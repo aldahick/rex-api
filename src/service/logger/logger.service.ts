@@ -16,7 +16,7 @@ export class LoggerService {
     const now = moment();
     let dateFormat = "HH:mm:ss";
     if (now.toDate().toLocaleDateString() !== this.lastLogTime.toDate().toLocaleDateString()) {
-      dateFormat = "YYYY-MM-DD " + dateFormat;
+      dateFormat = `YYYY-MM-DD ${dateFormat}`;
       this.lastLogTime = now;
     }
     let extra = data;
@@ -25,6 +25,6 @@ export class LoggerService {
         v instanceof Error ? `${k}="${v.stack}"` : `${k}=${util.inspect(v)}`
       ).join(" ");
     }
-    console.log(`${now.format(dateFormat)} [${level}] [${name}]${extra === undefined ? "" : (" " + extra)}`);
+    console.log(`${now.format(dateFormat)} [${level}] [${name}]${extra === undefined ? "" : (` ${extra}`)}`);
   }
 }
