@@ -9,6 +9,12 @@ export type Scalars = {
   Upload: File,
 };
 
+export type IAuthToken = {
+   __typename?: 'AuthToken',
+  token: Scalars['String'],
+  user: IUser,
+};
+
 export enum ICacheControlScope {
   Public = 'PUBLIC',
   Private = 'PRIVATE'
@@ -17,10 +23,16 @@ export enum ICacheControlScope {
 export type IMutation = {
    __typename?: 'Mutation',
   hello: Scalars['String'],
+  createAuthToken: IAuthToken,
   addPermissionsToRole: Scalars['Boolean'],
   createRole: IRole,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
+};
+
+
+export type IMutationCreateAuthTokenArgs = {
+  googleIdToken: Scalars['String']
 };
 
 

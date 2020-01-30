@@ -4,6 +4,9 @@ import { singleton } from "tsyringe";
 @singleton()
 export class ConfigService {
   readonly environment = this.optional("NODE_ENV") || "development";
+  readonly googleAuth = {
+    clientId: this.required("GOOGLE_CLIENT_ID")
+  };
   readonly httpPort = this.required("HTTP_PORT", Number);
   readonly jwtKey = this.required("JWT_KEY");
   readonly mongoUrl = this.required("MONGO_URL");

@@ -26,7 +26,6 @@ export class UserResolver {
     return user;
   }
 
-  @guard(can => can.read("role"))
   @resolver("User.roles")
   async roles(root: User): Promise<IUser["roles"]> {
     return this.userManager.getRoles(root);

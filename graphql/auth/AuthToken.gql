@@ -1,0 +1,4 @@
+type AuthToken {
+  token: String!
+  user: User!
+}
