@@ -6,6 +6,7 @@ import { User } from "../model/User";
 import { HttpError } from "../util/HttpError";
 import { UserManager } from "../manager/user";
 import { RoleManager } from "../manager/role";
+import { guard } from "../manager/auth/guard";
 
 @singleton()
 export class UserResolver {
@@ -15,6 +16,7 @@ export class UserResolver {
     private userManager: UserManager
   ) { }
 
+  @guard(can => can.read("user"))
   @query()
   async user(root: void, { id }: IQueryUserArgs): Promise<IQuery["user"]> {
     const user = await this.db.users.findById(id);
@@ -24,6 +26,7 @@ export class UserResolver {
     return user;
   }
 
+  @guard(can => can.read("role"))
   @resolver("User.roles")
   async roles(root: User): Promise<IUser["roles"]> {
     return this.userManager.getRoles(root);
@@ -31,9 +34,11 @@ export class UserResolver {
 
   @resolver("User.permissions")
   async permissions(root: User): Promise<IUser["permissions"]> {
-    return this.userManager.getPermissions(root);
+    const roles = await this.userManager.getRoles(root);
+    return this.roleManager.toPermissions(roles);
   }
 
+  @guard(can => can.update("user"))
   @mutation()
   async addRoleToUser(root: void, { userId, roleId }: IMutationAddRoleToUserArgs): Promise<IMutation["addRoleToUser"]> {
     const user = await this.userManager.get(userId);
@@ -48,6 +53,7 @@ export class UserResolver {
     return true;
   }
 
+  @guard(can => can.create("user"))
   @mutation()
   async createUser(root: void, { email }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
     const existing = await this.db.users.findOne({ email });

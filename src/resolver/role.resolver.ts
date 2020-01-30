@@ -5,6 +5,7 @@ import { DatabaseService } from "../service/database";
 import { IQuery, IMutationCreateRoleArgs, IMutation, IMutationAddPermissionsToRoleArgs } from "../graphql/types";
 import { Role } from "../model/Role";
 import { HttpError } from "../util/HttpError";
+import { guard } from "../manager/auth/guard";
 
 @singleton()
 export class RoleResolver {
@@ -12,11 +13,13 @@ export class RoleResolver {
     private db: DatabaseService
   ) { }
 
+  @guard(can => can.read("role"))
   @query()
   async roles(): Promise<IQuery["roles"]> {
     return this.db.roles.find();
   }
 
+  @guard(can => can.create("role"))
   @mutation()
   async createRole(root: void, { name }: IMutationCreateRoleArgs): Promise<IMutation["createRole"]> {
     return this.db.roles.create(new Role({
@@ -25,6 +28,7 @@ export class RoleResolver {
     }));
   }
 
+  @guard(can => can.update("role"))
   @mutation()
   async addPermissionsToRole(root: void, { roleId, permissions }: IMutationAddPermissionsToRoleArgs): Promise<IMutation["addPermissionsToRole"]> {
     const role = await this.db.roles.findById(roleId);

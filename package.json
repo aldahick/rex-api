@@ -9,7 +9,8 @@
     "build": "tsc",
     "lint": "eslint --ext .ts .",
     "generate": "npm run generate:graphql",
-    "generate:graphql": "graphql-codegen --config codegen.graphql.yml"
+    "generate:graphql": "graphql-codegen --config codegen.graphql.yml",
+    "createToken": "node scripts/createToken.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "express": "^4.17.1",
     "fs-extra": "^8.1.0",
     "graphql": "^14.6.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.8.10",
     "randomstring": "^1.1.5",
@@ -45,6 +47,7 @@
     "@graphql-codegen/typescript-operations": "^1.12.1",
     "@types/express": "^4.17.2",
     "@types/fs-extra": "^8.0.1",
+    "@types/jsonwebtoken": "^8.3.7",
     "@types/lodash": "^4.14.149",
     "@types/mongoose": "^5.7.0",
     "@types/node": "^13.5.2",
