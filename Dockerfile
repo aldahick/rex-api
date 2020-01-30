@@ -7,11 +7,13 @@ COPY package-lock.json ./
 RUN npm install
 
 COPY tsconfig.json ./
-COPY src /app/src
+COPY src ./src
 RUN npm run build
 
 COPY .eslintignore ./
 COPY .eslintrc.json ./
 RUN npm run lint
+
+COPY graphql ./graphql
 
 CMD npm start
