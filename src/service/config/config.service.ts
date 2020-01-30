@@ -5,6 +5,7 @@ import { singleton } from "tsyringe";
 export class ConfigService {
   readonly environment = this.optional("NODE_ENV") || "development";
   readonly httpPort = this.required("HTTP_PORT", Number);
+  readonly mongoUrl = this.required("MONGO_URL");
 
   get inDevelopment() {
     return this.environment === "development";

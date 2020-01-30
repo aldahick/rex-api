@@ -1,0 +1,4 @@
+extend type Mutation {
+  addRoleToUser(userId: String!, roleId: String!): Boolean!
+  createUser(email: String!): User!
+}

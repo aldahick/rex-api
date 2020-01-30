@@ -6,7 +6,7 @@ import { GraphQLScalarType } from "graphql";
 import * as recursiveReaddir from "recursive-readdir";
 import { singleton } from "tsyringe";
 import { findDecoratedMethods } from "../../util/findDecoratedMethods";
-import { ApolloContextManager } from "../../manager/ApolloContextManager";
+import { ApolloContextManager } from "../../manager/apolloContext";
 
 @singleton()
 export class ResolverRegistryService {
