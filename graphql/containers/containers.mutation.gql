@@ -1,0 +1,20 @@
+extend type Mutation {
+  createContainer(container: CreateContainerInput!): Container!
+  deleteContainers(ids: [String!]!): Boolean!
+  updateContainerPorts(containerId: String!, ports: [ContainerPortInput!]!): Boolean!
+  setContainerVariable(containerId: String!, name: String!, value: String!): Boolean!
+  removeContainerVariable(containerId: String!, name: String!): Boolean!
+}
+
+input CreateContainerInput {
+  name: String!
+  image: String!
+  tag: String!
+  hostId: String!
+}
+
+input ContainerPortInput {
+  containerPort: Int!
+  hostPort: Int
+  hostBindIp: String
+}

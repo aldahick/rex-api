@@ -1,0 +1,11 @@
+type Container {
+  _id: String!
+  name: String!
+  image: String!
+  tag: String!
+  status: ContainerStatus!
+  host: Host!
+
+  ports: [ContainerPort!]!
+  variables: [ContainerVariable!]!
+}

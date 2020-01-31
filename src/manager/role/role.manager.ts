@@ -17,7 +17,7 @@ export class RoleManager {
     if (!role) {
       throw HttpError.notFound(`role id=${id} not found`);
     }
-    return role;
+    return role.toObject();
   }
 
   toPermissions(roles: Role[]): (RolePermission & { role: Role })[] {

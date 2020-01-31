@@ -20,7 +20,7 @@ export class UserManager {
 
   async getSafe(id: string): Promise<User | undefined> {
     const user = await this.db.users.findById(id);
-    return user || undefined;
+    return user?.toObject() || undefined;
   }
 
   async getRoles(user: User): Promise<Role[]> {

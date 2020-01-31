@@ -1,0 +1,6 @@
+enum ContainerStatus {
+  RUNNING
+  STARTING
+  STOPPED
+  DEAD
+}

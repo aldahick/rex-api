@@ -5,9 +5,13 @@ import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 import { ConfigService } from "../config";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
+import { Container } from "../../model/Container";
+import { Host } from "../../model/Host";
 
 @singleton()
 export class DatabaseService {
+  containers!: ReturnModelType<typeof Container>;
+  hosts!: ReturnModelType<typeof Host>;
   roles!: ReturnModelType<typeof Role>;
   users!: ReturnModelType<typeof User>;
 
@@ -26,6 +30,8 @@ export class DatabaseService {
       useUnifiedTopology: true
     });
 
+    this.containers = this.getModel(Container, "containers");
+    this.hosts = this.getModel(Host, "hosts");
     this.roles = this.getModel(Role, "roles");
     this.users = this.getModel(User, "users");
   }
