@@ -1,12 +1,12 @@
-import * as jwt from "jsonwebtoken";
-import * as _ from "lodash";
-import { singleton } from "tsyringe";
-import { AccessControl } from "accesscontrol";
 import { ConfigService } from "../../service/config";
 import { RoleManager } from "../role";
 import { Role } from "../../model/Role";
 import { AuthTokenPayload } from "./AuthTokenPayload";
 import { AuthCheck } from "./AuthCheck";
+import { AccessControl } from "accesscontrol";
+import { singleton } from "tsyringe";
+import * as _ from "lodash";
+import * as jwt from "jsonwebtoken";
 
 @singleton()
 export class AuthManager {

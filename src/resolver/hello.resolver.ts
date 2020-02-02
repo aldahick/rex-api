@@ -1,6 +1,6 @@
-import { singleton } from "tsyringe";
 import { query, mutation } from "../service/registry";
 import { IQuery, IMutation } from "../graphql/types";
+import { singleton } from "tsyringe";
 
 @singleton()
 export class HelloResolver {

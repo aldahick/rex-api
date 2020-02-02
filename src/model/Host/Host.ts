@@ -1,5 +1,5 @@
-import { prop } from "@typegoose/typegoose";
 import { idProp } from "../../util/mongo";
+import { prop } from "@typegoose/typegoose";
 
 export class Host {
   @idProp()
@@ -10,6 +10,9 @@ export class Host {
 
   @prop({ required: true })
   hostname!: string;
+
+  @prop({ required: true })
+  dockerEndpoint!: string;
 
   constructor(init?: Omit<Host, "_id">) {
     Object.assign(this, init);

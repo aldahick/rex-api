@@ -1,8 +1,8 @@
-import * as express from "express";
-import { singleton } from "tsyringe";
 import { HttpError } from "../../util/HttpError";
 import { LoggerService } from "../logger";
 import { Controller } from "./Controller";
+import { singleton } from "tsyringe";
+import * as express from "express";
 
 @singleton()
 export class ControllerRegistryService {

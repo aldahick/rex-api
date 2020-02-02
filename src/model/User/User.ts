@@ -1,6 +1,6 @@
-import { prop, arrayProp } from "@typegoose/typegoose";
 import { idProp } from "../../util/mongo";
 import { UserAuth } from "./UserAuth";
+import { prop, arrayProp } from "@typegoose/typegoose";
 
 export class User {
   @idProp()

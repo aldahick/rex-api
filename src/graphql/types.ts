@@ -49,7 +49,8 @@ export enum IContainerStatus {
   Running = 'RUNNING',
   Starting = 'STARTING',
   Stopped = 'STOPPED',
-  Dead = 'DEAD'
+  Dead = 'DEAD',
+  Unknown = 'UNKNOWN'
 }
 
 export type IContainerVariable = {
@@ -65,6 +66,12 @@ export type ICreateContainerInput = {
   hostId: Scalars['String'],
 };
 
+export type ICreateHostInput = {
+  name: Scalars['String'],
+  hostname: Scalars['String'],
+  dockerEndpoint: Scalars['String'],
+};
+
 export type IHost = {
    __typename?: 'Host',
   _id: Scalars['String'],
@@ -76,22 +83,20 @@ export type IHost = {
 export type IMutation = {
    __typename?: 'Mutation',
   hello: Scalars['String'],
-  createAuthToken: IAuthToken,
   createContainer: IContainer,
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
   setContainerVariable: Scalars['Boolean'],
   removeContainerVariable: Scalars['Boolean'],
-  addPermissionsToRole: Scalars['Boolean'],
-  createRole: IRole,
+  startContainer: Scalars['Boolean'],
+  stopContainer: Scalars['Boolean'],
+  redeployContainer: Scalars['Boolean'],
   createHost: IHost,
+  createAuthToken: IAuthToken,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
-};
-
-
-export type IMutationCreateAuthTokenArgs = {
-  googleIdToken: Scalars['String']
+  addPermissionsToRole: Scalars['Boolean'],
+  createRole: IRole,
 };
 
 
@@ -124,20 +129,28 @@ export type IMutationRemoveContainerVariableArgs = {
 };
 
 
-export type IMutationAddPermissionsToRoleArgs = {
-  roleId: Scalars['String'],
-  permissions: Array<IRolePermissionInput>
+export type IMutationStartContainerArgs = {
+  containerId: Scalars['String']
 };
 
 
-export type IMutationCreateRoleArgs = {
-  name: Scalars['String']
+export type IMutationStopContainerArgs = {
+  containerId: Scalars['String']
+};
+
+
+export type IMutationRedeployContainerArgs = {
+  containerId: Scalars['String']
 };
 
 
 export type IMutationCreateHostArgs = {
-  name: Scalars['String'],
-  hostname: Scalars['String']
+  host: ICreateHostInput
+};
+
+
+export type IMutationCreateAuthTokenArgs = {
+  googleIdToken: Scalars['String']
 };
 
 
@@ -151,15 +164,26 @@ export type IMutationCreateUserArgs = {
   email: Scalars['String']
 };
 
+
+export type IMutationAddPermissionsToRoleArgs = {
+  roleId: Scalars['String'],
+  permissions: Array<IRolePermissionInput>
+};
+
+
+export type IMutationCreateRoleArgs = {
+  name: Scalars['String']
+};
+
 export type IQuery = {
    __typename?: 'Query',
   hello: Scalars['String'],
   container: IContainer,
   containers: Array<IContainer>,
-  roles: Array<IRole>,
   host: IHost,
   hosts: Array<IHost>,
   user: IUser,
+  roles: Array<IRole>,
 };
 
 

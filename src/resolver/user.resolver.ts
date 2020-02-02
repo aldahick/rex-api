@@ -1,4 +1,3 @@
-import { singleton } from "tsyringe";
 import { DatabaseService } from "../service/database";
 import { resolver, query, mutation } from "../service/registry";
 import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs } from "../graphql/types";
@@ -7,6 +6,7 @@ import { HttpError } from "../util/HttpError";
 import { UserManager } from "../manager/user";
 import { RoleManager } from "../manager/role";
 import { guard } from "../manager/auth/guard";
+import { singleton } from "tsyringe";
 
 @singleton()
 export class UserResolver {

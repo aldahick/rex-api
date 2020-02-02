@@ -1,11 +1,11 @@
-import { container } from "tsyringe";
-import { Request } from "express";
 import { AuthTokenPayload } from "../auth/AuthTokenPayload";
 import { AuthManager } from "../auth";
 import { UserManager } from "../user";
 import { User } from "../../model/User";
 import { AuthCheck } from "../auth/AuthCheck";
 import { Role } from "../../model/Role";
+import { Request } from "express";
+import { container } from "tsyringe";
 
 export class ApolloContext {
   private authManager = container.resolve(AuthManager);

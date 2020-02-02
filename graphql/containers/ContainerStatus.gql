@@ -3,4 +3,5 @@ enum ContainerStatus {
   STARTING
   STOPPED
   DEAD
+  UNKNOWN
 }

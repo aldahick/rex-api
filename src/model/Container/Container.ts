@@ -1,7 +1,7 @@
-import { prop, arrayProp } from "@typegoose/typegoose";
 import { idProp } from "../../util/mongo";
 import { ContainerPort } from "./ContainerPort";
 import { ContainerVariable } from "./ContainerVariable";
+import { prop, arrayProp } from "@typegoose/typegoose";
 
 export class Container {
   @idProp()
@@ -15,6 +15,9 @@ export class Container {
 
   @prop({ required: true })
   tag!: string;
+
+  @prop({ required: true })
+  dockerId!: string;
 
   @prop({ required: true })
   hostId!: string;

@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import "source-map-support/register";
-import { container } from "tsyringe";
 import { Application } from "./app";
+import { container } from "tsyringe";
 
 const main = async () => {
   const app = container.resolve(Application);

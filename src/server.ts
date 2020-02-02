@@ -1,13 +1,13 @@
 import * as http from "http";
 import * as path from "path";
+import { ConfigService } from "./service/config";
+import { RegistryService, Controller } from "./service/registry";
+import { LoggerService } from "./service/logger";
 import * as fs from "fs-extra";
 import * as express from "express";
 import * as _ from "lodash";
 import * as requireAll from "require-all";
 import { container, singleton } from "tsyringe";
-import { ConfigService } from "./service/config";
-import { RegistryService, Controller } from "./service/registry";
-import { LoggerService } from "./service/logger";
 
 @singleton()
 export class WebServer {

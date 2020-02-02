@@ -1,11 +1,11 @@
-import * as _ from "lodash";
-import { singleton } from "tsyringe";
 import { query, mutation } from "../service/registry";
 import { DatabaseService } from "../service/database";
 import { IQuery, IMutationCreateRoleArgs, IMutation, IMutationAddPermissionsToRoleArgs } from "../graphql/types";
 import { Role } from "../model/Role";
 import { HttpError } from "../util/HttpError";
 import { guard } from "../manager/auth/guard";
+import { singleton } from "tsyringe";
+import * as _ from "lodash";
 
 @singleton()
 export class RoleResolver {

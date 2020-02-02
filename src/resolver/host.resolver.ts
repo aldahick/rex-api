@@ -1,4 +1,3 @@
-import { singleton } from "tsyringe";
 import { guard } from "../manager/auth/guard";
 import { query, resolver, mutation } from "../service/registry";
 import { IQueryHostArgs, IQuery, IMutationCreateHostArgs, IMutation } from "../graphql/types";
@@ -6,6 +5,7 @@ import { HostManager } from "../manager/host";
 import { DatabaseService } from "../service/database";
 import { ContainerManager } from "../manager/container";
 import { Host } from "../model/Host";
+import { singleton } from "tsyringe";
 
 @singleton()
 export class HostResolver {
@@ -29,11 +29,8 @@ export class HostResolver {
 
   @guard(can => can.create("host"))
   @mutation()
-  async createHost(root: void, { name, hostname }: IMutationCreateHostArgs): Promise<IMutation["createHost"]> {
-    return this.db.hosts.create(new Host({
-      name,
-      hostname
-    }));
+  async createHost(root: void, { host }: IMutationCreateHostArgs): Promise<IMutation["createHost"]> {
+    return this.db.hosts.create(new Host(host));
   }
 
   @guard(can => can.read("container"))

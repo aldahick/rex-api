@@ -4,6 +4,10 @@ extend type Mutation {
   updateContainerPorts(containerId: String!, ports: [ContainerPortInput!]!): Boolean!
   setContainerVariable(containerId: String!, name: String!, value: String!): Boolean!
   removeContainerVariable(containerId: String!, name: String!): Boolean!
+
+  startContainer(containerId: String!): Boolean!
+  stopContainer(containerId: String!): Boolean!
+  redeployContainer(containerId: String!): Boolean!
 }
 
 input CreateContainerInput {
