@@ -59,6 +59,11 @@ export type IContainerVariable = {
   value: Scalars['String'],
 };
 
+export type IContainerVariableInput = {
+  name: Scalars['String'],
+  value: Scalars['String'],
+};
+
 export type ICreateContainerInput = {
   name: Scalars['String'],
   image: Scalars['String'],
@@ -86,17 +91,18 @@ export type IMutation = {
   createContainer: IContainer,
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
+  updateContainerVariables: Scalars['Boolean'],
   setContainerVariable: Scalars['Boolean'],
   removeContainerVariable: Scalars['Boolean'],
   startContainer: Scalars['Boolean'],
   stopContainer: Scalars['Boolean'],
   redeployContainer: Scalars['Boolean'],
-  createHost: IHost,
   createAuthToken: IAuthToken,
-  addRoleToUser: Scalars['Boolean'],
-  createUser: IUser,
+  createHost: IHost,
   addPermissionsToRole: Scalars['Boolean'],
   createRole: IRole,
+  addRoleToUser: Scalars['Boolean'],
+  createUser: IUser,
 };
 
 
@@ -113,6 +119,12 @@ export type IMutationDeleteContainersArgs = {
 export type IMutationUpdateContainerPortsArgs = {
   containerId: Scalars['String'],
   ports: Array<IContainerPortInput>
+};
+
+
+export type IMutationUpdateContainerVariablesArgs = {
+  containerId: Scalars['String'],
+  variables: Array<IContainerVariableInput>
 };
 
 
@@ -144,24 +156,13 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
-export type IMutationCreateHostArgs = {
-  host: ICreateHostInput
-};
-
-
 export type IMutationCreateAuthTokenArgs = {
   googleIdToken: Scalars['String']
 };
 
 
-export type IMutationAddRoleToUserArgs = {
-  userId: Scalars['String'],
-  roleId: Scalars['String']
-};
-
-
-export type IMutationCreateUserArgs = {
-  email: Scalars['String']
+export type IMutationCreateHostArgs = {
+  host: ICreateHostInput
 };
 
 
@@ -175,6 +176,17 @@ export type IMutationCreateRoleArgs = {
   name: Scalars['String']
 };
 
+
+export type IMutationAddRoleToUserArgs = {
+  userId: Scalars['String'],
+  roleId: Scalars['String']
+};
+
+
+export type IMutationCreateUserArgs = {
+  email: Scalars['String']
+};
+
 export type IQuery = {
    __typename?: 'Query',
   hello: Scalars['String'],
@@ -182,8 +194,8 @@ export type IQuery = {
   containers: Array<IContainer>,
   host: IHost,
   hosts: Array<IHost>,
-  user: IUser,
   roles: Array<IRole>,
+  user: IUser,
 };
 
 

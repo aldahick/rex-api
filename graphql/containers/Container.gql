@@ -8,4 +8,5 @@ type Container {
 
   ports: [ContainerPort!]!
   variables: [ContainerVariable!]!
+  volumes: [ContainerVolume!]!
 }

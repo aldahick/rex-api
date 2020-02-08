@@ -29,10 +29,11 @@ export class DockerService {
     this.docker.modem.path = path;
   }
 
-  async createContainer({ image, tag, name }: {
+  async createContainer({ image, tag, name, variables }: {
     image: string;
     tag: string;
     name: string;
+    variables: { name: string; value: string }[];
   }): Promise<string> {
     let fullImage = `${image}:${tag}`;
     const slashCount = fullImage.split("/").length;
@@ -44,7 +45,8 @@ export class DockerService {
     await this.docker.pull(fullImage, {});
     const container = await this.docker.createContainer({
       Image: fullImage,
-      name
+      name,
+      Env: variables.map(v => `${v.name}=${v.value}`)
     });
     return container.id;
   }

@@ -11,7 +11,8 @@ import {
   IQuery,
   IQueryContainerArgs,
   IMutationStartContainerArgs,
-  IMutationStopContainerArgs
+  IMutationStopContainerArgs,
+  IMutationUpdateContainerVariablesArgs
 } from "../graphql/types";
 import { guard } from "../manager/auth/guard";
 import { ContainerManager } from "../manager/container";
@@ -56,7 +57,6 @@ export class ContainerResolver {
       ports: [],
       variables: []
     });
-    console.log(newContainer);
     newContainer.dockerId = await this.containerManager.deploy(newContainer, host);
     const created = await this.db.containers.create(newContainer);
     return {
@@ -82,6 +82,22 @@ export class ContainerResolver {
         ports
       } as Partial<Container>
     });
+    return true;
+  }
+
+  @guard(can => can.update("container"))
+  @mutation()
+  async updateContainerVariables(root: void, { containerId, variables }: IMutationUpdateContainerVariablesArgs): Promise<IMutation["updateContainerVariables"]> {
+    const container = await this.containerManager.get(containerId);
+
+    await this.db.containers.updateOne({
+      _id: container._id
+    }, {
+      $set: {
+        variables
+      }
+    });
+
     return true;
   }
 

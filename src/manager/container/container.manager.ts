@@ -58,11 +58,11 @@ export class ContainerManager {
     await docker.removeContainer({
       id: container.dockerId
     });
-    console.log("create");
     const dockerId = await docker.createContainer({
       image: container.image,
       tag: container.tag,
-      name: container.name
+      name: container.name,
+      variables: container.variables
     });
     await this.db.containers.updateOne({ _id: container._id }, {
       $set: {
