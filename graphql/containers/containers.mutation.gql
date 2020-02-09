@@ -3,11 +3,7 @@ extend type Mutation {
   deleteContainers(ids: [String!]!): Boolean!
 
   updateContainerPorts(containerId: String!, ports: [ContainerPortInput!]!): Boolean!
-
   updateContainerVariables(containerId: String!, variables: [ContainerVariableInput!]!): Boolean!
-  setContainerVariable(containerId: String!, name: String!, value: String!): Boolean!
-  removeContainerVariable(containerId: String!, name: String!): Boolean!
-
   updateContainerVolumes(containerId: String!, volumes: [ContainerVolumeInput!]!): Boolean!
 
   startContainer(containerId: String!): Boolean!

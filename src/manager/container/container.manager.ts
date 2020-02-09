@@ -62,6 +62,7 @@ export class ContainerManager {
       image: container.image,
       tag: container.tag,
       name: container.name,
+      ports: container.ports,
       variables: container.variables,
       volumes: container.volumes,
     });

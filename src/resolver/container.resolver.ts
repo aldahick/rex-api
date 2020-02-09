@@ -6,8 +6,6 @@ import {
   IMutationCreateContainerArgs,
   IMutationDeleteContainersArgs,
   IMutationRedeployContainerArgs,
-  IMutationRemoveContainerVariableArgs,
-  IMutationSetContainerVariableArgs,
   IMutationUpdateContainerPortsArgs,
   IQuery,
   IQueryContainerArgs,
@@ -92,40 +90,6 @@ export class ContainerResolver {
   @mutation()
   async updateContainerVolumes(root: void, { containerId, volumes }: IMutationUpdateContainerVolumesArgs): Promise<IMutation["updateContainerVolumes"]> {
     await this.containerManager.updateField(containerId, "volumes", volumes);
-    return true;
-  }
-
-  @guard(can => can.update("container"))
-  @mutation()
-  async setContainerVariable(root: void, { containerId, name, value }: IMutationSetContainerVariableArgs): Promise<IMutation["setContainerVariable"]> {
-    const container = await this.containerManager.get(containerId);
-
-    await this.db.containers.updateOne({
-      _id: container._id
-    }, {
-      $set: {
-        variables: container.variables
-          .filter(v => v.name !== name)
-          .concat([{ name, value }])
-      }
-    });
-
-    return true;
-  }
-
-  @guard(can => can.update("container"))
-  @mutation()
-  async removeContainerVariable(root: void, { containerId, name }: IMutationRemoveContainerVariableArgs): Promise<IMutation["removeContainerVariable"]> {
-    const container = await this.containerManager.get(containerId);
-
-    await this.db.containers.updateOne({
-      _id: container._id
-    }, {
-      $set: {
-        variables: container.variables.filter(v => v.name !== name)
-      }
-    });
-
     return true;
   }
 

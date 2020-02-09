@@ -1,5 +1,6 @@
 import * as url from "url";
 import * as Dockerode from "dockerode";
+import * as _ from "lodash";
 import { HttpError } from "../../util/HttpError";
 
 export type DockerContainerState = "created" | "running" | "exited";
@@ -29,10 +30,11 @@ export class DockerService {
     this.docker.modem.path = path;
   }
 
-  async createContainer({ image, tag, name, variables, volumes }: {
+  async createContainer({ image, tag, name, ports, variables, volumes }: {
     image: string;
     tag: string;
     name: string;
+    ports: { containerPort: number; hostPort?: number; hostBindIp?: string }[];
     variables: { name: string; value: string }[];
     volumes: { hostPath: string; containerPath: string }[];
   }): Promise<string> {
@@ -44,12 +46,20 @@ export class DockerService {
       fullImage = `docker.io/${fullImage}`;
     }
     await this.docker.pull(fullImage, {});
+    const portBindings = _.mapValues(
+      _.mapKeys(ports.filter(p => !!p.hostPort), p => `${p.containerPort}/tcp`),
+      p => [{
+        HostPort: p.hostPort?.toString(),
+        HostIp: p.hostBindIp?.toString() || ""
+      }]
+    );
     const container = await this.docker.createContainer({
       Image: fullImage,
       name,
       Env: variables.map(v => `${v.name}=${v.value}`),
       HostConfig: {
-        Binds: volumes.map(v => `${v.hostPath}:${v.containerPath}`)
+        Binds: volumes.map(v => `${v.hostPath}:${v.containerPath}`),
+        PortBindings: portBindings
       }
     });
     return container.id;
