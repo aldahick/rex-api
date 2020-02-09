@@ -1,11 +1,11 @@
-import { guard } from "../manager/auth/guard";
-import { query, resolver, mutation } from "../service/registry";
-import { IQueryHostArgs, IQuery, IMutationCreateHostArgs, IMutation } from "../graphql/types";
-import { HostManager } from "../manager/host";
-import { DatabaseService } from "../service/database";
-import { ContainerManager } from "../manager/container";
-import { Host } from "../model/Host";
 import { singleton } from "tsyringe";
+import { IQueryHostArgs, IQuery, IMutationCreateHostArgs, IMutation } from "../graphql/types";
+import { guard } from "../manager/auth/guard";
+import { ContainerManager } from "../manager/container";
+import { HostManager } from "../manager/host";
+import { Host } from "../model/Host";
+import { DatabaseService } from "../service/database";
+import { query, resolver, mutation } from "../service/registry";
 
 @singleton()
 export class HostResolver {

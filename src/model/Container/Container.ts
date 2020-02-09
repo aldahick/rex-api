@@ -1,7 +1,8 @@
+import { prop, arrayProp } from "@typegoose/typegoose";
 import { idProp } from "../../util/mongo";
 import { ContainerPort } from "./ContainerPort";
 import { ContainerVariable } from "./ContainerVariable";
-import { prop, arrayProp } from "@typegoose/typegoose";
+import { ContainerVolume } from "./ContainerVolume";
 
 export class Container {
   @idProp()
@@ -27,6 +28,9 @@ export class Container {
 
   @arrayProp({ required: true, items: ContainerVariable, _id: false })
   variables!: ContainerVariable[];
+
+  @arrayProp({ required: true, items: ContainerVolume, _id: false })
+  volumes!: ContainerVolume[];
 
   constructor(init?: Omit<Container, "_id">) {
     Object.assign(this, init);

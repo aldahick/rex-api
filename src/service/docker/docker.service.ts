@@ -1,6 +1,6 @@
 import * as url from "url";
-import { HttpError } from "../../util/HttpError";
 import * as Dockerode from "dockerode";
+import { HttpError } from "../../util/HttpError";
 
 export type DockerContainerState = "created" | "running" | "exited";
 
@@ -29,11 +29,12 @@ export class DockerService {
     this.docker.modem.path = path;
   }
 
-  async createContainer({ image, tag, name, variables }: {
+  async createContainer({ image, tag, name, variables, volumes }: {
     image: string;
     tag: string;
     name: string;
     variables: { name: string; value: string }[];
+    volumes: { hostPath: string; containerPath: string }[];
   }): Promise<string> {
     let fullImage = `${image}:${tag}`;
     const slashCount = fullImage.split("/").length;
@@ -46,7 +47,10 @@ export class DockerService {
     const container = await this.docker.createContainer({
       Image: fullImage,
       name,
-      Env: variables.map(v => `${v.name}=${v.value}`)
+      Env: variables.map(v => `${v.name}=${v.value}`),
+      HostConfig: {
+        Binds: volumes.map(v => `${v.hostPath}:${v.containerPath}`)
+      }
     });
     return container.id;
   }

@@ -1,12 +1,12 @@
 import * as path from "path";
-import { findDecoratedMethods } from "../../util/findDecoratedMethods";
-import { ApolloContextManager } from "../../manager/apolloContext";
 import { ApolloServer, IResolvers } from "apollo-server-express";
 import * as express from "express";
 import * as fs from "fs-extra";
 import { GraphQLScalarType } from "graphql";
 import * as recursiveReaddir from "recursive-readdir";
 import { singleton } from "tsyringe";
+import { ApolloContextManager } from "../../manager/apolloContext";
+import { findDecoratedMethods } from "../../util/findDecoratedMethods";
 
 @singleton()
 export class ResolverRegistryService {

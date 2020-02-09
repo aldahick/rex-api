@@ -1,6 +1,6 @@
-import { HttpMethod } from "../../util/HttpMethod";
-import { HttpError } from "../../util/HttpError";
 import { Request, Response } from "express";
+import { HttpError } from "../../util/HttpError";
+import { HttpMethod } from "../../util/HttpMethod";
 
 export interface ControllerPayload {
   req: Request;

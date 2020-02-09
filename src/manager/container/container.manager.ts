@@ -1,12 +1,12 @@
-import { DatabaseService } from "../../service/database";
-import { Container } from "../../model/Container";
-import { HttpError } from "../../util/HttpError";
-import { Host } from "../../model/Host";
-import { IContainer, IContainerStatus } from "../../graphql/types";
-import { DockerService, DockerContainerState } from "../../service/docker";
-import { singleton } from "tsyringe";
-import * as _ from "lodash";
 import { DocumentType } from "@typegoose/typegoose";
+import * as _ from "lodash";
+import { singleton } from "tsyringe";
+import { IContainer, IContainerStatus } from "../../graphql/types";
+import { Container } from "../../model/Container";
+import { Host } from "../../model/Host";
+import { DatabaseService } from "../../service/database";
+import { DockerService, DockerContainerState } from "../../service/docker";
+import { HttpError } from "../../util/HttpError";
 
 @singleton()
 export class ContainerManager {
@@ -62,7 +62,8 @@ export class ContainerManager {
       image: container.image,
       tag: container.tag,
       name: container.name,
-      variables: container.variables
+      variables: container.variables,
+      volumes: container.volumes,
     });
     await this.db.containers.updateOne({ _id: container._id }, {
       $set: {
@@ -70,6 +71,17 @@ export class ContainerManager {
       }
     });
     return dockerId;
+  }
+
+  async updateField<Key extends keyof Container>(containerId: string, fieldName: Key, value: Container[Key]): Promise<void> {
+    const container = await this.get(containerId);
+    await this.db.containers.updateOne({
+      _id: container._id
+    }, {
+      $set: {
+        [fieldName]: value
+      }
+    });
   }
 
   async start(container: Container, host: Host): Promise<void> {

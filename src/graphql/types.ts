@@ -30,6 +30,7 @@ export type IContainer = {
   host: IHost,
   ports: Array<IContainerPort>,
   variables: Array<IContainerVariable>,
+  volumes: Array<IContainerVolume>,
 };
 
 export type IContainerPort = {
@@ -64,6 +65,17 @@ export type IContainerVariableInput = {
   value: Scalars['String'],
 };
 
+export type IContainerVolume = {
+   __typename?: 'ContainerVolume',
+  hostPath: Scalars['String'],
+  containerPath: Scalars['String'],
+};
+
+export type IContainerVolumeInput = {
+  hostPath: Scalars['String'],
+  containerPath: Scalars['String'],
+};
+
 export type ICreateContainerInput = {
   name: Scalars['String'],
   image: Scalars['String'],
@@ -88,21 +100,27 @@ export type IHost = {
 export type IMutation = {
    __typename?: 'Mutation',
   hello: Scalars['String'],
+  createAuthToken: IAuthToken,
   createContainer: IContainer,
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
   updateContainerVariables: Scalars['Boolean'],
   setContainerVariable: Scalars['Boolean'],
   removeContainerVariable: Scalars['Boolean'],
+  updateContainerVolumes: Scalars['Boolean'],
   startContainer: Scalars['Boolean'],
   stopContainer: Scalars['Boolean'],
   redeployContainer: Scalars['Boolean'],
-  createAuthToken: IAuthToken,
   createHost: IHost,
   addPermissionsToRole: Scalars['Boolean'],
   createRole: IRole,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
+};
+
+
+export type IMutationCreateAuthTokenArgs = {
+  googleIdToken: Scalars['String']
 };
 
 
@@ -141,6 +159,12 @@ export type IMutationRemoveContainerVariableArgs = {
 };
 
 
+export type IMutationUpdateContainerVolumesArgs = {
+  containerId: Scalars['String'],
+  volumes: Array<IContainerVolumeInput>
+};
+
+
 export type IMutationStartContainerArgs = {
   containerId: Scalars['String']
 };
@@ -153,11 +177,6 @@ export type IMutationStopContainerArgs = {
 
 export type IMutationRedeployContainerArgs = {
   containerId: Scalars['String']
-};
-
-
-export type IMutationCreateAuthTokenArgs = {
-  googleIdToken: Scalars['String']
 };
 
 

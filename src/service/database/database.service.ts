@@ -1,12 +1,12 @@
-import { ConfigService } from "../config";
-import { Role } from "../../model/Role";
-import { User } from "../../model/User";
-import { Container } from "../../model/Container";
-import { Host } from "../../model/Host";
-import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 import { ReturnModelType, getModelForClass } from "@typegoose/typegoose";
+import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 import { Connection, createConnection } from "mongoose";
 import { singleton } from "tsyringe";
+import { Container } from "../../model/Container";
+import { Host } from "../../model/Host";
+import { Role } from "../../model/Role";
+import { User } from "../../model/User";
+import { ConfigService } from "../config";
 
 @singleton()
 export class DatabaseService {

@@ -1,10 +1,10 @@
+import { DocumentType } from "@typegoose/typegoose";
+import * as _ from "lodash";
+import { singleton } from "tsyringe";
 import { Role } from "../../model/Role";
+import { RolePermission } from "../../model/Role/RolePermission";
 import { DatabaseService } from "../../service/database";
 import { HttpError } from "../../util/HttpError";
-import { RolePermission } from "../../model/Role/RolePermission";
-import { DocumentType } from "@typegoose/typegoose";
-import { singleton } from "tsyringe";
-import * as _ from "lodash";
 
 @singleton()
 export class RoleManager {

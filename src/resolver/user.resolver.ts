@@ -1,12 +1,12 @@
+import { singleton } from "tsyringe";
+import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs } from "../graphql/types";
+import { guard } from "../manager/auth/guard";
+import { RoleManager } from "../manager/role";
+import { UserManager } from "../manager/user";
+import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
 import { resolver, query, mutation } from "../service/registry";
-import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs } from "../graphql/types";
-import { User } from "../model/User";
 import { HttpError } from "../util/HttpError";
-import { UserManager } from "../manager/user";
-import { RoleManager } from "../manager/role";
-import { guard } from "../manager/auth/guard";
-import { singleton } from "tsyringe";
 
 @singleton()
 export class UserResolver {

@@ -1,7 +1,7 @@
-import { DatabaseService } from "../../service/database";
-import { Host } from "../../model/Host";
-import { HttpError } from "../../util/HttpError";
 import { singleton } from "tsyringe";
+import { Host } from "../../model/Host";
+import { DatabaseService } from "../../service/database";
+import { HttpError } from "../../util/HttpError";
 
 @singleton()
 export class HostManager {

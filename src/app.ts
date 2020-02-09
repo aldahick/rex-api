@@ -1,6 +1,6 @@
+import { singleton } from "tsyringe";
 import { WebServer } from "./server";
 import { DatabaseService } from "./service/database";
-import { singleton } from "tsyringe";
 
 @singleton()
 export class Application {

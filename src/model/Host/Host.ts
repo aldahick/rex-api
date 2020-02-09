@@ -1,5 +1,5 @@
-import { idProp } from "../../util/mongo";
 import { prop } from "@typegoose/typegoose";
+import { idProp } from "../../util/mongo";
 
 export class Host {
   @idProp()

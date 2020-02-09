@@ -1,5 +1,5 @@
-import { ApolloContext } from "../apolloContext/ApolloContext";
 import { HttpError } from "../../util/HttpError";
+import { ApolloContext } from "../apolloContext/ApolloContext";
 import { AuthCheck } from "./AuthCheck";
 
 export const guard = (check: AuthCheck): MethodDecorator => (target: any, key, descriptor: TypedPropertyDescriptor<any>) => {

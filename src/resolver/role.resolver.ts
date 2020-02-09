@@ -1,11 +1,11 @@
-import { query, mutation } from "../service/registry";
-import { DatabaseService } from "../service/database";
-import { IQuery, IMutationCreateRoleArgs, IMutation, IMutationAddPermissionsToRoleArgs } from "../graphql/types";
-import { Role } from "../model/Role";
-import { HttpError } from "../util/HttpError";
-import { guard } from "../manager/auth/guard";
-import { singleton } from "tsyringe";
 import * as _ from "lodash";
+import { singleton } from "tsyringe";
+import { IQuery, IMutationCreateRoleArgs, IMutation, IMutationAddPermissionsToRoleArgs } from "../graphql/types";
+import { guard } from "../manager/auth/guard";
+import { Role } from "../model/Role";
+import { DatabaseService } from "../service/database";
+import { query, mutation } from "../service/registry";
+import { HttpError } from "../util/HttpError";
 
 @singleton()
 export class RoleResolver {

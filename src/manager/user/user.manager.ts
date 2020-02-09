@@ -1,8 +1,8 @@
+import { singleton } from "tsyringe";
+import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
 import { HttpError } from "../../util/HttpError";
-import { Role } from "../../model/Role";
-import { singleton } from "tsyringe";
 
 @singleton()
 export class UserManager {

@@ -1,7 +1,7 @@
 import * as util from "util";
-import { LogLevel } from "./LogLevel";
 import * as moment from "moment";
 import { singleton } from "tsyringe";
+import { LogLevel } from "./LogLevel";
 
 @singleton()
 export class LoggerService {

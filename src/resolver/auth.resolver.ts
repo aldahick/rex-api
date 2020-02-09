@@ -1,10 +1,10 @@
-import { mutation } from "../service/registry";
+import { singleton } from "tsyringe";
 import { IMutationCreateAuthTokenArgs, IAuthToken } from "../graphql/types";
 import { AuthManager } from "../manager/auth";
-import { GoogleAuthService } from "../service/google/googleAuth.service";
-import { HttpError } from "../util/HttpError";
 import { DatabaseService } from "../service/database";
-import { singleton } from "tsyringe";
+import { GoogleAuthService } from "../service/google";
+import { mutation } from "../service/registry";
+import { HttpError } from "../util/HttpError";
 
 @singleton()
 export class AuthResolver {

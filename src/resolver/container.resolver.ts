@@ -1,3 +1,4 @@
+import { singleton } from "tsyringe";
 import {
   IContainer,
   IContainerStatus,
@@ -12,7 +13,8 @@ import {
   IQueryContainerArgs,
   IMutationStartContainerArgs,
   IMutationStopContainerArgs,
-  IMutationUpdateContainerVariablesArgs
+  IMutationUpdateContainerVariablesArgs,
+  IMutationUpdateContainerVolumesArgs
 } from "../graphql/types";
 import { guard } from "../manager/auth/guard";
 import { ContainerManager } from "../manager/container";
@@ -20,7 +22,6 @@ import { HostManager } from "../manager/host";
 import { Container } from "../model/Container";
 import { DatabaseService } from "../service/database";
 import { mutation, query, resolver } from "../service/registry";
-import { singleton } from "tsyringe";
 
 @singleton()
 export class ContainerResolver {
@@ -55,7 +56,8 @@ export class ContainerResolver {
       ...container,
       dockerId: "",
       ports: [],
-      variables: []
+      variables: [],
+      volumes: []
     });
     newContainer.dockerId = await this.containerManager.deploy(newContainer, host);
     const created = await this.db.containers.create(newContainer);
@@ -75,29 +77,21 @@ export class ContainerResolver {
   @guard(can => can.update("container"))
   @mutation()
   async updateContainerPorts(root: void, { containerId, ports }: IMutationUpdateContainerPortsArgs): Promise<IMutation["updateContainerPorts"]> {
-    await this.db.containers.updateOne({
-      _id: containerId,
-    }, {
-      $set: {
-        ports
-      } as Partial<Container>
-    });
+    await this.containerManager.updateField(containerId, "ports", ports);
     return true;
   }
 
   @guard(can => can.update("container"))
   @mutation()
   async updateContainerVariables(root: void, { containerId, variables }: IMutationUpdateContainerVariablesArgs): Promise<IMutation["updateContainerVariables"]> {
-    const container = await this.containerManager.get(containerId);
+    await this.containerManager.updateField(containerId, "variables", variables);
+    return true;
+  }
 
-    await this.db.containers.updateOne({
-      _id: container._id
-    }, {
-      $set: {
-        variables
-      }
-    });
-
+  @guard(can => can.update("container"))
+  @mutation()
+  async updateContainerVolumes(root: void, { containerId, volumes }: IMutationUpdateContainerVolumesArgs): Promise<IMutation["updateContainerVolumes"]> {
+    await this.containerManager.updateField(containerId, "volumes", volumes);
     return true;
   }
 
