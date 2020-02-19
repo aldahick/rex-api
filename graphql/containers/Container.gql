@@ -5,6 +5,7 @@ type Container {
   tag: String!
   status: ContainerStatus!
   host: Host!
+  networkName: String!
 
   ports: [ContainerPort!]!
   variables: [ContainerVariable!]!

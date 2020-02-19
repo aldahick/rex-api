@@ -65,6 +65,7 @@ export class ContainerManager {
       ports: container.ports,
       variables: container.variables,
       volumes: container.volumes,
+      networkName: container.networkName
     });
     await this.db.containers.updateOne({ _id: container._id }, {
       $set: {

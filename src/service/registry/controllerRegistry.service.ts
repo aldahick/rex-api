@@ -25,10 +25,7 @@ export class ControllerRegistryService {
     }
   }
 
-  /**
-   * Do not use; only exported for testing
-   */
-  buildRequestHandler(controller: Controller) {
+  private buildRequestHandler(controller: Controller) {
     return async (req: express.Request, res: express.Response) => {
       try {
         const result = await controller.handle({ req, res });

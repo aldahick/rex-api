@@ -23,6 +23,9 @@ export class Container {
   @prop({ required: true })
   hostId!: string;
 
+  @prop({ required: true })
+  networkName!: string;
+
   @arrayProp({ required: true, items: ContainerPort, _id: false })
   ports!: ContainerPort[];
 

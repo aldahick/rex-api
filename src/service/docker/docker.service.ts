@@ -30,10 +30,11 @@ export class DockerService {
     this.docker.modem.path = path;
   }
 
-  async createContainer({ image, tag, name, ports, variables, volumes }: {
+  async createContainer({ image, tag, name, networkName, ports, variables, volumes }: {
     image: string;
     tag: string;
     name: string;
+    networkName: string;
     ports: { containerPort: number; hostPort?: number; hostBindIp?: string }[];
     variables: { name: string; value: string }[];
     volumes: { hostPath: string; containerPath: string }[];
@@ -59,7 +60,8 @@ export class DockerService {
       Env: variables.map(v => `${v.name}=${v.value}`),
       HostConfig: {
         Binds: volumes.map(v => `${v.hostPath}:${v.containerPath}`),
-        PortBindings: portBindings
+        PortBindings: portBindings,
+        NetworkMode: networkName
       }
     });
     return container.id;

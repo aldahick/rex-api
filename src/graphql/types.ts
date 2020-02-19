@@ -28,6 +28,7 @@ export type IContainer = {
   tag: Scalars['String'],
   status: IContainerStatus,
   host: IHost,
+  networkName: Scalars['String'],
   ports: Array<IContainerPort>,
   variables: Array<IContainerVariable>,
   volumes: Array<IContainerVolume>,
@@ -81,6 +82,7 @@ export type ICreateContainerInput = {
   image: Scalars['String'],
   tag: Scalars['String'],
   hostId: Scalars['String'],
+  networkName: Scalars['String'],
 };
 
 export type ICreateHostInput = {
@@ -105,8 +107,6 @@ export type IMutation = {
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
   updateContainerVariables: Scalars['Boolean'],
-  setContainerVariable: Scalars['Boolean'],
-  removeContainerVariable: Scalars['Boolean'],
   updateContainerVolumes: Scalars['Boolean'],
   startContainer: Scalars['Boolean'],
   stopContainer: Scalars['Boolean'],
@@ -143,19 +143,6 @@ export type IMutationUpdateContainerPortsArgs = {
 export type IMutationUpdateContainerVariablesArgs = {
   containerId: Scalars['String'],
   variables: Array<IContainerVariableInput>
-};
-
-
-export type IMutationSetContainerVariableArgs = {
-  containerId: Scalars['String'],
-  name: Scalars['String'],
-  value: Scalars['String']
-};
-
-
-export type IMutationRemoveContainerVariableArgs = {
-  containerId: Scalars['String'],
-  name: Scalars['String']
 };
 
 

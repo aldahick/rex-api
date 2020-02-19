@@ -16,6 +16,7 @@ input CreateContainerInput {
   image: String!
   tag: String!
   hostId: String!
+  networkName: String!
 }
 
 input ContainerPortInput {
