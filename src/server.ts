@@ -3,7 +3,7 @@ import * as path from "path";
 import * as express from "express";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
-import * as requireAll from "require-all";
+import * as recursiveReaddir from "recursive-readdir";
 import { container, singleton } from "tsyringe";
 import { ConfigService } from "./service/config";
 import { LoggerService } from "./service/logger";
@@ -57,15 +57,15 @@ export class WebServer {
     if (!await fs.pathExists(fullDir)) {
       return [];
     }
-    const types = this.requireAll(fullDir);
-    return types.map(t => container.resolve(t));
+    return (await this.requireAll(fullDir)).map(t => container.resolve(t));
   }
 
-  private requireAll<T = any>(dir: string, options: Partial<requireAll.RequireAllOptions> = {}): T[] {
-    return _.flatten(Object.values(requireAll<T>({
-      dirname: path.resolve(__dirname, dir),
-      recursive: true,
-      ...options
-    })).map(Object.values));
+  private async requireAll<T = any>(dir: string): Promise<T[]> {
+    const files = await recursiveReaddir(path.resolve(__dirname, dir));
+    return _.flatten(files
+      .filter(f => f.endsWith(".js"))
+      .map(require)
+      .map(Object.values)
+    );
   }
 }

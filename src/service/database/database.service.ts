@@ -4,16 +4,20 @@ import { Connection, createConnection } from "mongoose";
 import { singleton } from "tsyringe";
 import { Container } from "../../model/Container";
 import { Host } from "../../model/Host";
+import { Progress } from "../../model/Progress";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
+import { WikiPage } from "../../model/WikiPage";
 import { ConfigService } from "../config";
 
 @singleton()
 export class DatabaseService {
   containers!: ReturnModelType<typeof Container>;
   hosts!: ReturnModelType<typeof Host>;
+  progress!: ReturnModelType<typeof Progress>;
   roles!: ReturnModelType<typeof Role>;
   users!: ReturnModelType<typeof User>;
+  wikiPages!: ReturnModelType<typeof WikiPage>;
 
   constructor(
     private config: ConfigService
@@ -26,14 +30,17 @@ export class DatabaseService {
       return;
     }
     this.connection = await createConnection(this.config.mongoUrl, {
+      useCreateIndex: true,
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
 
     this.containers = this.getModel(Container, "containers");
     this.hosts = this.getModel(Host, "hosts");
+    this.progress = this.getModel(Progress, "progress");
     this.roles = this.getModel(Role, "roles");
     this.users = this.getModel(User, "users");
+    this.wikiPages = this.getModel(WikiPage, "wikiPages");
   }
 
   async close() {

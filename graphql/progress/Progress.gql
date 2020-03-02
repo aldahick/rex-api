@@ -1,0 +1,7 @@
+type Progress {
+  _id: String!
+  action: String!
+  createdAt: DateTime!
+  status: ProgressStatus!
+  logs: [ProgressLog!]!
+}

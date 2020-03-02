@@ -1,0 +1,6 @@
+enum ProgressStatus {
+  CREATED
+  IN_PROGRESS
+  COMPLETE
+  ERRORED
+}

@@ -1,0 +1,5 @@
+type WikiPage {
+  _id: String!
+  name: String!
+  firstLinkedPage: WikiPage
+}
