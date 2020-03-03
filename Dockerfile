@@ -15,5 +15,6 @@ COPY .eslintrc.json ./
 RUN npm run lint
 
 COPY graphql ./graphql
+COPY scripts ./scripts
 
 CMD npm start

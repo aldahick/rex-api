@@ -1,5 +1,6 @@
 import * as http from "http";
 import * as path from "path";
+import * as cors from "cors";
 import * as express from "express";
 import * as fs from "fs-extra";
 import * as _ from "lodash";
@@ -22,6 +23,7 @@ export class WebServer {
 
   async init() {
     this.express = express();
+    this.express.use(cors());
 
     const resolvers = await this.loadInjectables("resolver");
     await this.registryService.resolvers.init(this.express, resolvers);

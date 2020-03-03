@@ -101,6 +101,18 @@ export type IHost = {
   containers?: Maybe<Array<IContainer>>,
 };
 
+export type IMediaItem = {
+   __typename?: 'MediaItem',
+  key: Scalars['String'],
+  type: IMediaItemType,
+};
+
+export enum IMediaItemType {
+  File = 'file',
+  Directory = 'directory',
+  Series = 'series'
+}
+
 export type IMutation = {
    __typename?: 'Mutation',
   hello: Scalars['String'],
@@ -231,6 +243,7 @@ export type IQuery = {
   containers: Array<IContainer>,
   host: IHost,
   hosts: Array<IHost>,
+  mediaItems: Array<IMediaItem>,
   progress: IProgress,
   roles: Array<IRole>,
   user: IUser,
@@ -245,6 +258,11 @@ export type IQueryContainerArgs = {
 
 export type IQueryHostArgs = {
   id: Scalars['String']
+};
+
+
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String']
 };
 
 

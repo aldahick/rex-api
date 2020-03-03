@@ -1,0 +1,5 @@
+enum MediaItemType {
+  file
+  directory
+  series
+}

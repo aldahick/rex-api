@@ -19,7 +19,11 @@ export class ApolloContext {
   constructor(
     private req: Request
   ) {
-    this.payload = this.authManager.getPayload(req.headers.authorization?.split(" ")[1] || "");
+    let token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      token = req.query.token;
+    }
+    this.payload = this.authManager.getPayload(token || "");
   }
 
   get userId(): string | undefined {

@@ -61,7 +61,10 @@ export class DockerService {
       HostConfig: {
         Binds: volumes.map(v => `${v.hostPath}:${v.containerPath}`),
         PortBindings: portBindings,
-        NetworkMode: networkName
+        NetworkMode: networkName,
+        RestartPolicy: {
+          Name: "always"
+        }
       }
     });
     return container.id;

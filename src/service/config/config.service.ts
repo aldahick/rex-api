@@ -9,6 +9,7 @@ export class ConfigService {
   };
   readonly httpPort = this.required("HTTP_PORT", Number);
   readonly jwtKey = this.required("JWT_KEY");
+  readonly mediaDir = this.required("MEDIA_DIR");
   readonly mongoUrl = this.required("MONGO_URL");
 
   get inDevelopment() {

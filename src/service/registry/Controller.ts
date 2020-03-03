@@ -1,18 +1,15 @@
 import { Request, Response } from "express";
-import { HttpError } from "../../util/HttpError";
 import { HttpMethod } from "../../util/HttpMethod";
+import { ApolloContext } from "../../manager/apolloContext";
 
 export interface ControllerPayload {
+  context: ApolloContext;
   req: Request;
   res: Response;
 }
 
-export class Controller {
-  method!: HttpMethod;
-  route!: string;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async handle(payload: ControllerPayload): Promise<any> {
-    throw HttpError.notImplemented();
-  }
+export interface Controller {
+  method: HttpMethod;
+  route: string;
+  handle(payload: ControllerPayload): Promise<any>;
 }
