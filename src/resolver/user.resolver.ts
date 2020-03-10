@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs } from "../graphql/types";
+import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs } from "../graphql/types";
 import { guard } from "../manager/auth/guard";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
@@ -7,10 +7,12 @@ import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
 import { resolver, query, mutation } from "../service/registry";
 import { HttpError } from "../util/HttpError";
+import { AuthManager } from "../manager/auth";
 
 @singleton()
 export class UserResolver {
   constructor(
+    private authManager: AuthManager,
     private db: DatabaseService,
     private roleManager: RoleManager,
     private userManager: UserManager
@@ -54,15 +56,35 @@ export class UserResolver {
 
   @guard(can => can.create("user"))
   @mutation()
-  async createUser(root: void, { email }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
-    const existing = await this.db.users.findOne({ email });
+  async createUser(root: void, { email, username, password }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
+    const existing = await this.db.users.findOne({
+      $or: [
+        { email },
+        { username: email },
+        ...(username ? [
+          { username },
+          { email: username }
+        ] : [])
+      ]
+    });
     if (existing) {
       throw HttpError.conflict(`user email=${email} already exists`);
     }
     return this.db.users.create(new User({
       email,
-      auth: {},
+      username,
+      auth: {
+        passwordHash: password ? await this.authManager.hashPassword(password) : undefined
+      },
       roleIds: []
     }));
+  }
+
+  @guard(can => can.update("user"))
+  @mutation()
+  async setUserPassword(root: void, { userId, password }: IMutationSetUserPasswordArgs): Promise<IMutation["setUserPassword"]> {
+    const user = await this.userManager.get(userId);
+    await this.userManager.setPassword(user, password);
+    return true;
   }
 }

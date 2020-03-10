@@ -116,7 +116,8 @@ export enum IMediaItemType {
 export type IMutation = {
    __typename?: 'Mutation',
   hello: Scalars['String'],
-  createAuthToken: IAuthToken,
+  createAuthTokenGoogle: IAuthToken,
+  createAuthTokenLocal: IAuthToken,
   createContainer: IContainer,
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
@@ -130,12 +131,19 @@ export type IMutation = {
   createRole: IRole,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
+  setUserPassword: Scalars['Boolean'],
   fetchWikiPagesUntil: IProgress,
 };
 
 
-export type IMutationCreateAuthTokenArgs = {
+export type IMutationCreateAuthTokenGoogleArgs = {
   googleIdToken: Scalars['String']
+};
+
+
+export type IMutationCreateAuthTokenLocalArgs = {
+  username: Scalars['String'],
+  password: Scalars['String']
 };
 
 
@@ -205,7 +213,15 @@ export type IMutationAddRoleToUserArgs = {
 
 
 export type IMutationCreateUserArgs = {
-  email: Scalars['String']
+  email: Scalars['String'],
+  username?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>
+};
+
+
+export type IMutationSetUserPasswordArgs = {
+  userId: Scalars['String'],
+  password: Scalars['String']
 };
 
 
@@ -303,6 +319,7 @@ export type IUser = {
    __typename?: 'User',
   _id: Scalars['String'],
   email: Scalars['String'],
+  username?: Maybe<Scalars['String']>,
   roles?: Maybe<Array<IRole>>,
   permissions?: Maybe<Array<IRolePermission>>,
 };

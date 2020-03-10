@@ -1,3 +1,5 @@
 extend type Mutation {
-  createAuthToken(googleIdToken: String!): AuthToken!
+  createAuthTokenGoogle(googleIdToken: String!): AuthToken!
+  # username can also be email
+  createAuthTokenLocal(username: String!, password: String!): AuthToken!
 }

@@ -12,6 +12,9 @@ export class User {
   @prop({ required: true })
   email!: string;
 
+  @prop()
+  username?: string;
+
   @arrayProp({ required: true, items: String })
   roleIds!: string[];
 

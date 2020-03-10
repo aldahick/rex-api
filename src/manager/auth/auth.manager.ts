@@ -1,4 +1,5 @@
 import { AccessControl } from "accesscontrol";
+import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
@@ -46,5 +47,13 @@ export class AuthManager {
       }
     }
     return true;
+  }
+
+  hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 8);
+  }
+
+  checkPassword(raw: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(raw, hash);
   }
 }
