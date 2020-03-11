@@ -1,0 +1,3 @@
+extend type Query {
+  steamPlayer(steamId64: String!): SteamPlayer!
+}

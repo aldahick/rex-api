@@ -1,0 +1,9 @@
+type SteamPlayer {
+  _id: String!
+  nickname: String!
+  avatarUrl: String!
+  profileUrl: String!
+
+  playingGame: SteamGame
+  ownedGames: [SteamGame!]!
+}

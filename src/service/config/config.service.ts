@@ -11,6 +11,7 @@ export class ConfigService {
   readonly jwtKey = this.required("JWT_KEY");
   readonly mediaDir = this.required("MEDIA_DIR");
   readonly mongoUrl = this.required("MONGO_URL");
+  readonly steamApiKey = this.required("STEAM_API_KEY");
 
   get inDevelopment() {
     return this.environment === "development";

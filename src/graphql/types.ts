@@ -264,6 +264,7 @@ export type IQuery = {
   progress: IProgress,
   roles: Array<IRole>,
   steamGames: Array<ISteamGame>,
+  steamPlayer: ISteamPlayer,
   user: IUser,
   wikiPage: IWikiPage,
 };
@@ -292,6 +293,11 @@ export type IQueryProgressArgs = {
 export type IQuerySteamGamesArgs = {
   page: Scalars['Int'],
   search: Scalars['String']
+};
+
+
+export type IQuerySteamPlayerArgs = {
+  steamId64: Scalars['String']
 };
 
 
@@ -326,6 +332,16 @@ export type ISteamGame = {
    __typename?: 'SteamGame',
   _id: Scalars['Int'],
   name: Scalars['String'],
+};
+
+export type ISteamPlayer = {
+   __typename?: 'SteamPlayer',
+  _id: Scalars['String'],
+  nickname: Scalars['String'],
+  avatarUrl: Scalars['String'],
+  profileUrl: Scalars['String'],
+  playingGame?: Maybe<ISteamGame>,
+  ownedGames: Array<ISteamGame>,
 };
 
 

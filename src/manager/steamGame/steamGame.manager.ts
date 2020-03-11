@@ -1,10 +1,10 @@
-import * as _ from "lodash";
-import { singleton } from "tsyringe";
 import { SteamService } from "../../service/steam";
 import { DatabaseService } from "../../service/database";
 import { SteamGame } from "../../model/SteamGame";
 import { ProgressManager } from "../progress";
 import { Progress, ProgressStatus } from "../../model/Progress";
+import { singleton } from "tsyringe";
+import * as _ from "lodash";
 
 const FETCH_CHUNK_SIZE = 1000;
 
@@ -15,6 +15,12 @@ export class SteamGameManager {
     private progressManager: ProgressManager,
     private steamService: SteamService
   ) { }
+
+  getMany(ids: number[]): Promise<SteamGame[]> {
+    return this.db.steamGames.find({
+      _id: { $in: ids }
+    }).exec();
+  }
 
   async fetchAll(progress: Progress) {
     await this.progressManager.addLogs(progress, "Deleting all previous games...", ProgressStatus.InProgress);
