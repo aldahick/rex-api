@@ -1,0 +1,4 @@
+type SteamGame {
+  _id: Int!
+  name: String!
+}

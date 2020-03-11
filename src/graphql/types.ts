@@ -129,6 +129,7 @@ export type IMutation = {
   createHost: IHost,
   addPermissionsToRole: Scalars['Boolean'],
   createRole: IRole,
+  fetchSteamGames: IProgress,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
   setUserPassword: Scalars['Boolean'],
@@ -262,6 +263,7 @@ export type IQuery = {
   mediaItems: Array<IMediaItem>,
   progress: IProgress,
   roles: Array<IRole>,
+  steamGames: Array<ISteamGame>,
   user: IUser,
   wikiPage: IWikiPage,
 };
@@ -284,6 +286,12 @@ export type IQueryMediaItemsArgs = {
 
 export type IQueryProgressArgs = {
   id: Scalars['String']
+};
+
+
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'],
+  search: Scalars['String']
 };
 
 
@@ -312,6 +320,12 @@ export type IRolePermission = {
 export type IRolePermissionInput = {
   action: Scalars['String'],
   resource: Scalars['String'],
+};
+
+export type ISteamGame = {
+   __typename?: 'SteamGame',
+  _id: Scalars['Int'],
+  name: Scalars['String'],
 };
 
 
