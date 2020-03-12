@@ -1,9 +1,10 @@
 import * as url from "url";
+import { singleton } from "tsyringe";
+import axios from "axios";
 import { ConfigService } from "../config";
 import * as IPlayerService from "./dto/IPlayerService";
 import * as ISteamUser from "./dto/ISteamUser";
-import { singleton } from "tsyringe";
-import axios from "axios";
+import { SteamPlayer } from "./SteamPlayer";
 
 const BASE_URL = "https://api.steampowered.com";
 
@@ -18,13 +19,7 @@ export class SteamService {
     return data.applist.apps.map(({ appid, name }) => ({ id: appid, name }));
   }
 
-  async getPlayerSummary(steamId64: string): Promise<{
-    id: string;
-    nickname: string;
-    avatarUrl: string;
-    profileUrl: string;
-    playingGameId?: number;
-  }> {
+  async getPlayerSummary(steamId64: string): Promise<SteamPlayer> {
     const { data: { response: { players } } } = await axios.get<ISteamUser.GetPlayerSummaries>(url.resolve(BASE_URL, `/ISteamUser/GetPlayerSummaries/v2/?${new URLSearchParams({
       key: this.config.steamApiKey,
       steamids: steamId64

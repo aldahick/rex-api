@@ -265,6 +265,7 @@ export type IQuery = {
   roles: Array<IRole>,
   steamGames: Array<ISteamGame>,
   steamPlayer: ISteamPlayer,
+  steamPlayers: Array<ISteamPlayer>,
   user: IUser,
   wikiPage: IWikiPage,
 };
@@ -298,6 +299,11 @@ export type IQuerySteamGamesArgs = {
 
 export type IQuerySteamPlayerArgs = {
   steamId64: Scalars['String']
+};
+
+
+export type IQuerySteamPlayersArgs = {
+  steamIds64: Array<Scalars['String']>
 };
 
 
