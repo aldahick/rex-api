@@ -1,8 +1,7 @@
 import { DocumentType } from "@typegoose/typegoose";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { Role } from "../../model/Role";
-import { RolePermission } from "../../model/Role/RolePermission";
+import { Role, RolePermission } from "../../model/Role";
 import { DatabaseService } from "../../service/database";
 import { HttpError } from "../../util/HttpError";
 

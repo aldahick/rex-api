@@ -2,7 +2,7 @@ import { singleton } from "tsyringe";
 import { query } from "../service/registry";
 import { IQuery, IQueryProgressArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 
 @singleton()
 export class ProgressResolver {

@@ -2,7 +2,7 @@ import * as mime from "mime";
 import { singleton } from "tsyringe";
 import { Controller, ControllerPayload } from "../service/registry";
 import { HttpMethod } from "../util/HttpMethod";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 import { HttpError } from "../util/HttpError";
 import { User } from "../model/User";
 import { MediaManager } from "../manager/media";

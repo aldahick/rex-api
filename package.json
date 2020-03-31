@@ -45,7 +45,7 @@
     "reflect-metadata": "^0.1.13",
     "socket.io": "^2.3.0",
     "source-map-support": "^0.5.16",
-    "tsyringe": "^4.0.1"
+    "tsyringe": "^4.1.0"
   },
   "devDependencies": {
     "@aldahick/eslint-rules": "^0.5.1",

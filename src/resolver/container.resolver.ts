@@ -14,7 +14,7 @@ import {
   IMutationUpdateContainerVariablesArgs,
   IMutationUpdateContainerVolumesArgs
 } from "../graphql/types";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Container } from "../model/Container";

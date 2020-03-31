@@ -1,9 +1,9 @@
-import { ApolloContext } from "../../manager/apolloContext";
+import { AuthContext } from "../../manager/auth";
 
 export interface WebsocketPayload<T> {
   socket: SocketIO.Socket;
   data: T;
-  context: ApolloContext;
+  context: AuthContext;
 }
 
 export const websocketEvent = (name: string) => (target: any, key: string) => {

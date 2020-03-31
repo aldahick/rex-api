@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { HttpMethod } from "../../util/HttpMethod";
-import { ApolloContext } from "../../manager/apolloContext";
+import { AuthContext } from "../../manager/auth";
 
 export interface ControllerPayload {
-  context: ApolloContext;
+  context: AuthContext;
   req: Request;
   res: Response;
 }

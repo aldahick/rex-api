@@ -1,14 +1,13 @@
 import { singleton } from "tsyringe";
+import * as bcrypt from "bcrypt";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
 import { HttpError } from "../../util/HttpError";
-import { AuthManager } from "../auth";
 
 @singleton()
 export class UserManager {
   constructor(
-    private authManager: AuthManager,
     private db: DatabaseService
   ) { }
 
@@ -32,7 +31,7 @@ export class UserManager {
   }
 
   async setPassword(user: User, password: string): Promise<void> {
-    const hash = await this.authManager.hashPassword(password);
+    const hash = await this.hashPassword(password);
     await this.db.users.updateOne({
       _id: user._id
     }, {
@@ -40,5 +39,13 @@ export class UserManager {
         "auth.passwordHash": hash
       }
     });
+  }
+
+  hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 8);
+  }
+
+  checkPassword(raw: string, hash: string): Promise<boolean> {
+    return bcrypt.compare(raw, hash);
   }
 }

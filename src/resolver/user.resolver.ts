@@ -1,18 +1,16 @@
 import { singleton } from "tsyringe";
 import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs } from "../graphql/types";
-import { guard } from "../manager/auth/guard";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
 import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
 import { resolver, query, mutation } from "../service/registry";
 import { HttpError } from "../util/HttpError";
-import { AuthManager } from "../manager/auth";
+import { guard } from "../manager/auth";
 
 @singleton()
 export class UserResolver {
   constructor(
-    private authManager: AuthManager,
     private db: DatabaseService,
     private roleManager: RoleManager,
     private userManager: UserManager
@@ -74,7 +72,7 @@ export class UserResolver {
       email,
       username,
       auth: {
-        passwordHash: password ? await this.authManager.hashPassword(password) : undefined
+        passwordHash: password ? await this.userManager.hashPassword(password) : undefined
       },
       roleIds: []
     }));

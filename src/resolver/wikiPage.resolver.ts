@@ -1,7 +1,7 @@
 import { singleton } from "tsyringe";
 import { mutation } from "../service/registry";
 import { IMutationFetchWikiPagesUntilArgs, IMutation } from "../graphql/types";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 import { WikiPageManager } from "../manager/wikiPage";
 import { ProgressManager } from "../manager/progress";
 

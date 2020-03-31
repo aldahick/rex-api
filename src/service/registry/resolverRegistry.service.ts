@@ -5,7 +5,7 @@ import * as fs from "fs-extra";
 import { GraphQLScalarType } from "graphql";
 import * as recursiveReaddir from "recursive-readdir";
 import { singleton } from "tsyringe";
-import { ApolloContextManager } from "../../manager/apolloContext";
+import { AuthManager } from "../../manager/auth";
 import { findDecoratedMethods } from "../../util/findDecoratedMethods";
 
 @singleton()
@@ -13,7 +13,7 @@ export class ResolverRegistryService {
   private apollo?: ApolloServer;
 
   constructor(
-    private apolloContextManager: ApolloContextManager
+    private authManager: AuthManager,
   ) { }
 
   async init(app: express.Application, resolverTargets: any[]) {
@@ -22,7 +22,7 @@ export class ResolverRegistryService {
     this.apollo = new ApolloServer({
       typeDefs: (await Promise.all((await recursiveReaddir(schemaDir)).map(filename => fs.readFile(filename)))).join("\n"),
       resolvers,
-      context: ctx => this.apolloContextManager.build(ctx.req)
+      context: ctx => this.authManager.buildContext(ctx.req)
     });
     this.apollo.applyMiddleware({ app });
   }

@@ -5,13 +5,15 @@ import { DatabaseService } from "../service/database";
 import { GoogleAuthService } from "../service/google";
 import { mutation } from "../service/registry";
 import { HttpError } from "../util/HttpError";
+import { UserManager } from "../manager/user";
 
 @singleton()
 export class AuthResolver {
   constructor(
     private authManager: AuthManager,
     private db: DatabaseService,
-    private googleAuthService: GoogleAuthService
+    private googleAuthService: GoogleAuthService,
+    private userManager: UserManager,
   ) { }
 
   @mutation()
@@ -43,7 +45,7 @@ export class AuthResolver {
     if (!user || !user.auth.passwordHash) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
-    if (!await this.authManager.checkPassword(password, user.auth.passwordHash)) {
+    if (!await this.userManager.checkPassword(password, user.auth.passwordHash)) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
     return {

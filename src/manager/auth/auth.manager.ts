@@ -1,5 +1,5 @@
 import { AccessControl } from "accesscontrol";
-import * as bcrypt from "bcrypt";
+import * as express from "express";
 import * as jwt from "jsonwebtoken";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
@@ -8,6 +8,7 @@ import { ConfigService } from "../../service/config";
 import { RoleManager } from "../role";
 import { AuthCheck } from "./AuthCheck";
 import { AuthTokenPayload } from "./AuthTokenPayload";
+import { AuthContext } from "./AuthContext";
 
 @singleton()
 export class AuthManager {
@@ -49,11 +50,7 @@ export class AuthManager {
     return true;
   }
 
-  hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 8);
-  }
-
-  checkPassword(raw: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(raw, hash);
+  buildContext(req: express.Request): AuthContext {
+    return new AuthContext(req);
   }
 }

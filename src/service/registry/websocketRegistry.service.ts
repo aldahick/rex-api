@@ -3,7 +3,7 @@ import * as socketIO from "socket.io";
 import { singleton } from "tsyringe";
 import { findDecoratedMethods } from "../../util/findDecoratedMethods";
 import { LoggerService } from "../logger";
-import { ApolloContext } from "../../manager/apolloContext";
+import { AuthManager } from "../../manager/auth";
 import { WebsocketPayload } from "./websocketDecorators";
 
 @singleton()
@@ -15,6 +15,7 @@ export class WebsocketRegistryService {
   } = {};
 
   constructor(
+    private authManager: AuthManager,
     private logger: LoggerService
   ) { }
 
@@ -35,7 +36,7 @@ export class WebsocketRegistryService {
   }
 
   private onConnection = (socket: SocketIO.Socket) => {
-    const context = new ApolloContext(socket.request);
+    const context = this.authManager.buildContext(socket.request);
     for (const eventName of Object.keys(this.eventHandlers)) {
       socket.on(eventName, data => {
         for (const eventHandler of this.eventHandlers[eventName]) {

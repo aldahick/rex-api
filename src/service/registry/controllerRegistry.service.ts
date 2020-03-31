@@ -2,13 +2,13 @@ import * as express from "express";
 import { singleton } from "tsyringe";
 import { HttpError } from "../../util/HttpError";
 import { LoggerService } from "../logger";
-import { ApolloContextManager } from "../../manager/apolloContext";
+import { AuthManager } from "../../manager/auth";
 import { Controller } from "./Controller";
 
 @singleton()
 export class ControllerRegistryService {
   constructor(
-    private apolloContextManager: ApolloContextManager,
+    private authManager: AuthManager,
     private logger: LoggerService
   ) { }
 
@@ -33,7 +33,7 @@ export class ControllerRegistryService {
         const result = await controller.handle({
           req,
           res,
-          context: this.apolloContextManager.build(req)
+          context: this.authManager.buildContext(req)
         });
         if (result !== undefined) {
           res.contentType("json").send(JSON.stringify(result));

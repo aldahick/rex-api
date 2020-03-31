@@ -68,6 +68,7 @@ export class WebServer {
   }
 
   private async requireAll<T = any>(dir: string): Promise<T[]> {
+    console.log(dir);
     const files = await recursiveReaddir(path.resolve(__dirname, dir));
     return _.flatten(files
       .filter(f => f.endsWith(".js"))

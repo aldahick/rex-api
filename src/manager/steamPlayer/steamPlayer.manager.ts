@@ -1,10 +1,9 @@
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { SteamService } from "../../service/steam";
+import { SteamPlayer, SteamService } from "../../service/steam";
 import { DatabaseService } from "../../service/database";
 import { HttpError } from "../../util/HttpError";
 import { SteamGameManager } from "../steamGame";
-import { SteamPlayer } from "../../service/steam/SteamPlayer";
 import { SteamGame } from "../../model/SteamGame";
 
 @singleton()

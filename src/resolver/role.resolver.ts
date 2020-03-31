@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
 import { IQuery, IMutationCreateRoleArgs, IMutation, IMutationAddPermissionsToRoleArgs } from "../graphql/types";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 import { Role } from "../model/Role";
 import { DatabaseService } from "../service/database";
 import { query, mutation } from "../service/registry";

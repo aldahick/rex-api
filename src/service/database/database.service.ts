@@ -2,15 +2,15 @@ import { ReturnModelType, getModelForClass } from "@typegoose/typegoose";
 import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
 import { Connection, createConnection } from "mongoose";
 import { singleton } from "tsyringe";
+import { ConfigService } from "../config";
 import { Container } from "../../model/Container";
 import { Host } from "../../model/Host";
 import { Progress } from "../../model/Progress";
 import { Role } from "../../model/Role";
+import { RummikubGame } from "../../model/RummikubGame";
+import { SteamGame } from "../../model/SteamGame";
 import { User } from "../../model/User";
 import { WikiPage } from "../../model/WikiPage";
-import { ConfigService } from "../config";
-import { SteamGame } from "../../model/SteamGame";
-import { RummikubGame } from "../../model/RummikubGame";
 
 @singleton()
 export class DatabaseService {

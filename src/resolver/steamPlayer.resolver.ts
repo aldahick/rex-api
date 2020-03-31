@@ -3,7 +3,7 @@ import { singleton } from "tsyringe";
 import { query } from "../service/registry";
 import { IQuerySteamPlayerArgs, IQuery, IQuerySteamPlayersArgs } from "../graphql/types";
 import { SteamPlayerManager } from "../manager/steamPlayer";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 import { SteamPlayer } from "../service/steam/SteamPlayer";
 import { SteamGame } from "../model/SteamGame";
 

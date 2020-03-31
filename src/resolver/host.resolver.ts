@@ -1,6 +1,6 @@
 import { singleton } from "tsyringe";
 import { IQueryHostArgs, IQuery, IMutationCreateHostArgs, IMutation } from "../graphql/types";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Host } from "../model/Host";

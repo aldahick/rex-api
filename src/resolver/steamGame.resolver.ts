@@ -3,7 +3,7 @@ import { mutation, query } from "../service/registry";
 import { SteamGameManager } from "../manager/steamGame";
 import { IMutation, IQuery, IQuerySteamGamesArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
-import { guard } from "../manager/auth/guard";
+import { guard } from "../manager/auth";
 
 const SEARCH_PAGE_SIZE = 100;
 
