@@ -48,7 +48,7 @@
     "tsyringe": "^4.0.1"
   },
   "devDependencies": {
-    "@aldahick/eslint-rules": "^0.5.0",
+    "@aldahick/eslint-rules": "^0.5.1",
     "@graphql-codegen/cli": "^1.12.1",
     "@graphql-codegen/typescript": "^1.12.1",
     "@graphql-codegen/typescript-operations": "^1.12.1",
