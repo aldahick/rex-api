@@ -1,0 +1,6 @@
+type RummikubChatMessage {
+  _id: String!
+  author: RummikubPlayer
+  color: String
+  text: String!
+}

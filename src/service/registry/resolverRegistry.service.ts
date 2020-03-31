@@ -22,7 +22,7 @@ export class ResolverRegistryService {
     this.apollo = new ApolloServer({
       typeDefs: (await Promise.all((await recursiveReaddir(schemaDir)).map(filename => fs.readFile(filename)))).join("\n"),
       resolvers,
-      context: ctx => this.apolloContextManager.build(ctx)
+      context: ctx => this.apolloContextManager.build(ctx.req)
     });
     this.apollo.applyMiddleware({ app });
   }

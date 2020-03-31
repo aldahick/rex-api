@@ -1,0 +1,4 @@
+type RummikubCard {
+  color: String!
+  number: Int!
+}

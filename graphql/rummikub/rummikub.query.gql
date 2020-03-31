@@ -1,0 +1,4 @@
+extend type Query {
+  # only shows public Lobby games
+  rummikubGames: [RummikubGame!]!
+}

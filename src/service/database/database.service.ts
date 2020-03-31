@@ -10,6 +10,7 @@ import { User } from "../../model/User";
 import { WikiPage } from "../../model/WikiPage";
 import { ConfigService } from "../config";
 import { SteamGame } from "../../model/SteamGame";
+import { RummikubGame } from "../../model/RummikubGame";
 
 @singleton()
 export class DatabaseService {
@@ -17,6 +18,7 @@ export class DatabaseService {
   hosts!: ReturnModelType<typeof Host>;
   progress!: ReturnModelType<typeof Progress>;
   roles!: ReturnModelType<typeof Role>;
+  rummikubGames!: ReturnModelType<typeof RummikubGame>;
   steamGames!: ReturnModelType<typeof SteamGame>;
   users!: ReturnModelType<typeof User>;
   wikiPages!: ReturnModelType<typeof WikiPage>;
@@ -42,6 +44,7 @@ export class DatabaseService {
     this.progress = this.getModel(Progress, "progress");
     this.steamGames = this.getModel(SteamGame, "steamGames");
     this.roles = this.getModel(Role, "roles");
+    this.rummikubGames = this.getModel(RummikubGame, "rummikubGames");
     this.users = this.getModel(User, "users");
     this.wikiPages = this.getModel(WikiPage, "wikiPages");
   }

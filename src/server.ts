@@ -30,14 +30,19 @@ export class WebServer {
 
     const controllers = await this.loadInjectables<Controller>("controller");
     this.registryService.controllers.init(this.express, controllers);
+
+    this.httpServer = http.createServer(this.express);
+
+    const websocketHandlers = await this.loadInjectables("websocket");
+    await this.registryService.websockets.init(this.httpServer, websocketHandlers);
   }
 
   async start() {
     await new Promise(resolve => {
-      if (!this.express) {
+      if (!this.httpServer) {
         return resolve();
       }
-      this.httpServer = this.express.listen(this.config.httpPort, resolve);
+      this.httpServer.listen(this.config.httpPort, resolve);
     });
     this.logger.info("server.start", { port: this.config.httpPort });
   }

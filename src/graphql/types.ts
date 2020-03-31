@@ -129,6 +129,8 @@ export type IMutation = {
   createHost: IHost,
   addPermissionsToRole: Scalars['Boolean'],
   createRole: IRole,
+  createRummikubGame: IRummikubGame,
+  joinRummikubGame: Scalars['Boolean'],
   fetchSteamGames: IProgress,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
@@ -207,6 +209,17 @@ export type IMutationCreateRoleArgs = {
 };
 
 
+export type IMutationCreateRummikubGameArgs = {
+  name: Scalars['String']
+};
+
+
+export type IMutationJoinRummikubGameArgs = {
+  id: Scalars['String'],
+  playerName?: Maybe<Scalars['String']>
+};
+
+
 export type IMutationAddRoleToUserArgs = {
   userId: Scalars['String'],
   roleId: Scalars['String']
@@ -263,6 +276,7 @@ export type IQuery = {
   mediaItems: Array<IMediaItem>,
   progress: IProgress,
   roles: Array<IRole>,
+  rummikubGames: Array<IRummikubGame>,
   steamGames: Array<ISteamGame>,
   steamPlayer: ISteamPlayer,
   steamPlayers: Array<ISteamPlayer>,
@@ -332,6 +346,51 @@ export type IRolePermission = {
 export type IRolePermissionInput = {
   action: Scalars['String'],
   resource: Scalars['String'],
+};
+
+export type IRummikubCard = {
+   __typename?: 'RummikubCard',
+  color: Scalars['String'],
+  number: Scalars['Int'],
+};
+
+export type IRummikubChatMessage = {
+   __typename?: 'RummikubChatMessage',
+  _id: Scalars['String'],
+  author?: Maybe<IRummikubPlayer>,
+  color?: Maybe<Scalars['String']>,
+  text: Scalars['String'],
+};
+
+export type IRummikubGame = {
+   __typename?: 'RummikubGame',
+  _id: Scalars['String'],
+  name: Scalars['String'],
+  status: IRummikubGameStatus,
+  privacy: IRummikubGamePrivacy,
+  players: Array<IRummikubPlayer>,
+  winner?: Maybe<IRummikubPlayer>,
+  currentPlayer?: Maybe<IRummikubPlayer>,
+};
+
+export enum IRummikubGamePrivacy {
+  Public = 'public',
+  Private = 'private'
+}
+
+export enum IRummikubGameStatus {
+  Lobby = 'lobby',
+  InProgress = 'inProgress',
+  Complete = 'complete',
+  Aborted = 'aborted'
+}
+
+export type IRummikubPlayer = {
+   __typename?: 'RummikubPlayer',
+  _id: Scalars['String'],
+  name: Scalars['String'],
+  turnOrder?: Maybe<Scalars['Int']>,
+  hand: Array<IRummikubCard>,
 };
 
 export type ISteamGame = {

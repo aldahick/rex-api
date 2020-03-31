@@ -21,7 +21,9 @@ export class ApolloContext {
   ) {
     let token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      token = req.query.token;
+      // websocket requests don't have .query, only ._query
+      // wish I knew why
+      token = (req.query || (req as any as { _query: Request["query"] })._query || {}).token;
     }
     this.payload = this.authManager.getPayload(token || "");
   }

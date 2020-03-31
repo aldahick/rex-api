@@ -43,6 +43,7 @@
     "randomstring": "^1.1.5",
     "recursive-readdir": "^2.2.2",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^2.3.0",
     "source-map-support": "^0.5.16",
     "tsyringe": "^4.0.1"
   },
@@ -64,6 +65,7 @@
     "@types/node": "^13.5.2",
     "@types/randomstring": "^1.1.6",
     "@types/recursive-readdir": "^2.2.0",
+    "@types/socket.io": "^2.1.4",
     "tsc-watch": "^4.1.0",
     "typescript": "^3.8.3"
   }

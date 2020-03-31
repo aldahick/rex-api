@@ -33,7 +33,7 @@ export class ControllerRegistryService {
         const result = await controller.handle({
           req,
           res,
-          context: this.apolloContextManager.build({ req, res })
+          context: this.apolloContextManager.build(req)
         });
         if (result !== undefined) {
           res.contentType("json").send(JSON.stringify(result));

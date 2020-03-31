@@ -1,0 +1,10 @@
+type RummikubGame {
+  _id: String!
+  name: String!
+  status: RummikubGameStatus!
+  privacy: RummikubGamePrivacy!
+  players: [RummikubPlayer!]!
+  winner: RummikubPlayer
+  # whose turn is it
+  currentPlayer: RummikubPlayer
+}
