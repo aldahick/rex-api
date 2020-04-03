@@ -1,10 +1,11 @@
 import { singleton } from "tsyringe";
-import { mutation, query } from "../service/registry";
-import { IMutationJoinRummikubGameArgs, IMutation, IMutationCreateRummikubGameArgs, IQuery } from "../graphql/types";
-import { RummikubManager } from "../manager/rummikub/rummikub.manager";
-import { guard } from "../manager/auth/guard";
+import { mutation, query, resolver } from "../service/registry";
+import { IMutationJoinRummikubGameArgs, IMutation, IMutationCreateRummikubGameArgs, IQuery, IRummikubPlayer } from "../graphql/types";
+import { RummikubManager } from "../manager/rummikub";
+import { guard } from "../manager/auth";
 import { AuthContext } from "../manager/auth";
 import { HttpError } from "../util/HttpError";
+import { RummikubPlayer } from "../model/RummikubGame";
 
 @singleton()
 export class RummikubResolver {
@@ -20,18 +21,23 @@ export class RummikubResolver {
   }
 
   @mutation()
-  async joinRummikubGame(root: void, { id, playerName }: IMutationJoinRummikubGameArgs, context: AuthContext): Promise<IMutation["joinRummikubGame"]> {
+  async joinRummikubGame(root: void, { id }: IMutationJoinRummikubGameArgs, context: AuthContext): Promise<IMutation["joinRummikubGame"]> {
     const user = await context.user();
     const game = await this.rummikubManager.games.get(id);
-    if (!user && !playerName) {
+    if (!user) {
       throw HttpError.badRequest("Missing player name");
     }
-    await this.rummikubManager.games.join(game, user ?? { playerName: playerName! });
+    await this.rummikubManager.games.join(game, user!);
     return true;
   }
 
   @query()
   async rummikubGames(): Promise<IQuery["rummikubGames"]> {
     return this.rummikubManager.games.getJoinable();
+  }
+
+  @resolver("RummikubPlayer.user")
+  async playerUser(root: RummikubPlayer): Promise<IRummikubPlayer["user"]> {
+    return this.rummikubManager.players.getUser(root);
   }
 }

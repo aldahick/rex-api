@@ -215,8 +215,7 @@ export type IMutationCreateRummikubGameArgs = {
 
 
 export type IMutationJoinRummikubGameArgs = {
-  id: Scalars['String'],
-  playerName?: Maybe<Scalars['String']>
+  id: Scalars['String']
 };
 
 
@@ -389,6 +388,7 @@ export type IRummikubPlayer = {
    __typename?: 'RummikubPlayer',
   _id: Scalars['String'],
   name: Scalars['String'],
+  user?: Maybe<IUser>,
   turnOrder?: Maybe<Scalars['Int']>,
   hand: Array<IRummikubCard>,
 };

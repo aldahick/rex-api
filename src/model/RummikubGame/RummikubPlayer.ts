@@ -1,4 +1,5 @@
 import { prop, arrayProp } from "@typegoose/typegoose";
+import * as randomstring from "randomstring";
 import { idProp } from "../../util/mongo";
 import { RummikubCard } from "./RummikubCard";
 
@@ -9,8 +10,8 @@ export class RummikubPlayer {
   @prop({ required: true })
   name!: string;
 
-  @prop()
-  userId?: string;
+  @prop({ required: true })
+  userId!: string;
 
   @prop()
   turnOrder?: number;
@@ -18,7 +19,10 @@ export class RummikubPlayer {
   @arrayProp({ required: true, items: RummikubCard, _id: false })
   hand!: RummikubCard[];
 
-  constructor(init?: Omit<RummikubPlayer, "_id" | "toGqlObject">) {
-    Object.assign(this, init);
+  constructor(init?: Omit<RummikubPlayer, "toGqlObject" | "_id"> & { _id?: string }) {
+    Object.assign(this, {
+      _id: randomstring.generate(),
+      ...init
+    });
   }
 }

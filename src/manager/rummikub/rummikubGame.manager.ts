@@ -1,4 +1,3 @@
-import * as randomstring from "randomstring";
 import { singleton } from "tsyringe";
 import { RummikubGame, RummikubPlayer } from "../../model/RummikubGame";
 import { DatabaseService } from "../../service/database";
@@ -44,31 +43,18 @@ export class RummikubGameManager {
     }));
   }
 
-  async join(game: RummikubGame, userOrPlayer: { playerName: string } | User): Promise<void> {
+  async join(game: RummikubGame, user: User): Promise<RummikubPlayer> {
     if (game.status !== IRummikubGameStatus.Lobby) {
       throw HttpError.conflict("You can only join a game while it hasn't yet started");
     }
-    let player: RummikubPlayer;
-    if ("playerName" in userOrPlayer) {
-      const existingPlayer = game.players.find(p => p.name.toLowerCase() === userOrPlayer.playerName);
-      if (existingPlayer) {
-        throw HttpError.conflict("Someone already has that name");
-      }
-      player = new RummikubPlayer({
-        name: userOrPlayer.playerName,
-        hand: []
-      });
-    } else {
-      if (game.players.find(p => p.userId === userOrPlayer._id)) {
-        throw HttpError.conflict("You're already in this game on another session");
-      }
-      player = new RummikubPlayer({
-        name: userOrPlayer.username || userOrPlayer.email,
-        userId: userOrPlayer._id,
-        hand: []
-      });
+    if (game.players.find(p => p.userId === user._id)) {
+      throw HttpError.conflict("You're already in this game on another session");
     }
-    player._id = randomstring.generate();
+    const player = new RummikubPlayer({
+      name: user.username || user.email,
+      userId: user._id,
+      hand: []
+    });
     await this.db.rummikubGames.updateOne({
       _id: game._id
     }, {
@@ -76,5 +62,6 @@ export class RummikubGameManager {
         players: player
       }
     });
+    return player;
   }
 }

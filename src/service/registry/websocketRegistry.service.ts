@@ -30,8 +30,6 @@ export class WebsocketRegistryService {
       this.eventHandlers[name].push(target[key].bind(target));
     });
 
-    console.log(this.eventHandlers);
-
     this.io.on("connection", this.onConnection);
   }
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import "reflect-metadata";
 import "source-map-support/register";
 import { container } from "tsyringe";

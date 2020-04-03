@@ -25,6 +25,7 @@ export class LoggerService {
         v instanceof Error ? `${k}="${v.stack}"` : `${k}=${util.inspect(v)}`
       ).join(" ");
     }
+    // eslint-disable-next-line no-console
     console.log(`${now.format(dateFormat)} [${level}] [${name}]${extra === undefined ? "" : (` ${extra}`)}`);
   }
 }

@@ -1,4 +1,4 @@
 extend type Mutation {
   createRummikubGame(name: String!): RummikubGame!
-  joinRummikubGame(id: String!, playerName: String): Boolean!
+  joinRummikubGame(id: String!): Boolean!
 }
