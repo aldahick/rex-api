@@ -3,6 +3,7 @@ import { idProp } from "../../util/mongo";
 import { IRummikubGameStatus, IRummikubGamePrivacy } from "../../graphql/types";
 import { RummikubPlayer } from "./RummikubPlayer";
 import { RummikubChatMessage } from "./RummikubChatMessage";
+import { RummikubCard } from "./RummikubCard";
 
 export class RummikubGame {
   @idProp()
@@ -16,6 +17,9 @@ export class RummikubGame {
 
   @prop({ required: true, enum: IRummikubGamePrivacy })
   privacy!: IRummikubGamePrivacy;
+
+  @arrayProp({ required: true, items: RummikubCard, _id: false, dimensions: 2 })
+  board!: RummikubCard[][];
 
   @arrayProp({ required: true, items: RummikubPlayer })
   players!: RummikubPlayer[];

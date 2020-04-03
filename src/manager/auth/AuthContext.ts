@@ -47,10 +47,13 @@ export class AuthContext {
     return this._user;
   }
 
-  async isAuthorized(check: AuthCheck): Promise<boolean> {
+  async isAuthorized(check?: AuthCheck): Promise<boolean> {
     const user = await this.user();
     if (!user) {
       return false;
+    }
+    if (!check) {
+      return true;
     }
     if (!this._roles) {
       this._roles = await this.userManager.getRoles(user);

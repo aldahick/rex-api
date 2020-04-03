@@ -1,5 +1,6 @@
 type RummikubGame {
   _id: String!
+  board: [[RummikubCard!]!]!
   name: String!
   status: RummikubGameStatus!
   privacy: RummikubGamePrivacy!

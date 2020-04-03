@@ -1,0 +1,4 @@
+# client -> server
+type RummikubChatPayload {
+  text: String!
+}

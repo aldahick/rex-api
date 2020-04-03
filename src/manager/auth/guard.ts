@@ -3,7 +3,7 @@ import { ControllerPayload } from "../../service/registry";
 import { AuthContext } from "./AuthContext";
 import { AuthCheck } from "./AuthCheck";
 
-export const guard = (check: AuthCheck): MethodDecorator => (target: any, key, descriptor: TypedPropertyDescriptor<any>) => {
+export const guard = (check?: AuthCheck): MethodDecorator => (target: any, key, descriptor: TypedPropertyDescriptor<any>) => {
   const old: Function = target[key];
   descriptor.value = async function(...args: [any, any, AuthContext] | [ControllerPayload]) {
     let context: AuthContext;

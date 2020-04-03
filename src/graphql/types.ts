@@ -129,13 +129,13 @@ export type IMutation = {
   createHost: IHost,
   addPermissionsToRole: Scalars['Boolean'],
   createRole: IRole,
-  createRummikubGame: IRummikubGame,
-  joinRummikubGame: Scalars['Boolean'],
   fetchSteamGames: IProgress,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
   setUserPassword: Scalars['Boolean'],
   fetchWikiPagesUntil: IProgress,
+  createRummikubGame: IRummikubGame,
+  joinRummikubGame: Scalars['Boolean'],
 };
 
 
@@ -209,16 +209,6 @@ export type IMutationCreateRoleArgs = {
 };
 
 
-export type IMutationCreateRummikubGameArgs = {
-  name: Scalars['String']
-};
-
-
-export type IMutationJoinRummikubGameArgs = {
-  id: Scalars['String']
-};
-
-
 export type IMutationAddRoleToUserArgs = {
   userId: Scalars['String'],
   roleId: Scalars['String']
@@ -241,6 +231,16 @@ export type IMutationSetUserPasswordArgs = {
 export type IMutationFetchWikiPagesUntilArgs = {
   firstPageName: Scalars['String'],
   untilPageName: Scalars['String']
+};
+
+
+export type IMutationCreateRummikubGameArgs = {
+  name: Scalars['String']
+};
+
+
+export type IMutationJoinRummikubGameArgs = {
+  id: Scalars['String']
 };
 
 export type IProgress = {
@@ -275,12 +275,12 @@ export type IQuery = {
   mediaItems: Array<IMediaItem>,
   progress: IProgress,
   roles: Array<IRole>,
-  rummikubGames: Array<IRummikubGame>,
   steamGames: Array<ISteamGame>,
   steamPlayer: ISteamPlayer,
   steamPlayers: Array<ISteamPlayer>,
   user: IUser,
   wikiPage: IWikiPage,
+  rummikubGames: Array<IRummikubGame>,
 };
 
 
@@ -361,6 +361,11 @@ export type IRummikubChatMessage = {
   text: Scalars['String'],
 };
 
+export type IRummikubChatPayload = {
+   __typename?: 'RummikubChatPayload',
+  text: Scalars['String'],
+};
+
 export type IRummikubGame = {
    __typename?: 'RummikubGame',
   _id: Scalars['String'],
@@ -384,6 +389,11 @@ export enum IRummikubGameStatus {
   Aborted = 'aborted'
 }
 
+export type IRummikubJoinPayload = {
+   __typename?: 'RummikubJoinPayload',
+  gameId: Scalars['String'],
+};
+
 export type IRummikubPlayer = {
    __typename?: 'RummikubPlayer',
   _id: Scalars['String'],
@@ -391,6 +401,12 @@ export type IRummikubPlayer = {
   user?: Maybe<IUser>,
   turnOrder?: Maybe<Scalars['Int']>,
   hand: Array<IRummikubCard>,
+};
+
+export type IRummikubUpdatePayload = {
+   __typename?: 'RummikubUpdatePayload',
+  board: Array<Array<IRummikubCard>>,
+  players: Array<IRummikubPlayer>,
 };
 
 export type ISteamGame = {

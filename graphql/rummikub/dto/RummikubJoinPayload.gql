@@ -1,0 +1,5 @@
+# websocket event: "rummikub.join"
+# client -> server
+type RummikubJoinPayload {
+  gameId: String!
+}
