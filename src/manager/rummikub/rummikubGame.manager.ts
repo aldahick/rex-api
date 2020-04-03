@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { singleton } from "tsyringe";
 import { RummikubGame, RummikubPlayer } from "../../model/RummikubGame";
 import { DatabaseService } from "../../service/database";
