@@ -1,5 +1,6 @@
 import * as path from "path";
 import { Readable } from "stream";
+import axios from "axios";
 import * as fs from "fs-extra";
 import { singleton } from "tsyringe";
 import { IMediaItem, IMediaItemType } from "../../graphql/types";
@@ -7,13 +8,48 @@ import { User } from "../../model/User";
 import { ConfigService } from "../../service/config";
 import { HttpError } from "../../util/HttpError";
 import { LoggerService } from "../../service/logger";
+import { Progress, ProgressStatus } from "../../model/Progress";
+import { ProgressManager } from "../progress";
 
 @singleton()
 export class MediaManager {
   constructor(
     private config: ConfigService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private progressManager: ProgressManager
   ) { }
+
+  async download({ user, url, destinationKey, progress }: {
+    user: User;
+    url: string;
+    destinationKey: string;
+    progress: Progress;
+  }): Promise<void> {
+    const filename = this.toFilename(user, destinationKey);
+    await fs.mkdirp(path.dirname(filename));
+    const { data: stream, headers } = await axios.get<Readable>(url, { responseType: "stream" });
+    const totalSize = Number(headers["content-length"]);
+    let fetchedSize = 0;
+    const loggedPercents = [0];
+    const onLogError = (err: Error) => {
+      this.logger.error("downloadMedia.logComplete", err, { destinationKey, progressId: progress._id, url, userId: user._id });
+    };
+    stream.pause();
+    stream.on("data", (chunk: Buffer) => {
+      const percentComplete = Math.floor((fetchedSize / totalSize) * 100);
+      fetchedSize += chunk.byteLength;
+      if (percentComplete % 10 === 0 && !loggedPercents.includes(percentComplete)) {
+        this.progressManager.addLogs(progress, `${percentComplete}% complete`).catch(onLogError);
+        loggedPercents.push(percentComplete);
+      }
+    });
+    stream.pipe(fs.createWriteStream(filename));
+    stream.on("end", () => {
+      this.progressManager.addLogs(progress, `Finished downloading ${url} to ${destinationKey}`, ProgressStatus.Complete).catch(onLogError);
+    });
+    await this.progressManager.addLogs(progress, "Started download", ProgressStatus.InProgress);
+    stream.resume();
+  }
 
   async list(user: User, dir: string): Promise<IMediaItem[]> {
     const baseDir = this.toFilename(user, dir);

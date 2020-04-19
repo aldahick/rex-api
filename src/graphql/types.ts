@@ -118,6 +118,9 @@ export type IMutation = {
   hello: Scalars['String'],
   createAuthTokenGoogle: IAuthToken,
   createAuthTokenLocal: IAuthToken,
+  addMediaDownload: IProgress,
+  addPermissionsToRole: Scalars['Boolean'],
+  createRole: IRole,
   createContainer: IContainer,
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
@@ -126,13 +129,11 @@ export type IMutation = {
   startContainer: Scalars['Boolean'],
   stopContainer: Scalars['Boolean'],
   redeployContainer: Scalars['Boolean'],
-  createHost: IHost,
-  addPermissionsToRole: Scalars['Boolean'],
-  createRole: IRole,
-  fetchSteamGames: IProgress,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
   setUserPassword: Scalars['Boolean'],
+  fetchSteamGames: IProgress,
+  createHost: IHost,
   fetchWikiPagesUntil: IProgress,
   createRummikubGame: IRummikubGame,
   joinRummikubGame: Scalars['Boolean'],
@@ -147,6 +148,23 @@ export type IMutationCreateAuthTokenGoogleArgs = {
 export type IMutationCreateAuthTokenLocalArgs = {
   username: Scalars['String'],
   password: Scalars['String']
+};
+
+
+export type IMutationAddMediaDownloadArgs = {
+  url: Scalars['String'],
+  destinationKey: Scalars['String']
+};
+
+
+export type IMutationAddPermissionsToRoleArgs = {
+  roleId: Scalars['String'],
+  permissions: Array<IRolePermissionInput>
+};
+
+
+export type IMutationCreateRoleArgs = {
+  name: Scalars['String']
 };
 
 
@@ -193,22 +211,6 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
-export type IMutationCreateHostArgs = {
-  host: ICreateHostInput
-};
-
-
-export type IMutationAddPermissionsToRoleArgs = {
-  roleId: Scalars['String'],
-  permissions: Array<IRolePermissionInput>
-};
-
-
-export type IMutationCreateRoleArgs = {
-  name: Scalars['String']
-};
-
-
 export type IMutationAddRoleToUserArgs = {
   userId: Scalars['String'],
   roleId: Scalars['String']
@@ -225,6 +227,11 @@ export type IMutationCreateUserArgs = {
 export type IMutationSetUserPasswordArgs = {
   userId: Scalars['String'],
   password: Scalars['String']
+};
+
+
+export type IMutationCreateHostArgs = {
+  host: ICreateHostInput
 };
 
 
@@ -268,29 +275,19 @@ export enum IProgressStatus {
 export type IQuery = {
    __typename?: 'Query',
   hello: Scalars['String'],
-  container: IContainer,
-  containers: Array<IContainer>,
-  host: IHost,
-  hosts: Array<IHost>,
   mediaItems: Array<IMediaItem>,
   progress: IProgress,
   roles: Array<IRole>,
-  steamGames: Array<ISteamGame>,
+  container: IContainer,
+  containers: Array<IContainer>,
   steamPlayer: ISteamPlayer,
   steamPlayers: Array<ISteamPlayer>,
   user: IUser,
+  steamGames: Array<ISteamGame>,
+  host: IHost,
+  hosts: Array<IHost>,
   wikiPage: IWikiPage,
   rummikubGames: Array<IRummikubGame>,
-};
-
-
-export type IQueryContainerArgs = {
-  id: Scalars['String']
-};
-
-
-export type IQueryHostArgs = {
-  id: Scalars['String']
 };
 
 
@@ -304,9 +301,8 @@ export type IQueryProgressArgs = {
 };
 
 
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'],
-  search: Scalars['String']
+export type IQueryContainerArgs = {
+  id: Scalars['String']
 };
 
 
@@ -322,6 +318,17 @@ export type IQuerySteamPlayersArgs = {
 
 export type IQueryUserArgs = {
   id?: Maybe<Scalars['String']>
+};
+
+
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'],
+  search: Scalars['String']
+};
+
+
+export type IQueryHostArgs = {
+  id: Scalars['String']
 };
 
 
@@ -369,6 +376,7 @@ export type IRummikubChatPayload = {
 export type IRummikubGame = {
    __typename?: 'RummikubGame',
   _id: Scalars['String'],
+  board: Array<Array<IRummikubCard>>,
   name: Scalars['String'],
   status: IRummikubGameStatus,
   privacy: IRummikubGamePrivacy,
