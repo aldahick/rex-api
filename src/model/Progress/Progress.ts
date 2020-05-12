@@ -1,11 +1,11 @@
 import { prop, arrayProp } from "@typegoose/typegoose";
-import { idProp } from "../../util/mongo";
+import { MongoService } from "@athenajs/core";
 import { IProgress, IProgressStatus } from "../../graphql/types";
 import { ProgressLog } from "./ProgressLog";
 import { ProgressStatus } from "./ProgressStatus";
 
 export class Progress {
-  @idProp()
+  @MongoService.idProp()
   _id!: string;
 
   @prop({ required: true })

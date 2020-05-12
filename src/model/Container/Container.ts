@@ -1,11 +1,11 @@
 import { prop, arrayProp } from "@typegoose/typegoose";
-import { idProp } from "../../util/mongo";
+import { MongoService } from "@athenajs/core";
 import { ContainerPort } from "./ContainerPort";
 import { ContainerVariable } from "./ContainerVariable";
 import { ContainerVolume } from "./ContainerVolume";
 
 export class Container {
-  @idProp()
+  @MongoService.idProp()
   _id!: string;
 
   @prop({ required: true })

@@ -1,12 +1,12 @@
 import { prop, arrayProp } from "@typegoose/typegoose";
-import { idProp } from "../../util/mongo";
+import { MongoService } from "@athenajs/core";
 import { IRummikubGameStatus, IRummikubGamePrivacy } from "../../graphql/types";
 import { RummikubPlayer } from "./RummikubPlayer";
 import { RummikubChatMessage } from "./RummikubChatMessage";
 import { RummikubCard } from "./RummikubCard";
 
 export class RummikubGame {
-  @idProp()
+  @MongoService.idProp()
   _id!: string;
 
   @prop({ required: true })

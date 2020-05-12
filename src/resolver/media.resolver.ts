@@ -1,9 +1,8 @@
 import { singleton } from "tsyringe";
+import { guard, query, mutation, HttpError } from "@athenajs/core";
 import { MediaManager } from "../manager/media";
-import { query, mutation } from "../service/registry";
 import { IQuery, IQueryMediaItemsArgs, IMutationAddMediaDownloadArgs, IMutation } from "../graphql/types";
-import { HttpError } from "../util/HttpError";
-import { AuthContext, guard } from "../manager/auth";
+import { AuthContext } from "../manager/auth";
 import { ProgressManager } from "../manager/progress";
 
 @singleton()
@@ -13,7 +12,10 @@ export class MediaResolver {
     private progressManager: ProgressManager
   ) { }
 
-  @guard(can => can.read("mediaItem"))
+  @guard({
+    resource: "mediaItem",
+    action: "readOwn"
+  })
   @query()
   async mediaItems(root: void, { dir }: IQueryMediaItemsArgs, context: AuthContext): Promise<IQuery["mediaItems"]> {
     const user = await context.user();
@@ -23,7 +25,10 @@ export class MediaResolver {
     return this.mediaManager.list(user, dir);
   }
 
-  @guard(can => can.create("mediaItem"))
+  @guard({
+    resource: "mediaItem",
+    action: "createOwn"
+  })
   @mutation()
   async addMediaDownload(root: void, { url, destinationKey }: IMutationAddMediaDownloadArgs, context: AuthContext): Promise<IMutation["addMediaDownload"]> {
     const user = await context.user();

@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
+import { HttpError } from "@athenajs/core";
 import { SteamPlayer, SteamService } from "../../service/steam";
 import { DatabaseService } from "../../service/database";
-import { HttpError } from "../../util/HttpError";
 import { SteamGameManager } from "../steamGame";
 import { SteamGame } from "../../model/SteamGame";
 

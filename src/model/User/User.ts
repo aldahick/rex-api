@@ -1,9 +1,9 @@
 import { prop, arrayProp } from "@typegoose/typegoose";
-import { idProp } from "../../util/mongo";
+import { MongoService } from "@athenajs/core";
 import { UserAuth } from "./UserAuth";
 
 export class User {
-  @idProp()
+  @MongoService.idProp()
   _id!: string;
 
   @prop({ required: true, _id: false })

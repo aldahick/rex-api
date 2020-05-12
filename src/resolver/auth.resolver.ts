@@ -1,10 +1,9 @@
 import { singleton } from "tsyringe";
+import { mutation, HttpError } from "@athenajs/core";
 import { IMutationCreateAuthTokenGoogleArgs, IMutation, IMutationCreateAuthTokenLocalArgs } from "../graphql/types";
 import { AuthManager } from "../manager/auth";
 import { DatabaseService } from "../service/database";
 import { GoogleAuthService } from "../service/google";
-import { mutation } from "../service/registry";
-import { HttpError } from "../util/HttpError";
 import { UserManager } from "../manager/user";
 
 @singleton()

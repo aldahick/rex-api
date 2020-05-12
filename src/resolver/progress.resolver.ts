@@ -1,8 +1,7 @@
 import { singleton } from "tsyringe";
-import { query } from "../service/registry";
+import { guard, query } from "@athenajs/core";
 import { IQuery, IQueryProgressArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
-import { guard } from "../manager/auth";
 
 @singleton()
 export class ProgressResolver {
@@ -10,7 +9,10 @@ export class ProgressResolver {
     private progressManager: ProgressManager
   ) { }
 
-  @guard(can => can.read("progress"))
+  @guard({
+    resource: "progress",
+    action: "readAny"
+  })
   @query()
   async progress(root: void, { id }: IQueryProgressArgs): Promise<IQuery["progress"]> {
     return (await this.progressManager.get(id)).toGqlObject();

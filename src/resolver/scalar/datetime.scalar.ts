@@ -1,6 +1,6 @@
 import { singleton } from "tsyringe";
 import { GraphQLScalarType, GraphQLError } from "graphql";
-import { resolver } from "../../service/registry";
+import { resolver } from "@athenajs/core";
 
 @singleton()
 export class DateTimeScalarResolver {

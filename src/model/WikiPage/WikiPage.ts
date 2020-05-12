@@ -1,8 +1,8 @@
 import { prop } from "@typegoose/typegoose";
-import { idProp } from "../../util/mongo";
+import { MongoService } from "@athenajs/core";
 
 export class WikiPage {
-  @idProp()
+  @MongoService.idProp()
   _id!: string;
 
   @prop({ required: true, unique: true })

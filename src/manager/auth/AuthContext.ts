@@ -1,32 +1,23 @@
 import { Request } from "express";
 import { container } from "tsyringe";
+import { BaseAuthContext, AuthCheck } from "@athenajs/core";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { UserManager } from "../user";
-import { AuthCheck } from "./AuthCheck";
 import { AuthTokenPayload } from "./AuthTokenPayload";
 import { AuthManager } from "./auth.manager";
 
-export class AuthContext {
+export class AuthContext implements BaseAuthContext {
   private authManager = container.resolve(AuthManager);
   private userManager = container.resolve(UserManager);
-
-  private payload?: AuthTokenPayload;
 
   private _user?: User | "notFound";
   private _roles?: Role[];
 
   constructor(
-    private req: Request
-  ) {
-    let token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      // websocket requests don't have .query, only ._query
-      // wish I knew why
-      token = (req.query || (req as any as { _query: Request["query"] })._query || {}).token;
-    }
-    this.payload = this.authManager.getPayload(token || "");
-  }
+    readonly req: Request,
+    private payload?: AuthTokenPayload
+  ) { }
 
   get userId(): string | undefined {
     return this.payload?.userId;

@@ -3,11 +3,10 @@ import { Readable } from "stream";
 import axios from "axios";
 import * as fs from "fs-extra";
 import { singleton } from "tsyringe";
+import { LoggerService, HttpError } from "@athenajs/core";
 import { IMediaItem, IMediaItemType } from "../../graphql/types";
 import { User } from "../../model/User";
 import { ConfigService } from "../../service/config";
-import { HttpError } from "../../util/HttpError";
-import { LoggerService } from "../../service/logger";
 import { Progress, ProgressStatus } from "../../model/Progress";
 import { ProgressManager } from "../progress";
 

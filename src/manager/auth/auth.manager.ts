@@ -1,18 +1,18 @@
-import { AccessControl } from "accesscontrol";
 import * as express from "express";
 import * as jwt from "jsonwebtoken";
-import * as _ from "lodash";
 import { singleton } from "tsyringe";
+import { AuthService, authProvider, AuthCheck } from "@athenajs/core";
 import { Role } from "../../model/Role";
 import { ConfigService } from "../../service/config";
 import { RoleManager } from "../role";
-import { AuthCheck } from "./AuthCheck";
 import { AuthTokenPayload } from "./AuthTokenPayload";
 import { AuthContext } from "./AuthContext";
 
+@authProvider
 @singleton()
 export class AuthManager {
   constructor(
+    private authService: AuthService,
     private config: ConfigService,
     private roleManager: RoleManager
   ) { }
@@ -34,23 +34,13 @@ export class AuthManager {
     if (permissions.length === 0) {
       return false;
     }
-    const ac = new AccessControl(permissions.map(permission => ({
-      ...permission,
-      attributes: "*",
-      role: permission.role.name
-    }))
-    );
-    const checks = _.flatten(roles.map(r => check(ac.can(r.name))));
-    const checkGroups = _.groupBy(checks, c => `${c.resource}-${c.attributes}`);
-    for (const checkGroup of Object.values(checkGroups)) {
-      if (!checkGroup.some(c => c.granted)) {
-        return false;
-      }
-    }
-    return true;
+    return this.authService.isCheckValid(permissions.map(p => ({
+      ...p,
+      roleName: p.role.name
+    })), check);
   }
 
-  buildContext(req: express.Request): AuthContext {
-    return new AuthContext(req);
+  getContext(req: express.Request, payload?: AuthTokenPayload): AuthContext {
+    return new AuthContext(req, payload);
   }
 }

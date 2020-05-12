@@ -1,14 +1,13 @@
 import "dotenv/config";
 import { singleton } from "tsyringe";
+import { BaseConfigService } from "@athenajs/core";
 
 @singleton()
-export class ConfigService {
+export class ConfigService extends BaseConfigService {
   readonly environment = this.optional("NODE_ENV") || "development";
   readonly googleAuth = {
     clientId: this.required("GOOGLE_CLIENT_ID")
   };
-  readonly httpPort = this.required("HTTP_PORT", Number);
-  readonly jwtKey = this.required("JWT_KEY");
   readonly mediaDir = this.required("MEDIA_DIR");
   readonly mongoUrl = this.required("MONGO_URL");
   readonly steamApiKey = this.required("STEAM_API_KEY");

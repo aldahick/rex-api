@@ -1,23 +1,23 @@
+import { controller, ControllerPayload, HttpError, guard } from "@athenajs/core";
 import * as mime from "mime";
 import { singleton } from "tsyringe";
-import { Controller, ControllerPayload } from "../service/registry";
-import { HttpMethod } from "../util/HttpMethod";
-import { guard } from "../manager/auth";
-import { HttpError } from "../util/HttpError";
+import { AuthContext } from "../manager/auth";
 import { User } from "../model/User";
 import { MediaManager } from "../manager/media";
 
 @singleton()
-export class MediaContentController implements Controller {
-  method = HttpMethod.Get;
-  route = "/v1/media/content";
-
+export class MediaContentController {
   constructor(
     private mediaManager: MediaManager
   ) { }
 
-  @guard(can => can.read("mediaItem"))
-  async handle(payload: ControllerPayload) {
+  @guard({
+    resource: "mediaItem",
+    action: "readOwn",
+    attributes: "content"
+  })
+  @controller("get", "/v1/media/content")
+  async handle(payload: ControllerPayload<AuthContext>) {
     const { req, res, context } = payload;
     const { key } = req.query;
     if (!key) {
@@ -40,7 +40,7 @@ export class MediaContentController implements Controller {
     stream.pipe(res);
   }
 
-  private async sendHeaders({ req, res }: ControllerPayload, user: User, key: string): Promise<{ start: number; end?: number }> {
+  private async sendHeaders({ req, res }: ControllerPayload<AuthContext>, user: User, key: string): Promise<{ start: number; end?: number }> {
     const mimeType = mime.getType(key) || "text/plain";
     let start = 0;
     let end: number | undefined;

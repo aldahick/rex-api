@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "start:dev": "tsc-watch --onSuccess \"npm start\"",
+    "start:dev": "tsc-watch --onSuccess \"npm start\" | bunyan",
     "build": "tsc",
     "lint": "eslint --ext .ts .",
     "generate": "npm run generate:graphql",
@@ -23,7 +23,8 @@
   },
   "homepage": "https://github.com/aldahick/rex-api#readme",
   "dependencies": {
-    "@typegoose/typegoose": "^6.2.2",
+    "@athenajs/core": "^0.2.3",
+    "@typegoose/typegoose": "^7.0.0",
     "accesscontrol": "^2.2.1",
     "apollo-server-express": "^2.9.16",
     "axios": "^0.19.2",
@@ -39,11 +40,10 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mime": "^2.4.4",
-    "mongoose": "^5.8.10",
+    "mongoose": "^5.9.13",
     "randomstring": "^1.1.5",
     "recursive-readdir": "^2.2.2",
     "reflect-metadata": "^0.1.13",
-    "socket.io": "^2.3.0",
     "source-map-support": "^0.5.16",
     "tsyringe": "^4.1.0"
   },
@@ -61,11 +61,10 @@
     "@types/jsonwebtoken": "^8.3.7",
     "@types/lodash": "^4.14.149",
     "@types/mime": "^2.0.1",
-    "@types/mongoose": "^5.7.0",
+    "@types/mongoose": "^5.7.18",
     "@types/node": "^13.5.2",
     "@types/randomstring": "^1.1.6",
     "@types/recursive-readdir": "^2.2.0",
-    "@types/socket.io": "^2.1.4",
     "tsc-watch": "^4.1.0",
     "typescript": "^3.8.3"
   }

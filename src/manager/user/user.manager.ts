@@ -1,9 +1,9 @@
 import { singleton } from "tsyringe";
 import * as bcrypt from "bcrypt";
+import { HttpError } from "@athenajs/core";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
-import { HttpError } from "../../util/HttpError";
 
 @singleton()
 export class UserManager {

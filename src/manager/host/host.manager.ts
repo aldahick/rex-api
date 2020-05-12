@@ -1,7 +1,7 @@
 import { singleton } from "tsyringe";
+import { HttpError } from "@athenajs/core";
 import { Host } from "../../model/Host";
 import { DatabaseService } from "../../service/database";
-import { HttpError } from "../../util/HttpError";
 
 @singleton()
 export class HostManager {

@@ -1,27 +1,23 @@
-/* eslint-disable no-console */
-
 import "reflect-metadata";
-import "source-map-support/register";
-import { container } from "tsyringe";
-import { Application } from "./app";
+
+import { Application, container } from "@athenajs/core";
+import * as controllers from "./controller";
+import * as resolvers from "./resolver";
+import { DatabaseService } from "./service/database";
 
 const main = async () => {
-  const app = container.resolve(Application);
-  await app.init();
+  const app = new Application();
+
+  const db = container.resolve(DatabaseService);
+  await db.init();
+
+  app.registry.controller.register(Object.values(controllers));
+  await app.registry.resolver.register(Object.values(resolvers), {
+    schemaDir: `${__dirname}/../graphql`
+  });
+
   await app.start();
 };
 
-const stop = (err?: any) => {
-  if (err instanceof Error) {
-    console.error(err);
-  }
-  const app = container.resolve(Application);
-  app.stop().catch(console.error);
-};
-
+// eslint-disable-next-line no-console
 main().catch(console.error);
-
-process
-  .on("SIGINT", stop)
-  .on("uncaughtException", stop)
-  .on("unhandledRejection", stop);

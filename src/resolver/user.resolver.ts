@@ -1,12 +1,10 @@
 import { singleton } from "tsyringe";
+import { guard, query, HttpError, resolver, mutation } from "@athenajs/core";
 import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs } from "../graphql/types";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
 import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
-import { resolver, query, mutation } from "../service/registry";
-import { HttpError } from "../util/HttpError";
-import { guard } from "../manager/auth";
 
 @singleton()
 export class UserResolver {
@@ -16,7 +14,10 @@ export class UserResolver {
     private userManager: UserManager
   ) { }
 
-  @guard(can => can.read("user"))
+  @guard({
+    resource: "user",
+    action: "readAny"
+  })
   @query()
   async user(root: void, { id }: IQueryUserArgs): Promise<IQuery["user"]> {
     const user = await this.db.users.findById(id);
@@ -26,18 +27,30 @@ export class UserResolver {
     return user;
   }
 
+  @guard({
+    resource: "role",
+    action: "readAny"
+  })
   @resolver("User.roles")
   async roles(root: User): Promise<IUser["roles"]> {
     return this.userManager.getRoles(root);
   }
 
+  @guard({
+    resource: "role",
+    action: "readAny"
+  })
   @resolver("User.permissions")
   async permissions(root: User): Promise<IUser["permissions"]> {
     const roles = await this.userManager.getRoles(root);
     return this.roleManager.toPermissions(roles);
   }
 
-  @guard(can => can.update("user"))
+  @guard({
+    resource: "user",
+    action: "updateAny",
+    attributes: "role"
+  })
   @mutation()
   async addRoleToUser(root: void, { userId, roleId }: IMutationAddRoleToUserArgs): Promise<IMutation["addRoleToUser"]> {
     const user = await this.userManager.get(userId);
@@ -52,7 +65,10 @@ export class UserResolver {
     return true;
   }
 
-  @guard(can => can.create("user"))
+  @guard({
+    resource: "user",
+    action: "createAny"
+  })
   @mutation()
   async createUser(root: void, { email, username, password }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
     const existing = await this.db.users.findOne({
@@ -78,7 +94,11 @@ export class UserResolver {
     }));
   }
 
-  @guard(can => can.update("user"))
+  @guard({
+    resource: "user",
+    action: "updateAny",
+    attributes: "password"
+  })
   @mutation()
   async setUserPassword(root: void, { userId, password }: IMutationSetUserPasswordArgs): Promise<IMutation["setUserPassword"]> {
     const user = await this.userManager.get(userId);

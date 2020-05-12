@@ -1,8 +1,8 @@
 import { singleton } from "tsyringe";
+import { HttpError } from "@athenajs/core";
 import { DatabaseService } from "../../service/database";
 import { RummikubPlayer } from "../../model/RummikubGame";
 import { User } from "../../model/User";
-import { HttpError } from "../../util/HttpError";
 
 @singleton()
 export class RummikubPlayerManager {

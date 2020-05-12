@@ -1,9 +1,8 @@
 import { singleton } from "tsyringe";
-import { mutation, query } from "../service/registry";
+import { guard, mutation, query } from "@athenajs/core";
 import { SteamGameManager } from "../manager/steamGame";
 import { IMutation, IQuery, IQuerySteamGamesArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
-import { guard } from "../manager/auth";
 
 const SEARCH_PAGE_SIZE = 100;
 
@@ -14,7 +13,10 @@ export class SteamGameResolver {
     private steamGameManager: SteamGameManager
   ) { }
 
-  @guard(can => can.create("steamGame"))
+  @guard({
+    resource: "steamGame",
+    action: "updateAny"
+  })
   @mutation()
   async fetchSteamGames(): Promise<IMutation["fetchSteamGames"]> {
     const progress = await this.progressManager.create("fetchSteamGames");
@@ -22,7 +24,10 @@ export class SteamGameResolver {
     return progress.toGqlObject();
   }
 
-  @guard(can => can.read("steamGame"))
+  @guard({
+    resource: "steamGame",
+    action: "readAny"
+  })
   @query()
   async steamGames(root: void, { page, search }: IQuerySteamGamesArgs): Promise<IQuery["steamGames"]> {
     return this.steamGameManager.search(search, {

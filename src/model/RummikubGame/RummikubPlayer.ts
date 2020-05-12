@@ -1,10 +1,10 @@
 import { prop, arrayProp } from "@typegoose/typegoose";
 import * as randomstring from "randomstring";
-import { idProp } from "../../util/mongo";
+import { MongoService } from "@athenajs/core";
 import { RummikubCard } from "./RummikubCard";
 
 export class RummikubPlayer {
-  @idProp()
+  @MongoService.idProp()
   _id!: string;
 
   @prop({ required: true })

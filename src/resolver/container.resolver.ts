@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+import { guard, query, mutation, resolver } from "@athenajs/core";
 import {
   IContainer,
   IContainerStatus,
@@ -14,12 +15,10 @@ import {
   IMutationUpdateContainerVariablesArgs,
   IMutationUpdateContainerVolumesArgs
 } from "../graphql/types";
-import { guard } from "../manager/auth";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Container } from "../model/Container";
 import { DatabaseService } from "../service/database";
-import { mutation, query, resolver } from "../service/registry";
 
 @singleton()
 export class ContainerResolver {
@@ -29,7 +28,10 @@ export class ContainerResolver {
     private hostManager: HostManager
   ) { }
 
-  @guard(can => can.read("container"))
+  @guard({
+    resource: "container",
+    action: "readAny"
+  })
   @query()
   async container(root: void, { id }: IQueryContainerArgs): Promise<IQuery["container"]> {
     const { container, host } = await this.getContainerAndHost(id);
@@ -40,13 +42,19 @@ export class ContainerResolver {
     };
   }
 
-  @guard(can => can.read("container"))
+  @guard({
+    resource: "container",
+    action: "readAny"
+  })
   @query()
   async containers(): Promise<IQuery["containers"]> {
     return this.containerManager.getAll();
   }
 
-  @guard(can => can.create("container"))
+  @guard({
+    resource: "container",
+    action: "createAny"
+  })
   @mutation()
   async createContainer(root: void, { container }: IMutationCreateContainerArgs): Promise<IMutation["createContainer"]> {
     const host = await this.hostManager.get(container.hostId);
@@ -65,35 +73,54 @@ export class ContainerResolver {
     };
   }
 
-  @guard(can => can.delete("container"))
+  @guard({
+    resource: "container",
+    action: "deleteAny"
+  })
   @mutation()
   async deleteContainers(root: void, { ids }: IMutationDeleteContainersArgs): Promise<IMutation["deleteContainers"]> {
     await this.containerManager.delete(ids);
     return true;
   }
 
-  @guard(can => can.update("container"))
+  @guard({
+    resource: "container",
+    action: "updateAny",
+    attributes: "ports"
+  })
   @mutation()
   async updateContainerPorts(root: void, { containerId, ports }: IMutationUpdateContainerPortsArgs): Promise<IMutation["updateContainerPorts"]> {
     await this.containerManager.updateField(containerId, "ports", ports);
     return true;
   }
 
-  @guard(can => can.update("container"))
+  @guard({
+    resource: "container",
+    action: "updateAny",
+    attributes: "variables"
+  })
   @mutation()
   async updateContainerVariables(root: void, { containerId, variables }: IMutationUpdateContainerVariablesArgs): Promise<IMutation["updateContainerVariables"]> {
     await this.containerManager.updateField(containerId, "variables", variables);
     return true;
   }
 
-  @guard(can => can.update("container"))
+  @guard({
+    resource: "container",
+    action: "updateAny",
+    attributes: "volumes"
+  })
   @mutation()
   async updateContainerVolumes(root: void, { containerId, volumes }: IMutationUpdateContainerVolumesArgs): Promise<IMutation["updateContainerVolumes"]> {
     await this.containerManager.updateField(containerId, "volumes", volumes);
     return true;
   }
 
-  @guard(can => can.update("container"))
+  @guard({
+    resource: "container",
+    action: "updateAny",
+    attributes: "deploy"
+  })
   @mutation()
   async redeployContainer(root: void, { containerId }: IMutationRedeployContainerArgs): Promise<IMutation["redeployContainer"]> {
     const { container, host } = await this.getContainerAndHost(containerId);
@@ -106,7 +133,11 @@ export class ContainerResolver {
     return true;
   }
 
-  @guard(can => can.update("container"))
+  @guard({
+    resource: "container",
+    action: "updateAny",
+    attributes: "start"
+  })
   @mutation()
   async startContainer(root: void, { containerId }: IMutationStartContainerArgs): Promise<IMutation["startContainer"]> {
     const { container, host } = await this.getContainerAndHost(containerId);
@@ -114,7 +145,11 @@ export class ContainerResolver {
     return true;
   }
 
-  @guard(can => can.update("container"))
+  @guard({
+    resource: "container",
+    action: "updateAny",
+    attributes: "stop"
+  })
   @mutation()
   async stopContainer(root: void, { containerId }: IMutationStopContainerArgs): Promise<IMutation["stopContainer"]> {
     const { container, host } = await this.getContainerAndHost(containerId);
@@ -122,7 +157,10 @@ export class ContainerResolver {
     return true;
   }
 
-  @guard(can => can.read("host"))
+  @guard({
+    resource: "host",
+    action: "readAny"
+  })
   @resolver("Container.host")
   host(root: IContainer) {
     return root.host;

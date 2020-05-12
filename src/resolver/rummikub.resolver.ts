@@ -1,10 +1,8 @@
 import { singleton } from "tsyringe";
-import { mutation, query, resolver } from "../service/registry";
+import { mutation, guard, query, resolver, HttpError } from "@athenajs/core";
 import { IMutationJoinRummikubGameArgs, IMutation, IMutationCreateRummikubGameArgs, IQuery, IRummikubPlayer } from "../graphql/types";
 import { RummikubManager } from "../manager/rummikub";
-import { guard } from "../manager/auth";
 import { AuthContext } from "../manager/auth";
-import { HttpError } from "../util/HttpError";
 import { RummikubPlayer } from "../model/RummikubGame";
 
 @singleton()
@@ -13,7 +11,10 @@ export class RummikubResolver {
     private rummikubManager: RummikubManager
   ) { }
 
-  @guard(can => can.create("rummikubGame"))
+  @guard({
+    resource: "rummikubGame",
+    action: "createAny"
+  })
   @mutation()
   async createRummikubGame(root: void, { name }: IMutationCreateRummikubGameArgs, context: AuthContext): Promise<IMutation["createRummikubGame"]> {
     const user = await context.user();

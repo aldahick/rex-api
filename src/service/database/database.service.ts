@@ -1,7 +1,6 @@
-import { ReturnModelType, getModelForClass } from "@typegoose/typegoose";
-import { AnyParamConstructor } from "@typegoose/typegoose/lib/types";
-import { Connection, createConnection } from "mongoose";
+import { ReturnModelType } from "@typegoose/typegoose";
 import { singleton } from "tsyringe";
+import { MongoService } from "@athenajs/core";
 import { ConfigService } from "../config";
 import { Container } from "../../model/Container";
 import { Host } from "../../model/Host";
@@ -24,39 +23,20 @@ export class DatabaseService {
   wikiPages!: ReturnModelType<typeof WikiPage>;
 
   constructor(
-    private config: ConfigService
+    private config: ConfigService,
+    private mongo: MongoService
   ) { }
 
-  private connection?: Connection;
-
   async init() {
-    if (this.connection) {
-      return;
-    }
-    this.connection = await createConnection(this.config.mongoUrl, {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await this.mongo.init(this.config.mongoUrl);
 
-    this.containers = this.getModel(Container, "containers");
-    this.hosts = this.getModel(Host, "hosts");
-    this.progress = this.getModel(Progress, "progress");
-    this.steamGames = this.getModel(SteamGame, "steamGames");
-    this.roles = this.getModel(Role, "roles");
-    this.rummikubGames = this.getModel(RummikubGame, "rummikubGames");
-    this.users = this.getModel(User, "users");
-    this.wikiPages = this.getModel(WikiPage, "wikiPages");
-  }
-
-  async close() {
-    await this.connection?.close();
-  }
-
-  private getModel<T extends AnyParamConstructor<any>>(model: T, collectionName: string) {
-    return getModelForClass<any, T>(model, {
-      existingConnection: this.connection,
-      schemaOptions: { collection: collectionName }
-    });
+    this.containers = this.mongo.getModel(Container, "containers");
+    this.hosts = this.mongo.getModel(Host, "hosts");
+    this.progress = this.mongo.getModel(Progress, "progress");
+    this.steamGames = this.mongo.getModel(SteamGame, "steamGames");
+    this.roles = this.mongo.getModel(Role, "roles");
+    this.rummikubGames = this.mongo.getModel(RummikubGame, "rummikubGames");
+    this.users = this.mongo.getModel(User, "users");
+    this.wikiPages = this.mongo.getModel(WikiPage, "wikiPages");
   }
 }

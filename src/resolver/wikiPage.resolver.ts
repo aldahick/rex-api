@@ -1,7 +1,6 @@
 import { singleton } from "tsyringe";
-import { mutation } from "../service/registry";
+import { guard } from "@athenajs/core";
 import { IMutationFetchWikiPagesUntilArgs, IMutation } from "../graphql/types";
-import { guard } from "../manager/auth";
 import { WikiPageManager } from "../manager/wikiPage";
 import { ProgressManager } from "../manager/progress";
 
@@ -12,8 +11,10 @@ export class WikiPageResolver {
     private wikiPageManager: WikiPageManager
   ) { }
 
-  @guard(can => can.create("wikiPage"))
-  @mutation()
+  @guard({
+    resource: "wikiPage",
+    action: "createAny"
+  })
   async fetchWikiPagesUntil(root: void, { firstPageName, untilPageName }: IMutationFetchWikiPagesUntilArgs): Promise<IMutation["fetchWikiPagesUntil"]> {
     const progress = await this.progressManager.create("fetchWikiPagesUntil");
     this.progressManager.resolveSafe(progress, this.wikiPageManager.fetchUntil(progress, firstPageName, untilPageName));
