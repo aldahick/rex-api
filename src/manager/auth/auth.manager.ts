@@ -1,9 +1,7 @@
 import * as express from "express";
-import * as jwt from "jsonwebtoken";
 import { singleton } from "tsyringe";
 import { AuthService, authProvider, AuthCheck } from "@athenajs/core";
 import { Role } from "../../model/Role";
-import { ConfigService } from "../../service/config";
 import { RoleManager } from "../role";
 import { AuthTokenPayload } from "./AuthTokenPayload";
 import { AuthContext } from "./AuthContext";
@@ -13,20 +11,11 @@ import { AuthContext } from "./AuthContext";
 export class AuthManager {
   constructor(
     private authService: AuthService,
-    private config: ConfigService,
     private roleManager: RoleManager
   ) { }
 
   signToken(payload: AuthTokenPayload): string {
-    return jwt.sign(payload, this.config.jwtKey);
-  }
-
-  getPayload(token: string): AuthTokenPayload | undefined {
-    try {
-      return jwt.verify(token, this.config.jwtKey) as any;
-    } catch (err) {
-      return undefined;
-    }
+    return this.authService.signToken(payload);
   }
 
   isAuthorized(roles: Role[], check: AuthCheck): boolean {
