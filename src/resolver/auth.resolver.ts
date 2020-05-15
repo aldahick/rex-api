@@ -44,7 +44,7 @@ export class AuthResolver {
     if (!user || !user.auth.passwordHash) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
-    if (!await this.userManager.checkPassword(password, user.auth.passwordHash)) {
+    if (!await this.userManager.password.isValid(password, user.auth.passwordHash)) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
     return {

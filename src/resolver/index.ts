@@ -1,4 +1,5 @@
 export * from "./auth.resolver";
+export * from "./calendar.resolver";
 export * from "./container.resolver";
 export * from "./hello.resolver";
 export * from "./host.resolver";

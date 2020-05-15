@@ -1,0 +1,5 @@
+type Calendar {
+  _id: String!
+  name: String!
+  url: String!
+}

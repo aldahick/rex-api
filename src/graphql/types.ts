@@ -21,6 +21,13 @@ export enum ICacheControlScope {
   Private = 'PRIVATE'
 }
 
+export type ICalendar = {
+   __typename?: 'Calendar',
+  _id: Scalars['String'],
+  name: Scalars['String'],
+  url: Scalars['String'],
+};
+
 export type IContainer = {
    __typename?: 'Container',
   _id: Scalars['String'],
@@ -116,11 +123,10 @@ export enum IMediaItemType {
 export type IMutation = {
    __typename?: 'Mutation',
   hello: Scalars['String'],
+  addCalendar: Scalars['Boolean'],
+  removeCalendar: Scalars['Boolean'],
   createAuthTokenGoogle: IAuthToken,
   createAuthTokenLocal: IAuthToken,
-  addMediaDownload: IProgress,
-  addPermissionsToRole: Scalars['Boolean'],
-  createRole: IRole,
   createContainer: IContainer,
   deleteContainers: Scalars['Boolean'],
   updateContainerPorts: Scalars['Boolean'],
@@ -129,14 +135,28 @@ export type IMutation = {
   startContainer: Scalars['Boolean'],
   stopContainer: Scalars['Boolean'],
   redeployContainer: Scalars['Boolean'],
+  addMediaDownload: IProgress,
+  addPermissionsToRole: Scalars['Boolean'],
+  createRole: IRole,
+  fetchSteamGames: IProgress,
   addRoleToUser: Scalars['Boolean'],
   createUser: IUser,
   setUserPassword: Scalars['Boolean'],
-  fetchSteamGames: IProgress,
   createHost: IHost,
   fetchWikiPagesUntil: IProgress,
   createRummikubGame: IRummikubGame,
   joinRummikubGame: Scalars['Boolean'],
+};
+
+
+export type IMutationAddCalendarArgs = {
+  name: Scalars['String'],
+  url: Scalars['String']
+};
+
+
+export type IMutationRemoveCalendarArgs = {
+  id: Scalars['String']
 };
 
 
@@ -148,23 +168,6 @@ export type IMutationCreateAuthTokenGoogleArgs = {
 export type IMutationCreateAuthTokenLocalArgs = {
   username: Scalars['String'],
   password: Scalars['String']
-};
-
-
-export type IMutationAddMediaDownloadArgs = {
-  url: Scalars['String'],
-  destinationKey: Scalars['String']
-};
-
-
-export type IMutationAddPermissionsToRoleArgs = {
-  roleId: Scalars['String'],
-  permissions: Array<IRolePermissionInput>
-};
-
-
-export type IMutationCreateRoleArgs = {
-  name: Scalars['String']
 };
 
 
@@ -208,6 +211,23 @@ export type IMutationStopContainerArgs = {
 
 export type IMutationRedeployContainerArgs = {
   containerId: Scalars['String']
+};
+
+
+export type IMutationAddMediaDownloadArgs = {
+  url: Scalars['String'],
+  destinationKey: Scalars['String']
+};
+
+
+export type IMutationAddPermissionsToRoleArgs = {
+  roleId: Scalars['String'],
+  permissions: Array<IRolePermissionInput>
+};
+
+
+export type IMutationCreateRoleArgs = {
+  name: Scalars['String']
 };
 
 
@@ -275,19 +295,25 @@ export enum IProgressStatus {
 export type IQuery = {
    __typename?: 'Query',
   hello: Scalars['String'],
+  calendars: Array<ICalendar>,
+  container: IContainer,
+  containers: Array<IContainer>,
   mediaItems: Array<IMediaItem>,
   progress: IProgress,
   roles: Array<IRole>,
-  container: IContainer,
-  containers: Array<IContainer>,
+  steamGames: Array<ISteamGame>,
   steamPlayer: ISteamPlayer,
   steamPlayers: Array<ISteamPlayer>,
   user: IUser,
-  steamGames: Array<ISteamGame>,
   host: IHost,
   hosts: Array<IHost>,
   wikiPage: IWikiPage,
   rummikubGames: Array<IRummikubGame>,
+};
+
+
+export type IQueryContainerArgs = {
+  id: Scalars['String']
 };
 
 
@@ -301,8 +327,9 @@ export type IQueryProgressArgs = {
 };
 
 
-export type IQueryContainerArgs = {
-  id: Scalars['String']
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'],
+  search: Scalars['String']
 };
 
 
@@ -318,12 +345,6 @@ export type IQuerySteamPlayersArgs = {
 
 export type IQueryUserArgs = {
   id?: Maybe<Scalars['String']>
-};
-
-
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'],
-  search: Scalars['String']
 };
 
 

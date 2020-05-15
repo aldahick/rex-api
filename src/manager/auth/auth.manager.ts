@@ -23,10 +23,7 @@ export class AuthManager {
     if (permissions.length === 0) {
       return false;
     }
-    return this.authService.isCheckValid(permissions.map(p => ({
-      ...p,
-      roleName: p.role.name
-    })), check);
+    return this.authService.isCheckValid(permissions, check);
   }
 
   getContext(req: express.Request, payload?: AuthTokenPayload): AuthContext {

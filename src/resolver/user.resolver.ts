@@ -5,6 +5,7 @@ import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
 import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
+import { AuthContext } from "../manager/auth";
 
 @singleton()
 export class UserResolver {
@@ -14,17 +15,21 @@ export class UserResolver {
     private userManager: UserManager
   ) { }
 
-  @guard({
-    resource: "user",
-    action: "readAny"
-  })
   @query()
-  async user(root: void, { id }: IQueryUserArgs): Promise<IQuery["user"]> {
-    const user = await this.db.users.findById(id);
-    if (!user) {
-      throw HttpError.notFound(`user id=${id} not found`);
+  async user(root: void, { id }: IQueryUserArgs, context: AuthContext): Promise<IQuery["user"]> {
+    if (id && await context.isAuthorized({
+      resource: "user",
+      action: "readAny"
+    })) {
+      return this.userManager.get(id);
+    } else if (context.userId && await context.isAuthorized({
+      resource: "user",
+      action: "readOwn"
+    })) {
+      return this.userManager.get(context.userId);
+    } else {
+      throw HttpError.forbidden();
     }
-    return user;
   }
 
   @guard({
@@ -88,9 +93,10 @@ export class UserResolver {
       email,
       username,
       auth: {
-        passwordHash: password ? await this.userManager.hashPassword(password) : undefined
+        passwordHash: password ? await this.userManager.password.hash(password) : undefined
       },
-      roleIds: []
+      roleIds: [],
+      calendars: []
     }));
   }
 
@@ -102,7 +108,7 @@ export class UserResolver {
   @mutation()
   async setUserPassword(root: void, { userId, password }: IMutationSetUserPasswordArgs): Promise<IMutation["setUserPassword"]> {
     const user = await this.userManager.get(userId);
-    await this.userManager.setPassword(user, password);
+    await this.userManager.password.set(user, password);
     return true;
   }
 }

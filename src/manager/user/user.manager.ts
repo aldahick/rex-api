@@ -1,13 +1,16 @@
 import { singleton } from "tsyringe";
-import * as bcrypt from "bcrypt";
 import { HttpError } from "@athenajs/core";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
+import { UserCalendarManager } from "./userCalendar.manager";
+import { UserPasswordManager } from "./userPassword.manager";
 
 @singleton()
 export class UserManager {
   constructor(
+    readonly calendar: UserCalendarManager,
+    readonly password: UserPasswordManager,
     private db: DatabaseService
   ) { }
 
@@ -28,24 +31,5 @@ export class UserManager {
     return this.db.roles.find({
       _id: { $in: user.roleIds }
     });
-  }
-
-  async setPassword(user: User, password: string): Promise<void> {
-    const hash = await this.hashPassword(password);
-    await this.db.users.updateOne({
-      _id: user._id
-    }, {
-      $set: {
-        "auth.passwordHash": hash
-      }
-    });
-  }
-
-  hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, 8);
-  }
-
-  checkPassword(raw: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(raw, hash);
   }
 }

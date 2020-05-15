@@ -19,11 +19,11 @@ export class RoleManager {
     return role.toObject();
   }
 
-  toPermissions(roles: Role[]): (RolePermission & { role: Role })[] {
+  toPermissions(roles: Role[]): (RolePermission & { roleName: string })[] {
     return _.flatten(roles.map(role =>
       (role.permissions as DocumentType<RolePermission>[]).map(permission => ({
         ...permission.toObject(),
-        role
+        roleName: role.name
       }))
     ));
   }
