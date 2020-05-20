@@ -1,6 +1,6 @@
+import { guard, mutation, query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { guard, query, mutation, resolver } from "@athenajs/core";
-import { IQueryHostArgs, IQuery, IMutationCreateHostArgs, IMutation } from "../graphql/types";
+import { IMutation,IMutationCreateHostArgs, IQuery, IQueryHostArgs } from "../graphql/types";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Host } from "../model/Host";

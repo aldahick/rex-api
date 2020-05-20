@@ -1,7 +1,6 @@
+import { MongoService } from "@athenajs/core";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { singleton } from "tsyringe";
-import { MongoService } from "@athenajs/core";
-import { ConfigService } from "../config";
 import { Container } from "../../model/Container";
 import { Host } from "../../model/Host";
 import { Progress } from "../../model/Progress";
@@ -10,6 +9,7 @@ import { RummikubGame } from "../../model/RummikubGame";
 import { SteamGame } from "../../model/SteamGame";
 import { User } from "../../model/User";
 import { WikiPage } from "../../model/WikiPage";
+import { ConfigService } from "../config";
 
 @singleton()
 export class DatabaseService {

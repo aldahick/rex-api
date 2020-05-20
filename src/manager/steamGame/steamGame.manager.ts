@@ -1,10 +1,10 @@
-import { singleton } from "tsyringe";
 import * as _ from "lodash";
-import { SteamService } from "../../service/steam";
-import { DatabaseService } from "../../service/database";
-import { SteamGame } from "../../model/SteamGame";
-import { ProgressManager } from "../progress";
+import { singleton } from "tsyringe";
 import { Progress, ProgressStatus } from "../../model/Progress";
+import { SteamGame } from "../../model/SteamGame";
+import { DatabaseService } from "../../service/database";
+import { SteamService } from "../../service/steam";
+import { ProgressManager } from "../progress";
 
 const FETCH_CHUNK_SIZE = 1000;
 

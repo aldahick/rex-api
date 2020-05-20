@@ -1,10 +1,10 @@
+import { HttpError,mutation } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { mutation, HttpError } from "@athenajs/core";
-import { IMutationCreateAuthTokenGoogleArgs, IMutation, IMutationCreateAuthTokenLocalArgs } from "../graphql/types";
+import { IMutation, IMutationCreateAuthTokenGoogleArgs, IMutationCreateAuthTokenLocalArgs } from "../graphql/types";
 import { AuthManager } from "../manager/auth";
+import { UserManager } from "../manager/user";
 import { DatabaseService } from "../service/database";
 import { GoogleAuthService } from "../service/google";
-import { UserManager } from "../manager/user";
 
 @singleton()
 export class AuthResolver {

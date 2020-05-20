@@ -1,6 +1,6 @@
-import { singleton } from "tsyringe";
 import { mutation, query } from "@athenajs/core";
-import { IQuery, IMutation } from "../graphql/types";
+import { singleton } from "tsyringe";
+import { IMutation,IQuery } from "../graphql/types";
 
 @singleton()
 export class HelloResolver {

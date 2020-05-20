@@ -1,10 +1,10 @@
+import { HttpError } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { HttpError } from "@athenajs/core";
-import { SteamPlayer, SteamService } from "../../service/steam";
-import { DatabaseService } from "../../service/database";
-import { SteamGameManager } from "../steamGame";
 import { SteamGame } from "../../model/SteamGame";
+import { DatabaseService } from "../../service/database";
+import { SteamPlayer, SteamService } from "../../service/steam";
+import { SteamGameManager } from "../steamGame";
 
 @singleton()
 export class SteamPlayerManager {

@@ -1,9 +1,9 @@
-import { controller, ControllerPayload, HttpError, guard } from "@athenajs/core";
+import { controller, ControllerPayload, guard,HttpError } from "@athenajs/core";
 import * as mime from "mime";
 import { singleton } from "tsyringe";
 import { AuthContext } from "../manager/auth";
-import { User } from "../model/User";
 import { MediaManager } from "../manager/media";
+import { User } from "../model/User";
 
 @singleton()
 export class MediaContentController {

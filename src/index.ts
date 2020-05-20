@@ -1,6 +1,5 @@
-import "reflect-metadata";
-
 import { Application, container } from "@athenajs/core";
+import "reflect-metadata";
 import * as controllers from "./controller";
 import * as resolvers from "./resolver";
 import { DatabaseService } from "./service/database";

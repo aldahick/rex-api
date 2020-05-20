@@ -1,8 +1,8 @@
+import { guard, HttpError,mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { guard, query, mutation, HttpError } from "@athenajs/core";
-import { MediaManager } from "../manager/media";
-import { IQuery, IQueryMediaItemsArgs, IMutationAddMediaDownloadArgs, IMutation } from "../graphql/types";
+import { IMutation,IMutationAddMediaDownloadArgs, IQuery, IQueryMediaItemsArgs } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
+import { MediaManager } from "../manager/media";
 import { ProgressManager } from "../manager/progress";
 
 @singleton()

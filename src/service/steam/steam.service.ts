@@ -1,6 +1,6 @@
-import * as url from "url";
-import { singleton } from "tsyringe";
 import axios from "axios";
+import { singleton } from "tsyringe";
+import * as url from "url";
 import { ConfigService } from "../config";
 import * as IPlayerService from "./dto/IPlayerService";
 import * as ISteamUser from "./dto/ISteamUser";

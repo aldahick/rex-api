@@ -1,6 +1,6 @@
-import { prop, arrayProp } from "@typegoose/typegoose";
-import * as randomstring from "randomstring";
 import { MongoService } from "@athenajs/core";
+import { arrayProp,prop } from "@typegoose/typegoose";
+import * as randomstring from "randomstring";
 import { RummikubCard } from "./RummikubCard";
 
 export class RummikubPlayer {

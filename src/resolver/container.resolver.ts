@@ -1,5 +1,5 @@
+import { guard, mutation, query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { guard, query, mutation, resolver } from "@athenajs/core";
 import {
   IContainer,
   IContainerStatus,
@@ -7,14 +7,13 @@ import {
   IMutationCreateContainerArgs,
   IMutationDeleteContainersArgs,
   IMutationRedeployContainerArgs,
-  IMutationUpdateContainerPortsArgs,
-  IQuery,
-  IQueryContainerArgs,
   IMutationStartContainerArgs,
   IMutationStopContainerArgs,
+  IMutationUpdateContainerPortsArgs,
   IMutationUpdateContainerVariablesArgs,
-  IMutationUpdateContainerVolumesArgs
-} from "../graphql/types";
+  IMutationUpdateContainerVolumesArgs,
+  IQuery,
+  IQueryContainerArgs} from "../graphql/types";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Container } from "../model/Container";

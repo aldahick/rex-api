@@ -1,9 +1,9 @@
-import { prop, arrayProp } from "@typegoose/typegoose";
 import { MongoService } from "@athenajs/core";
-import { IRummikubGameStatus, IRummikubGamePrivacy } from "../../graphql/types";
-import { RummikubPlayer } from "./RummikubPlayer";
-import { RummikubChatMessage } from "./RummikubChatMessage";
+import { arrayProp,prop } from "@typegoose/typegoose";
+import { IRummikubGamePrivacy,IRummikubGameStatus } from "../../graphql/types";
 import { RummikubCard } from "./RummikubCard";
+import { RummikubChatMessage } from "./RummikubChatMessage";
+import { RummikubPlayer } from "./RummikubPlayer";
 
 export class RummikubGame {
   @MongoService.idProp()

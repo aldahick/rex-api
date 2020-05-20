@@ -1,11 +1,11 @@
+import { guard, HttpError, mutation,query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { guard, query, HttpError, resolver, mutation } from "@athenajs/core";
-import { IUser, IQuery, IQueryUserArgs, IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs } from "../graphql/types";
+import { IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs,IQuery, IQueryUserArgs, IUser } from "../graphql/types";
+import { AuthContext } from "../manager/auth";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
 import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
-import { AuthContext } from "../manager/auth";
 
 @singleton()
 export class UserResolver {

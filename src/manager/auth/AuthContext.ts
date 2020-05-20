@@ -1,11 +1,11 @@
+import { AuthCheck,BaseAuthContext } from "@athenajs/core";
 import { Request } from "express";
 import { container } from "tsyringe";
-import { BaseAuthContext, AuthCheck } from "@athenajs/core";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { UserManager } from "../user";
-import { AuthTokenPayload } from "./AuthTokenPayload";
 import { AuthManager } from "./auth.manager";
+import { AuthTokenPayload } from "./AuthTokenPayload";
 
 export class AuthContext implements BaseAuthContext {
   private authManager = container.resolve(AuthManager);

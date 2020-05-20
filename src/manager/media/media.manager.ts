@@ -1,13 +1,13 @@
-import * as path from "path";
-import { Readable } from "stream";
+import { HttpError,LoggerService } from "@athenajs/core";
 import axios from "axios";
 import * as fs from "fs-extra";
+import * as path from "path";
+import { Readable } from "stream";
 import { singleton } from "tsyringe";
-import { LoggerService, HttpError } from "@athenajs/core";
 import { IMediaItem, IMediaItemType } from "../../graphql/types";
+import { Progress, ProgressStatus } from "../../model/Progress";
 import { User } from "../../model/User";
 import { ConfigService } from "../../service/config";
-import { Progress, ProgressStatus } from "../../model/Progress";
 import { ProgressManager } from "../progress";
 
 @singleton()

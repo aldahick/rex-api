@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt";
 import { singleton } from "tsyringe";
-import { DatabaseService } from "../../service/database";
 import { User } from "../../model/User";
+import { DatabaseService } from "../../service/database";
 
 @singleton()
 export class UserPasswordManager {

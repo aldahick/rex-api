@@ -1,6 +1,6 @@
-import { singleton } from "tsyringe";
 import { HttpError } from "@athenajs/core";
-import { Progress, ProgressStatus, ProgressLog } from "../../model/Progress";
+import { singleton } from "tsyringe";
+import { Progress, ProgressLog,ProgressStatus } from "../../model/Progress";
 import { DatabaseService } from "../../service/database";
 
 @singleton()

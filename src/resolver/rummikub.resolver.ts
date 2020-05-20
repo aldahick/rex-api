@@ -1,8 +1,8 @@
+import { guard, HttpError,mutation, query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { mutation, guard, query, resolver, HttpError } from "@athenajs/core";
-import { IMutationJoinRummikubGameArgs, IMutation, IMutationCreateRummikubGameArgs, IQuery, IRummikubPlayer } from "../graphql/types";
-import { RummikubManager } from "../manager/rummikub";
+import { IMutation, IMutationCreateRummikubGameArgs, IMutationJoinRummikubGameArgs, IQuery, IRummikubPlayer } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
+import { RummikubManager } from "../manager/rummikub";
 import { RummikubPlayer } from "../model/RummikubGame";
 
 @singleton()

@@ -1,10 +1,10 @@
+import { guard, query } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { guard, query } from "@athenajs/core";
-import { IQuerySteamPlayerArgs, IQuery, IQuerySteamPlayersArgs } from "../graphql/types";
+import { IQuery, IQuerySteamPlayerArgs, IQuerySteamPlayersArgs } from "../graphql/types";
 import { SteamPlayerManager } from "../manager/steamPlayer";
-import { SteamPlayer } from "../service/steam/SteamPlayer";
 import { SteamGame } from "../model/SteamGame";
+import { SteamPlayer } from "../service/steam/SteamPlayer";
 
 @singleton()
 export class SteamPlayerResolver {

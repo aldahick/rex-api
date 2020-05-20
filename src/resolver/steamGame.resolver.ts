@@ -1,8 +1,8 @@
-import { singleton } from "tsyringe";
 import { guard, mutation, query } from "@athenajs/core";
-import { SteamGameManager } from "../manager/steamGame";
+import { singleton } from "tsyringe";
 import { IMutation, IQuery, IQuerySteamGamesArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
+import { SteamGameManager } from "../manager/steamGame";
 
 const SEARCH_PAGE_SIZE = 100;
 

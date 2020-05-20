@@ -1,12 +1,12 @@
+import { HttpError } from "@athenajs/core";
 import { DocumentType } from "@typegoose/typegoose";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { HttpError } from "@athenajs/core";
 import { IContainer, IContainerStatus } from "../../graphql/types";
 import { Container } from "../../model/Container";
 import { Host } from "../../model/Host";
 import { DatabaseService } from "../../service/database";
-import { DockerService, DockerContainerState } from "../../service/docker";
+import { DockerContainerState,DockerService } from "../../service/docker";
 
 @singleton()
 export class ContainerManager {

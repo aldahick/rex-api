@@ -1,8 +1,8 @@
-import { singleton } from "tsyringe";
 import { guard } from "@athenajs/core";
-import { IMutationFetchWikiPagesUntilArgs, IMutation } from "../graphql/types";
-import { WikiPageManager } from "../manager/wikiPage";
+import { singleton } from "tsyringe";
+import { IMutation,IMutationFetchWikiPagesUntilArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
+import { WikiPageManager } from "../manager/wikiPage";
 
 @singleton()
 export class WikiPageResolver {

@@ -1,5 +1,5 @@
-import { prop } from "@typegoose/typegoose";
 import { MongoService } from "@athenajs/core";
+import { prop } from "@typegoose/typegoose";
 
 export class Host {
   @MongoService.idProp()

@@ -1,6 +1,6 @@
 import { singleton } from "tsyringe";
-import { DatabaseService } from "../../service/database";
 import { User, UserCalendar } from "../../model/User";
+import { DatabaseService } from "../../service/database";
 
 @singleton()
 export class UserCalendarManager {

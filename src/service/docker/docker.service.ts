@@ -1,7 +1,7 @@
-import * as url from "url";
+import { HttpError } from "@athenajs/core";
 import * as Dockerode from "dockerode";
 import * as _ from "lodash";
-import { HttpError } from "@athenajs/core";
+import * as url from "url";
 
 export type DockerContainerState = "created" | "running" | "exited";
 

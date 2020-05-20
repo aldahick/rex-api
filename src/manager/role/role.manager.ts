@@ -1,7 +1,7 @@
+import { HttpError } from "@athenajs/core";
 import { DocumentType } from "@typegoose/typegoose";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { HttpError } from "@athenajs/core";
 import { Role, RolePermission } from "../../model/Role";
 import { DatabaseService } from "../../service/database";
 

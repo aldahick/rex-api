@@ -1,5 +1,5 @@
-import { singleton } from "tsyringe";
 import { HttpError } from "@athenajs/core";
+import { singleton } from "tsyringe";
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";

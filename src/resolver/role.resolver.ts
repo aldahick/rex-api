@@ -1,7 +1,7 @@
+import { guard, HttpError,mutation, query } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { guard, query, mutation, HttpError } from "@athenajs/core";
-import { IQuery, IMutationCreateRoleArgs, IMutation, IMutationAddPermissionsToRoleArgs } from "../graphql/types";
+import { IMutation, IMutationAddPermissionsToRoleArgs,IMutationCreateRoleArgs, IQuery } from "../graphql/types";
 import { Role } from "../model/Role";
 import { DatabaseService } from "../service/database";
 

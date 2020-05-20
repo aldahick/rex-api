@@ -1,5 +1,5 @@
-import { singleton } from "tsyringe";
 import { BaseConfigService, ConfigUtils } from "@athenajs/core";
+import { singleton } from "tsyringe";
 
 @singleton()
 export class ConfigService extends BaseConfigService {

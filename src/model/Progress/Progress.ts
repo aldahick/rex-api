@@ -1,5 +1,5 @@
-import { prop, arrayProp } from "@typegoose/typegoose";
 import { MongoService } from "@athenajs/core";
+import { arrayProp,prop } from "@typegoose/typegoose";
 import { IProgress, IProgressStatus } from "../../graphql/types";
 import { ProgressLog } from "./ProgressLog";
 import { ProgressStatus } from "./ProgressStatus";
