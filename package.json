@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/aldahick/rex-api#readme",
   "dependencies": {
-    "@athenajs/core": "^0.2.4",
+    "@athenajs/core": "^0.2.5",
     "@typegoose/typegoose": "^7.0.0",
     "accesscontrol": "^2.2.1",
     "apollo-server-express": "^2.9.16",
