@@ -1,8 +1,9 @@
-import { HttpError,mutation } from "@athenajs/core";
+import { guard,HttpError,mutation } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationCreateAuthTokenGoogleArgs, IMutationCreateAuthTokenLocalArgs } from "../graphql/types";
+import { IAuthToken,IMutation, IMutationCreateAuthTokenArgs,IMutationCreateAuthTokenGoogleArgs, IMutationCreateAuthTokenLocalArgs } from "../graphql/types";
 import { AuthContext,AuthManager } from "../manager/auth";
 import { UserManager } from "../manager/user";
+import { User } from "../model/User";
 import { DatabaseService } from "../service/database";
 import { GoogleAuthService } from "../service/google";
 
@@ -25,14 +26,7 @@ export class AuthResolver {
     if (!user) {
       throw HttpError.forbidden(`Missing user email=${googlePayload.email}`);
     }
-    const payload = {
-      userId: user._id
-    };
-    context.setPayload(payload);
-    return {
-      token: this.authManager.signToken(payload),
-      user
-    };
+    return this.getAuthToken(user, context);
   }
 
   @mutation()
@@ -49,10 +43,24 @@ export class AuthResolver {
     if (!await this.userManager.password.isValid(password, user.auth.passwordHash)) {
       throw HttpError.forbidden("Invalid username/email or password");
     }
-    const payload = {
-      userId: user._id
-    };
-    context.setPayload(payload);
+    return this.getAuthToken(user, context);
+  }
+
+  @guard({
+    resource: "user",
+    action: "createAny",
+    attributes: "token"
+  })
+  @mutation()
+  async createAuthToken(root: void, { userId }: IMutationCreateAuthTokenArgs): Promise<IMutation["createAuthToken"]> {
+    return this.getAuthToken(await this.userManager.get(userId));
+  }
+
+  private getAuthToken(user: User, context?: AuthContext): IAuthToken {
+    const payload = { userId: user._id };
+    if (context) {
+      context.setPayload(payload);
+    }
     return {
       token: this.authManager.signToken(payload),
       user
