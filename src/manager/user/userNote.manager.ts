@@ -9,6 +9,20 @@ export class UserNoteManager {
     private db: DatabaseService
   ) { }
 
+  async update(user: User, { id, body }: { id: string; body: string }): Promise<void> {
+    await this.db.users.updateOne({
+      notes: {
+        $elemMatch: {
+          _id: id
+        }
+      }
+    }, {
+      $set: {
+        "notes.$.body": body
+      }
+    });
+  }
+
   async create(user: User, { title }: Pick<UserNote, "title">): Promise<UserNote> {
     const note = new UserNote({
       title,

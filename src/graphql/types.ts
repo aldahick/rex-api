@@ -139,18 +139,18 @@ export type IMutation = {
   startContainer: Scalars['Boolean'];
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
-  addMediaDownload: IProgress;
   createHost: IHost;
+  addMediaDownload: IProgress;
   createNote: INote;
   removeNote: Scalars['Boolean'];
-  updateNoteBody: INote;
+  updateNoteBody: Scalars['Boolean'];
   addPermissionsToRole: Scalars['Boolean'];
   createRole: IRole;
   fetchSteamGames: IProgress;
-  fetchWikiPagesUntil: IProgress;
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
+  fetchWikiPagesUntil: IProgress;
   createRummikubGame: IRummikubGame;
   joinRummikubGame: Scalars['Boolean'];
 };
@@ -226,14 +226,14 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
-export type IMutationAddMediaDownloadArgs = {
-  url: Scalars['String'];
-  destinationKey: Scalars['String'];
+export type IMutationCreateHostArgs = {
+  host: ICreateHostInput;
 };
 
 
-export type IMutationCreateHostArgs = {
-  host: ICreateHostInput;
+export type IMutationAddMediaDownloadArgs = {
+  url: Scalars['String'];
+  destinationKey: Scalars['String'];
 };
 
 
@@ -264,12 +264,6 @@ export type IMutationCreateRoleArgs = {
 };
 
 
-export type IMutationFetchWikiPagesUntilArgs = {
-  firstPageName: Scalars['String'];
-  untilPageName: Scalars['String'];
-};
-
-
 export type IMutationAddRoleToUserArgs = {
   userId: Scalars['String'];
   roleId: Scalars['String'];
@@ -286,6 +280,12 @@ export type IMutationCreateUserArgs = {
 export type IMutationSetUserPasswordArgs = {
   userId: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type IMutationFetchWikiPagesUntilArgs = {
+  firstPageName: Scalars['String'];
+  untilPageName: Scalars['String'];
 };
 
 
@@ -334,9 +334,9 @@ export type IQuery = {
   calendars: Array<ICalendar>;
   container: IContainer;
   containers: Array<IContainer>;
-  mediaItems: Array<IMediaItem>;
   host: IHost;
   hosts: Array<IHost>;
+  mediaItems: Array<IMediaItem>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
@@ -344,8 +344,8 @@ export type IQuery = {
   steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
-  wikiPage: IWikiPage;
   user: IUser;
+  wikiPage: IWikiPage;
   /** only shows public Lobby games */
   rummikubGames: Array<IRummikubGame>;
 };
@@ -356,13 +356,13 @@ export type IQueryContainerArgs = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
+export type IQueryHostArgs = {
+  id: Scalars['String'];
 };
 
 
-export type IQueryHostArgs = {
-  id: Scalars['String'];
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String'];
 };
 
 
@@ -392,13 +392,13 @@ export type IQuerySteamPlayersArgs = {
 };
 
 
-export type IQueryWikiPageArgs = {
-  name: Scalars['String'];
+export type IQueryUserArgs = {
+  id?: Maybe<Scalars['String']>;
 };
 
 
-export type IQueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
+export type IQueryWikiPageArgs = {
+  name: Scalars['String'];
 };
 
 export type IRole = {
