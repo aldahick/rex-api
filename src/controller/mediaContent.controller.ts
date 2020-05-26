@@ -20,7 +20,7 @@ export class MediaContentController {
   async handle(payload: ControllerPayload<AuthContext>) {
     const { req, res, context } = payload;
     const { key } = req.query;
-    if (!key) {
+    if (!key || typeof(key) !== "string") {
       throw HttpError.badRequest("Missing required query parameter `key`");
     }
 
