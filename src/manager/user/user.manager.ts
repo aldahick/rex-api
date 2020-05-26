@@ -4,12 +4,14 @@ import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
 import { UserCalendarManager } from "./userCalendar.manager";
+import { UserNoteManager } from "./userNote.manager";
 import { UserPasswordManager } from "./userPassword.manager";
 
 @singleton()
 export class UserManager {
   constructor(
     readonly calendar: UserCalendarManager,
+    readonly note: UserNoteManager,
     readonly password: UserPasswordManager,
     private db: DatabaseService
   ) { }
@@ -27,9 +29,47 @@ export class UserManager {
     return user?.toObject() || undefined;
   }
 
+  async addRole(user: User, role: Role): Promise<void> {
+    await this.db.users.updateOne({ _id: user._id }, {
+      $addToSet: {
+        roleIds: role._id
+      }
+    });
+  }
+
   async getRoles(user: User): Promise<Role[]> {
     return this.db.roles.find({
       _id: { $in: user.roleIds }
     });
+  }
+
+  async create({ email, username, password }: {
+    email: string;
+    username?: string;
+    password?: string;
+  }) {
+    const existing = await this.db.users.findOne({
+      $or: [
+        { email },
+        { username: email },
+        ...(username ? [
+          { username },
+          { email: username }
+        ] : [])
+      ]
+    });
+    if (existing) {
+      throw HttpError.conflict(`user email=${email} already exists`);
+    }
+    return this.db.users.create(new User({
+      email,
+      username,
+      auth: {
+        passwordHash: password ? await this.password.hash(password) : undefined
+      },
+      roleIds: [],
+      calendars: [],
+      notes: []
+    }));
   }
 }

@@ -1,0 +1,6 @@
+type Note {
+  _id: String!
+  createdAt: DateTime!
+  title: String!
+  body: String!
+}

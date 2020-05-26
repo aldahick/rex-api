@@ -1,0 +1,5 @@
+extend type Mutation {
+  createNote(title: String!): Note!
+  removeNote(id: String!): Boolean!
+  updateNoteBody(id: String!, body: String!): Note!
+}

@@ -61,11 +61,7 @@ export class UserResolver {
     const user = await this.userManager.get(userId);
     const role = await this.roleManager.get(roleId);
 
-    await this.db.users.updateOne({ _id: user._id }, {
-      $addToSet: {
-        roleIds: role._id
-      }
-    });
+    await this.userManager.addRole(user, role);
 
     return true;
   }
@@ -76,28 +72,7 @@ export class UserResolver {
   })
   @mutation()
   async createUser(root: void, { email, username, password }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
-    const existing = await this.db.users.findOne({
-      $or: [
-        { email },
-        { username: email },
-        ...(username ? [
-          { username },
-          { email: username }
-        ] : [])
-      ]
-    });
-    if (existing) {
-      throw HttpError.conflict(`user email=${email} already exists`);
-    }
-    return this.db.users.create(new User({
-      email,
-      username,
-      auth: {
-        passwordHash: password ? await this.userManager.password.hash(password) : undefined
-      },
-      roleIds: [],
-      calendars: []
-    }));
+    return this.userManager.create({ email, username, password });
   }
 
   @guard({
