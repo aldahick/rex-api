@@ -139,8 +139,8 @@ export type IMutation = {
   startContainer: Scalars['Boolean'];
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
-  createHost: IHost;
   addMediaDownload: IProgress;
+  createHost: IHost;
   createNote: INote;
   removeNote: Scalars['Boolean'];
   updateNoteBody: Scalars['Boolean'];
@@ -225,14 +225,14 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
-export type IMutationCreateHostArgs = {
-  host: ICreateHostInput;
-};
-
-
 export type IMutationAddMediaDownloadArgs = {
   url: Scalars['String'];
   destinationKey: Scalars['String'];
+};
+
+
+export type IMutationCreateHostArgs = {
+  host: ICreateHostInput;
 };
 
 
@@ -329,9 +329,9 @@ export type IQuery = {
   calendars: Array<ICalendar>;
   container: IContainer;
   containers: Array<IContainer>;
+  mediaItems: Array<IMediaItem>;
   host: IHost;
   hosts: Array<IHost>;
-  mediaItems: Array<IMediaItem>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
@@ -351,13 +351,13 @@ export type IQueryContainerArgs = {
 };
 
 
-export type IQueryHostArgs = {
-  id: Scalars['String'];
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String'];
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
+export type IQueryHostArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -478,9 +478,11 @@ export type IRummikubServerBoardPayload = {
 /** rummikub.server.chat */
 export type IRummikubServerChatPayload = {
   __typename?: 'RummikubServerChatPayload';
+  id: Scalars['String'];
   /** if null, author is system */
   author?: Maybe<IRummikubPlayer>;
-  createdAt: Scalars['DateTime'];
+  /** ISO8601 */
+  createdAt: Scalars['String'];
   message: Scalars['String'];
 };
 

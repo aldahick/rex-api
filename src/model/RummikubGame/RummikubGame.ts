@@ -50,9 +50,10 @@ export class RummikubGame {
   get availableCards(): RummikubCard[] {
     const boardCards = _.flatten(this.board);
     const playerCards = _.flatten(this.players.map(p => p.hand));
+    const allCards = RummikubGame.allCards;
     return _.differenceBy(
+      allCards,
       boardCards.concat(playerCards),
-      RummikubGame.allCards,
       c => `${c.value}-${c.color}`
     );
   }

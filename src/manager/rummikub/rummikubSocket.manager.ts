@@ -6,14 +6,14 @@ import { RummikubGameManager } from "./rummikubGame.manager";
 
 @singleton()
 export class RummikubSocketManager {
-  private io: SocketIO.Server;
+  private get io(): SocketIO.Server {
+    return this.websocketRegistry.io;
+  }
 
   constructor(
     private rummikubGameManager: RummikubGameManager,
-    websocketRegistry: WebsocketRegistry
-  ) {
-    this.io = websocketRegistry.io;
-  }
+    private websocketRegistry: WebsocketRegistry
+  ) { }
 
   async setGameId(socket: SocketIO.Socket, gameId: string): Promise<void> {
     (socket as any).rummikubGameId = gameId;
@@ -75,8 +75,9 @@ export class RummikubSocketManager {
 
   sendChat(game: RummikubGame, message: RummikubChatMessage) {
     this.sendToGame<IRummikubServerChatPayload>(game, "rummikub.server.chat", {
+      id: message._id,
       message: message.text,
-      createdAt: message.createdAt,
+      createdAt: message.createdAt.toISOString(),
       author: message.playerId ? game.players.find(p => p._id === message.playerId) : undefined
     });
   }
@@ -90,7 +91,7 @@ export class RummikubSocketManager {
 
   sendPlayers(game: RummikubGame) {
     this.sendToGame<IRummikubServerPlayersPayload>(game, "rummikub.server.players", {
-      players: game.players.map(p => ({
+      players: game.players.filter(p => this.isConnected(p)).map(p => ({
         _id: p._id,
         name: p.name
       }))
@@ -113,5 +114,9 @@ export class RummikubSocketManager {
 
   getRoom(game: RummikubGame) {
     return `rummikub.game.${game._id}`;
+  }
+
+  isConnected(player: RummikubPlayer) {
+    return this.io.sockets.connected[player.socketId]?.connected;
   }
 }

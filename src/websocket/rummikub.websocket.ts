@@ -8,12 +8,26 @@ import {
   IRummikubClientPlaceCardsPayload
 } from "../graphql/types";
 import { RummikubManager } from "../manager/rummikub";
+import { RummikubGame, RummikubGameStatus } from "../model/RummikubGame";
 
 @singleton()
 export class RummikubWebsocketHandler {
   constructor(
     private rummikubManager: RummikubManager
   ) { }
+
+  @websocketEvent("disconnect")
+  async onDisconnect({ socket }: WebsocketPayload<void, any>) {
+    let game: RummikubGame;
+    try {
+      game = await this.rummikubManager.socket.getGame(socket);
+    } catch (err) {
+      // we don't really care
+      return;
+    }
+    // resend players now that one has disconnected
+    this.rummikubManager.socket.sendPlayers(game);
+  }
 
   @websocketEvent("rummikub.client.join", joi.object({
     gameId: joi.string().required(),
@@ -26,7 +40,24 @@ export class RummikubWebsocketHandler {
     game = await this.rummikubManager.game.get(gameId);
     await this.rummikubManager.socket.setGameId(socket, game._id);
     this.rummikubManager.socket.setPlayerId(socket, player._id);
-    this.rummikubManager.socket.sendPlayers(game);
+    // the client won't know they've joined until this returns - give them
+    // a moment to prepare to receive events
+    socket.emit("rummikub.client.join", true);
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          this.rummikubManager.socket.sendPlayers(game);
+          if (game.status === RummikubGameStatus.InProgress) {
+            this.rummikubManager.socket.sendBoard(game);
+            this.rummikubManager.socket.sendHand(socket).then(resolve).catch(reject);
+          } else {
+            resolve();
+          }
+        } catch (err) {
+          reject(err);
+        }
+      }, 500);
+    });
   }
 
   @websocketEvent("rummikub.client.chat", joi.object({
@@ -78,8 +109,12 @@ export class RummikubWebsocketHandler {
   @websocketEvent("rummikub.client.start")
   async start({ socket }: WebsocketPayload<void, any>) {
     let game = await this.rummikubManager.socket.getGame(socket);
+    if (game.status !== RummikubGameStatus.Lobby) {
+      return true;
+    }
     await this.rummikubManager.game.start(game);
     game = await this.rummikubManager.game.get(game._id);
     await this.rummikubManager.socket.sendStart(game);
+    return true;
   }
 }

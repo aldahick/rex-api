@@ -38,24 +38,35 @@ export class RummikubGameManager {
   }
 
   async join(game: RummikubGame, displayName: string, socketId: string): Promise<RummikubPlayer> {
-    if (game.status !== RummikubGameStatus.Lobby) {
-      throw HttpError.conflict("You can only join a game while it hasn't yet started");
-    }
-    if (game.players.find(p => p.name.toLowerCase() === displayName.toLowerCase())) {
-      throw HttpError.conflict("That name is already in use for this game");
-    }
-    const player = new RummikubPlayer({
-      name: displayName,
-      hand: [],
-      socketId
-    });
-    await this.db.rummikubGames.updateOne({
-      _id: game._id
-    }, {
-      $push: {
-        players: player
+    const playerIndex = game.players.findIndex(p => p.name.toLowerCase() === displayName.toLowerCase());
+    let player: RummikubPlayer;
+    if (playerIndex !== -1) {
+      player = game.players[playerIndex];
+      player.socketId = socketId;
+      await this.db.rummikubGames.updateOne({
+        _id: game._id
+      }, {
+        $set: {
+          [`players.${playerIndex}`]: player
+        }
+      });
+    } else {
+      if (game.status !== RummikubGameStatus.Lobby) {
+        throw HttpError.conflict("You can only join a game while it hasn't yet started");
       }
-    });
+      player = new RummikubPlayer({
+        name: displayName,
+        hand: [],
+        socketId
+      });
+      await this.db.rummikubGames.updateOne({
+        _id: game._id
+      }, {
+        $push: {
+          players: player
+        }
+      });
+    }
     return player;
   }
 
@@ -82,15 +93,17 @@ export class RummikubGameManager {
     for (const player of game.players) {
       _.range(14).forEach(() => {
         const availableCards = game.availableCards;
-        player.hand.push(availableCards[_.random(0, availableCards.length)]);
+        player.hand.push(availableCards[_.random(0, availableCards.length - 1)]);
       });
+      player.hand = _.sortBy(player.hand, c => c.color, c => c.value);
     }
     await this.db.rummikubGames.updateOne({
       _id: game._id
     }, {
       $set: {
         currentPlayerId: game.players[0]._id,
-        players: game.players
+        players: game.players,
+        status: RummikubGameStatus.InProgress
       }
     });
   }
