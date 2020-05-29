@@ -1,0 +1,4 @@
+# rummikub.server.hand
+type RummikubServerHandPayload {
+  hand: [RummikubCard!]!
+}

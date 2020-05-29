@@ -1,4 +1,3 @@
 extend type Mutation {
-  createRummikubGame(name: String!): RummikubGame!
-  joinRummikubGame(id: String!): Boolean!
+  createRummikubGame(name: String!, privacy: RummikubGamePrivacy!): RummikubGame!
 }

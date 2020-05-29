@@ -1,0 +1,8 @@
+# rummikub.client.placeCards
+type RummikubClientPlaceCardsPayload {
+  cards: [RummikubCard!]!
+  # which row these cards are going to
+  boardIndex: Int!
+  # where in the row these cards are going
+  rowIndex: Int!
+}

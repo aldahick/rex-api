@@ -1,0 +1,4 @@
+# rummikub.server.players
+type RummikubServerPlayersPayload {
+  players: [RummikubPlayer!]!
+}

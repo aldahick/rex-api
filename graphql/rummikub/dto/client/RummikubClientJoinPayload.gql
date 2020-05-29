@@ -1,0 +1,5 @@
+# rummikub.client.join
+type RummikubClientJoinPayload {
+  gameId: String!
+  displayName: String!
+}

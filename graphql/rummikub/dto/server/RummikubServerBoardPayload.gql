@@ -1,0 +1,4 @@
+# rummikub.server.board
+type RummikubServerBoardPayload {
+  board: [[RummikubCard!]!]!
+}

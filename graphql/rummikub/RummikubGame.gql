@@ -1,11 +1,5 @@
 type RummikubGame {
   _id: String!
-  board: [[RummikubCard!]!]!
   name: String!
-  status: RummikubGameStatus!
-  privacy: RummikubGamePrivacy!
-  players: [RummikubPlayer!]!
-  winner: RummikubPlayer
-  # whose turn is it
-  currentPlayer: RummikubPlayer
+  playerNames: [String!]!
 }

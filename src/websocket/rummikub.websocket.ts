@@ -1,0 +1,85 @@
+import { HttpError,websocketEvent, WebsocketPayload } from "@athenajs/core";
+import * as joi from "@hapi/joi";
+import { singleton } from "tsyringe";
+import {
+  IRummikubCardColor,
+  IRummikubClientChatPayload,
+  IRummikubClientJoinPayload,
+  IRummikubClientPlaceCardsPayload
+} from "../graphql/types";
+import { RummikubManager } from "../manager/rummikub";
+
+@singleton()
+export class RummikubWebsocketHandler {
+  constructor(
+    private rummikubManager: RummikubManager
+  ) { }
+
+  @websocketEvent("rummikub.client.join", joi.object({
+    gameId: joi.string().required(),
+    displayName: joi.string().required()
+  }).required())
+  async onJoin({ data: { gameId, displayName }, socket }: WebsocketPayload<IRummikubClientJoinPayload, any>) {
+    let game = await this.rummikubManager.game.get(gameId);
+    const player = await this.rummikubManager.game.join(game, displayName, socket.id);
+    // refetch game after operations are complete
+    game = await this.rummikubManager.game.get(gameId);
+    await this.rummikubManager.socket.setGameId(socket, game._id);
+    this.rummikubManager.socket.setPlayerId(socket, player._id);
+    this.rummikubManager.socket.sendPlayers(game);
+  }
+
+  @websocketEvent("rummikub.client.chat", joi.object({
+    message: joi.string().required()
+  }).required())
+  async onChat({ data: { message }, socket }: WebsocketPayload<IRummikubClientChatPayload, any>) {
+    const game = await this.rummikubManager.socket.getGame(socket);
+    const player = await this.rummikubManager.socket.getPlayer(socket, game);
+    const chatMessage = await this.rummikubManager.game.createChat(game, message, player);
+    this.rummikubManager.socket.sendChat(game, chatMessage);
+  }
+
+  @websocketEvent("rummikub.client.endTurn")
+  async onEndTurn({ socket }: WebsocketPayload<void, any>) {
+    let game = await this.rummikubManager.socket.getGame(socket);
+    const playerId = this.rummikubManager.socket.getPlayerId(socket);
+    if (game.currentPlayerId !== playerId) {
+      throw HttpError.forbidden("It's not your turn!");
+    }
+    await this.rummikubManager.game.nextTurn(game);
+    game = await this.rummikubManager.game.get(game._id);
+    this.rummikubManager.socket.sendTurn(game);
+  }
+
+  @websocketEvent("rummikub.client.placeCards", joi.object({
+    cards: joi.array().items(joi.object({
+      color: joi.string().valid(...Object.values(IRummikubCardColor)).required(),
+      value: joi.number()
+    }).required()).required(),
+    boardIndex: joi.number().required(),
+    rowIndex: joi.number().required()
+  }).required())
+  async onPlaceCards({
+    data: {
+      cards,
+      boardIndex,
+      rowIndex
+    },
+    socket
+  }: WebsocketPayload<IRummikubClientPlaceCardsPayload, any>) {
+    let game = await this.rummikubManager.socket.getGame(socket);
+    const player = await this.rummikubManager.socket.getPlayer(socket, game);
+    await this.rummikubManager.game.placeCards(game, player, { cards, boardIndex, rowIndex });
+    game = await this.rummikubManager.game.get(game._id);
+    await this.rummikubManager.socket.sendHand(socket);
+    this.rummikubManager.socket.sendBoard(game);
+  }
+
+  @websocketEvent("rummikub.client.start")
+  async start({ socket }: WebsocketPayload<void, any>) {
+    let game = await this.rummikubManager.socket.getGame(socket);
+    await this.rummikubManager.game.start(game);
+    game = await this.rummikubManager.game.get(game._id);
+    await this.rummikubManager.socket.sendStart(game);
+  }
+}

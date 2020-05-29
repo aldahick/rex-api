@@ -1,7 +1,4 @@
 type RummikubPlayer {
   _id: String!
   name: String!
-  user: User
-  turnOrder: Int
-  hand: [RummikubCard!]!
 }

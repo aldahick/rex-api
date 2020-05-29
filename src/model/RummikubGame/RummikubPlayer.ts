@@ -10,14 +10,11 @@ export class RummikubPlayer {
   @prop({ required: true })
   name!: string;
 
-  @prop({ required: true })
-  userId!: string;
-
-  @prop()
-  turnOrder?: number;
-
   @arrayProp({ required: true, items: RummikubCard, _id: false })
   hand!: RummikubCard[];
+
+  @prop({ required: true })
+  socketId!: string;
 
   constructor(init?: Omit<RummikubPlayer, "toGqlObject" | "_id"> & { _id?: string }) {
     Object.assign(this, {

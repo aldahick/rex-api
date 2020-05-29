@@ -1,6 +1,0 @@
-# websocket event: "rummikub.update"
-# server -> client
-type RummikubUpdatePayload {
-  board: [[RummikubCard!]!]!
-  players: [RummikubPlayer!]!
-}

@@ -1,4 +1,4 @@
 enum RummikubGamePrivacy {
   public
-  private
+  unlisted
 }

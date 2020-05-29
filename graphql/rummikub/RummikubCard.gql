@@ -1,4 +1,5 @@
 type RummikubCard {
-  color: String!
-  number: Int!
+  color: RummikubCardColor!
+  # if null, wildcard
+  value: Int
 }

@@ -1,0 +1,7 @@
+# rummikub.server.chat
+type RummikubServerChatPayload {
+  # if null, author is system
+  author: RummikubPlayer
+  createdAt: DateTime!
+  message: String!
+}

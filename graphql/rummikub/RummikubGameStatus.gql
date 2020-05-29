@@ -1,6 +1,0 @@
-enum RummikubGameStatus {
-  lobby
-  inProgress
-  complete
-  aborted
-}

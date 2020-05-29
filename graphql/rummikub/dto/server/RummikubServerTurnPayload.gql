@@ -1,0 +1,4 @@
+# rummikub.server.turn
+type RummikubServerTurnPayload {
+  player: RummikubPlayer!
+}

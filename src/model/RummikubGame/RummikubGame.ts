@@ -1,8 +1,10 @@
 import { MongoService } from "@athenajs/core";
 import { arrayProp,prop } from "@typegoose/typegoose";
-import { IRummikubGamePrivacy,IRummikubGameStatus } from "../../graphql/types";
+import * as _ from "lodash";
+import { IRummikubCardColor,IRummikubGame,IRummikubGamePrivacy } from "../../graphql/types";
 import { RummikubCard } from "./RummikubCard";
 import { RummikubChatMessage } from "./RummikubChatMessage";
+import { RummikubGameStatus } from "./RummikubGameStatus";
 import { RummikubPlayer } from "./RummikubPlayer";
 
 export class RummikubGame {
@@ -12,8 +14,8 @@ export class RummikubGame {
   @prop({ required: true })
   name!: string;
 
-  @prop({ required: true, enum: IRummikubGameStatus })
-  status!: IRummikubGameStatus;
+  @prop({ required: true, enum: RummikubGameStatus })
+  status!: RummikubGameStatus;
 
   @prop({ required: true, enum: IRummikubGamePrivacy })
   privacy!: IRummikubGamePrivacy;
@@ -33,7 +35,33 @@ export class RummikubGame {
   @prop()
   currentPlayerId?: string;
 
-  constructor(init?: Omit<RummikubGame, "_id" | "toGqlObject">) {
+  constructor(init?: Omit<RummikubGame, "_id" | "availableCards" | "toGqlObject">) {
     Object.assign(this, init);
+  }
+
+  toGqlObject(): IRummikubGame {
+    return {
+      _id: this._id,
+      name: this.name,
+      playerNames: this.players.map(p => p.name)
+    };
+  }
+
+  get availableCards(): RummikubCard[] {
+    const boardCards = _.flatten(this.board);
+    const playerCards = _.flatten(this.players.map(p => p.hand));
+    return _.differenceBy(
+      boardCards.concat(playerCards),
+      RummikubGame.allCards,
+      c => `${c.value}-${c.color}`
+    );
+  }
+
+  static get allCards(): RummikubCard[] {
+    return _.flatten(_.range(15).map(value =>
+      Object.values(IRummikubCardColor).map(color => ({
+        color, value
+      }))
+    ));
   }
 }

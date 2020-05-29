@@ -1,9 +1,7 @@
-import { guard, HttpError,mutation, query, resolver } from "@athenajs/core";
+import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationCreateRummikubGameArgs, IMutationJoinRummikubGameArgs, IQuery, IRummikubPlayer } from "../graphql/types";
-import { AuthContext } from "../manager/auth";
+import { IMutation, IMutationCreateRummikubGameArgs, IQuery } from "../graphql/types";
 import { RummikubManager } from "../manager/rummikub";
-import { RummikubPlayer } from "../model/RummikubGame";
 
 @singleton()
 export class RummikubResolver {
@@ -16,29 +14,14 @@ export class RummikubResolver {
     action: "createAny"
   })
   @mutation()
-  async createRummikubGame(root: void, { name }: IMutationCreateRummikubGameArgs, context: AuthContext): Promise<IMutation["createRummikubGame"]> {
-    const user = await context.user();
-    return this.rummikubManager.games.create(user!, name);
-  }
-
-  @mutation()
-  async joinRummikubGame(root: void, { id }: IMutationJoinRummikubGameArgs, context: AuthContext): Promise<IMutation["joinRummikubGame"]> {
-    const user = await context.user();
-    const game = await this.rummikubManager.games.get(id);
-    if (!user) {
-      throw HttpError.badRequest("Missing player name");
-    }
-    await this.rummikubManager.games.join(game, user!);
-    return true;
+  async createRummikubGame(root: void, { name, privacy }: IMutationCreateRummikubGameArgs): Promise<IMutation["createRummikubGame"]> {
+    const game = await this.rummikubManager.game.create(privacy, name);
+    return game.toGqlObject();
   }
 
   @query()
   async rummikubGames(): Promise<IQuery["rummikubGames"]> {
-    return this.rummikubManager.games.getJoinable();
-  }
-
-  @resolver("RummikubPlayer.user")
-  async playerUser(root: RummikubPlayer): Promise<IRummikubPlayer["user"]> {
-    return this.rummikubManager.players.getUser(root);
+    const games = await this.rummikubManager.game.getJoinable();
+    return games.map(g => g.toGqlObject());
   }
 }

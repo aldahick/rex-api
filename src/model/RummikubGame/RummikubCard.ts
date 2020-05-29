@@ -1,9 +1,10 @@
 import { prop } from "@typegoose/typegoose";
+import { IRummikubCardColor } from "../../graphql/types";
 
 export class RummikubCard {
-  @prop({ required: true })
-  color!: string;
+  @prop({ required: true, enum: IRummikubCardColor })
+  color!: IRummikubCardColor;
 
-  @prop({ required: true })
-  number!: number;
+  @prop()
+  value?: number;
 }
