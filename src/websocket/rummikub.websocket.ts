@@ -48,6 +48,7 @@ export class RummikubWebsocketHandler {
         try {
           this.rummikubManager.socket.sendPlayers(game);
           if (game.status === RummikubGameStatus.InProgress) {
+            this.rummikubManager.socket.sendTurn(game);
             this.rummikubManager.socket.sendBoard(game);
             this.rummikubManager.socket.sendHand(socket).then(resolve).catch(reject);
           } else {

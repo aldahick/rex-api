@@ -35,7 +35,7 @@ export class RummikubGame {
   @prop()
   currentPlayerId?: string;
 
-  constructor(init?: Omit<RummikubGame, "_id" | "availableCards" | "toGqlObject">) {
+  constructor(init?: Omit<RummikubGame, "_id" | "availableCards" | "drawCard" | "toGqlObject">) {
     Object.assign(this, init);
   }
 
@@ -45,6 +45,11 @@ export class RummikubGame {
       name: this.name,
       playerNames: this.players.map(p => p.name)
     };
+  }
+
+  drawCard(player: RummikubPlayer) {
+    const availableCards = this.availableCards;
+    player.hand.push(availableCards[_.random(0, availableCards.length - 1)]);
   }
 
   get availableCards(): RummikubCard[] {

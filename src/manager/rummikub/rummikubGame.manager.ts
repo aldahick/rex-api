@@ -90,11 +90,12 @@ export class RummikubGameManager {
     if (game.players.length === 0) {
       throw HttpError.conflict("No players are in this game");
     }
+    _.range(14).forEach(() => {
+      for (const player of game.players) {
+        game.drawCard(player);
+      }
+    });
     for (const player of game.players) {
-      _.range(14).forEach(() => {
-        const availableCards = game.availableCards;
-        player.hand.push(availableCards[_.random(0, availableCards.length - 1)]);
-      });
       player.hand = _.sortBy(player.hand, c => c.color, c => c.value);
     }
     await this.db.rummikubGames.updateOne({

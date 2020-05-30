@@ -1,4 +1,5 @@
 # rummikub.server.players
 type RummikubServerPlayersPayload {
   players: [RummikubPlayer!]!
+  self: RummikubPlayer!
 }

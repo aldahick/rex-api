@@ -59,12 +59,12 @@ export class RummikubSocketManager {
   }
 
   async sendStart(game: RummikubGame) {
-    for (const player of game.players) {
-      const payload: IRummikubServerHandPayload = {
-        hand: player.hand
-      };
-      this.io.to(player.socketId).emit("rummikub.server.hand", payload);
-    }
+    this.sendToGameEach<IRummikubServerHandPayload>(
+      game,
+      "rummikub.server.hand",
+      ({ hand }) => ({ hand })
+    );
+    this.sendTurn(game);
   }
 
   sendBoard(game: RummikubGame) {
@@ -90,12 +90,14 @@ export class RummikubSocketManager {
   }
 
   sendPlayers(game: RummikubGame) {
-    this.sendToGame<IRummikubServerPlayersPayload>(game, "rummikub.server.players", {
-      players: game.players.filter(p => this.isConnected(p)).map(p => ({
-        _id: p._id,
-        name: p.name
-      }))
-    });
+    const players = game.players.filter(p => this.isConnected(p)).map(p => ({
+      _id: p._id,
+      name: p.name
+    }));
+    this.sendToGameEach<IRummikubServerPlayersPayload>(game, "rummikub.server.players", player => ({
+      players,
+      self: player
+    }));
   }
 
   sendTurn(game: RummikubGame) {
@@ -110,6 +112,12 @@ export class RummikubSocketManager {
 
   sendToGame<Payload>(game: RummikubGame, eventName: string, payload: Payload) {
     this.io.to(this.getRoom(game)).emit(eventName, payload);
+  }
+
+  sendToGameEach<Payload>(game: RummikubGame, eventName: string, payload: (player: RummikubPlayer) => Payload) {
+    for (const player of game.players) {
+      this.io.to(player.socketId).emit(eventName, payload(player));
+    }
   }
 
   getRoom(game: RummikubGame) {
