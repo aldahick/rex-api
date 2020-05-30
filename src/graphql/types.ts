@@ -140,7 +140,6 @@ export type IMutation = {
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
   createHost: IHost;
-  addMediaDownload: IProgress;
   createNote: INote;
   removeNote: Scalars['Boolean'];
   updateNoteBody: Scalars['Boolean'];
@@ -150,6 +149,7 @@ export type IMutation = {
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
+  addMediaDownload: IProgress;
   fetchWikiPagesUntil: IProgress;
   createRummikubGame: IRummikubGame;
 };
@@ -230,12 +230,6 @@ export type IMutationCreateHostArgs = {
 };
 
 
-export type IMutationAddMediaDownloadArgs = {
-  url: Scalars['String'];
-  destinationKey: Scalars['String'];
-};
-
-
 export type IMutationCreateNoteArgs = {
   title: Scalars['String'];
 };
@@ -279,6 +273,12 @@ export type IMutationCreateUserArgs = {
 export type IMutationSetUserPasswordArgs = {
   userId: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type IMutationAddMediaDownloadArgs = {
+  url: Scalars['String'];
+  destinationKey: Scalars['String'];
 };
 
 
@@ -331,16 +331,16 @@ export type IQuery = {
   containers: Array<IContainer>;
   host: IHost;
   hosts: Array<IHost>;
-  mediaItems: Array<IMediaItem>;
+  progress: IProgress;
   note: INote;
   notes: Array<INote>;
-  progress: IProgress;
   roles: Array<IRole>;
   steamGames: Array<ISteamGame>;
+  user: IUser;
+  mediaItems: Array<IMediaItem>;
+  wikiPage: IWikiPage;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
-  user: IUser;
-  wikiPage: IWikiPage;
   /** only shows public games */
   rummikubGames: Array<IRummikubGame>;
 };
@@ -356,17 +356,12 @@ export type IQueryHostArgs = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
-};
-
-
-export type IQueryNoteArgs = {
+export type IQueryProgressArgs = {
   id: Scalars['String'];
 };
 
 
-export type IQueryProgressArgs = {
+export type IQueryNoteArgs = {
   id: Scalars['String'];
 };
 
@@ -377,6 +372,21 @@ export type IQuerySteamGamesArgs = {
 };
 
 
+export type IQueryUserArgs = {
+  id?: Maybe<Scalars['String']>;
+};
+
+
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String'];
+};
+
+
+export type IQueryWikiPageArgs = {
+  name: Scalars['String'];
+};
+
+
 export type IQuerySteamPlayerArgs = {
   steamId64: Scalars['String'];
 };
@@ -384,16 +394,6 @@ export type IQuerySteamPlayerArgs = {
 
 export type IQuerySteamPlayersArgs = {
   steamIds64: Array<Scalars['String']>;
-};
-
-
-export type IQueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
-};
-
-
-export type IQueryWikiPageArgs = {
-  name: Scalars['String'];
 };
 
 export type IRole = {
@@ -439,6 +439,16 @@ export type IRummikubClientJoinPayload = {
   __typename?: 'RummikubClientJoinPayload';
   gameId: Scalars['String'];
   displayName: Scalars['String'];
+};
+
+export type IRummikubClientPlaceCardPayload = {
+  __typename?: 'RummikubClientPlaceCardPayload';
+  /** if null, from hand */
+  fromRowIndex?: Maybe<Scalars['Int']>;
+  fromCardIndex: Scalars['Int'];
+  /** if null, to hand */
+  toRowIndex?: Maybe<Scalars['Int']>;
+  toCardIndex: Scalars['Int'];
 };
 
 /** rummikub.client.placeCards */

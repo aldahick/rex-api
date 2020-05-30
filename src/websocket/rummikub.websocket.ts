@@ -5,8 +5,8 @@ import {
   IRummikubCardColor,
   IRummikubClientChatPayload,
   IRummikubClientJoinPayload,
-  IRummikubClientPlaceCardsPayload
-} from "../graphql/types";
+  IRummikubClientPlaceCardPayload,
+  IRummikubClientPlaceCardsPayload} from "../graphql/types";
 import { RummikubManager } from "../manager/rummikub";
 import { RummikubGame, RummikubGameStatus } from "../model/RummikubGame";
 
@@ -78,9 +78,10 @@ export class RummikubWebsocketHandler {
     if (game.currentPlayerId !== playerId) {
       throw HttpError.forbidden("It's not your turn!");
     }
-    await this.rummikubManager.game.nextTurn(game);
+    const chatMessage = await this.rummikubManager.game.nextTurn(game);
     game = await this.rummikubManager.game.get(game._id);
     this.rummikubManager.socket.sendTurn(game);
+    this.rummikubManager.socket.sendChat(game, chatMessage);
   }
 
   @websocketEvent("rummikub.client.placeCards", joi.object({
@@ -107,8 +108,30 @@ export class RummikubWebsocketHandler {
     this.rummikubManager.socket.sendBoard(game);
   }
 
+  @websocketEvent("rummikub.client.placeCard", joi.object({
+    fromRowIndex: joi.number(),
+    fromCardIndex: joi.number().required(),
+    toRowIndex: joi.number(),
+    toCardIndex: joi.number().required()
+  }).required())
+  async onPlaceCard({ data, socket }: WebsocketPayload<IRummikubClientPlaceCardPayload, any>) {
+    let game = await this.rummikubManager.socket.getGame(socket);
+    try {
+      const player = await this.rummikubManager.socket.getPlayer(socket, game);
+      const chatMessage = await this.rummikubManager.game.placeCard(game, player, data);
+      game = await this.rummikubManager.game.get(game._id);
+      this.rummikubManager.socket.sendBoard(game);
+      this.rummikubManager.socket.sendChat(game, chatMessage);
+    } catch (err) {
+      this.rummikubManager.socket.sendBoard(game, socket);
+      throw err;
+    } finally {
+      await this.rummikubManager.socket.sendHand(socket);
+    }
+  }
+
   @websocketEvent("rummikub.client.start")
-  async start({ socket }: WebsocketPayload<void, any>) {
+  async onStart({ socket }: WebsocketPayload<void, any>) {
     let game = await this.rummikubManager.socket.getGame(socket);
     if (game.status !== RummikubGameStatus.Lobby) {
       return true;

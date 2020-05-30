@@ -1,5 +1,5 @@
 import { MongoService } from "@athenajs/core";
-import { arrayProp,prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import * as _ from "lodash";
 import { IRummikubCardColor,IRummikubGame,IRummikubGamePrivacy } from "../../graphql/types";
 import { RummikubCard } from "./RummikubCard";
@@ -20,13 +20,13 @@ export class RummikubGame {
   @prop({ required: true, enum: IRummikubGamePrivacy })
   privacy!: IRummikubGamePrivacy;
 
-  @arrayProp({ required: true, items: RummikubCard, _id: false, dimensions: 2 })
+  @prop({ required: true, type: RummikubCard, _id: false, dim: 2 })
   board!: RummikubCard[][];
 
-  @arrayProp({ required: true, items: RummikubPlayer })
+  @prop({ required: true, type: RummikubPlayer })
   players!: RummikubPlayer[];
 
-  @arrayProp({ required: true, items: RummikubChatMessage })
+  @prop({ required: true, type: RummikubChatMessage })
   chatMessages!: RummikubChatMessage[];
 
   @prop()

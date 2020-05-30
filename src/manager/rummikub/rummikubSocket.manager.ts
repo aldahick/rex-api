@@ -63,10 +63,15 @@ export class RummikubSocketManager {
     this.sendTurn(game);
   }
 
-  sendBoard(game: RummikubGame) {
-    this.sendToGame<IRummikubServerBoardPayload>(game, "rummikub.server.board", {
+  sendBoard(game: RummikubGame, socket?: SocketIO.Socket) {
+    const payload: IRummikubServerBoardPayload = {
       board: game.board
-    });
+    };
+    if (socket) {
+      socket.emit("rummikub.server.board", payload);
+    } else {
+      this.sendToGame<IRummikubServerBoardPayload>(game, "rummikub.server.board", payload);
+    }
   }
 
   sendChat(game: RummikubGame, message: RummikubChatMessage) {

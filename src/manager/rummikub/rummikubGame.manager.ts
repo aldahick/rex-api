@@ -109,7 +109,7 @@ export class RummikubGameManager {
     });
   }
 
-  async nextTurn(game: RummikubGame): Promise<void> {
+  async nextTurn(game: RummikubGame): Promise<RummikubChatMessage> {
     const currentPlayerIndex = game.players.findIndex(p => p._id === game.currentPlayerId);
     let nextPlayerIndex = currentPlayerIndex + 1;
     if (nextPlayerIndex >= game.players.length) {
@@ -125,6 +125,7 @@ export class RummikubGameManager {
         [`players.${nextPlayerIndex}.hand`]: nextPlayer.hand
       }
     });
+    return this.createChat(game, `It's ${nextPlayer.name}'s turn!`);
   }
 
   async placeCards(game: RummikubGame, player: RummikubPlayer, { cards, boardIndex, rowIndex }: {
@@ -158,5 +159,57 @@ export class RummikubGameManager {
         [`players.${playerIndex}.hand`]: newHand
       }
     });
+  }
+
+  async placeCard(game: RummikubGame, player: RummikubPlayer, {
+    fromRowIndex, fromCardIndex, toRowIndex, toCardIndex
+  }: {
+    fromRowIndex?: number;
+    fromCardIndex: number;
+    toRowIndex?: number;
+    toCardIndex: number;
+  }): Promise<RummikubChatMessage> {
+    if (game.currentPlayerId !== player._id) {
+      throw HttpError.forbidden("It's not your turn!");
+    }
+    const getRow = (rowIndex?: number) => {
+      if (rowIndex === -1) {
+        game.board.push([]);
+        return game.board[game.board.length - 1];
+      }
+      if (rowIndex === undefined) {
+        return player.hand;
+      }
+      if (rowIndex >= 0 && rowIndex < game.board.length) {
+        return game.board[rowIndex];
+      }
+      throw new Error(`Row index out of bounds: ${rowIndex}`);
+    };
+
+    const fromRow = getRow(fromRowIndex);
+    const toRow = getRow(toRowIndex);
+
+    const [card] = fromRow.splice(fromCardIndex, 1);
+    card.source = {
+      rowIndex: fromRowIndex,
+      cardIndex: fromCardIndex
+    };
+    toRow.splice(toCardIndex, 0, card);
+
+    const playerIndex = game.players.findIndex(p => p._id === player._id);
+
+    await this.db.rummikubGames.updateOne({
+      _id: game._id
+    }, {
+      $set: {
+        board: game.board,
+        [`players.${playerIndex}.hand`]: player.hand
+      }
+    });
+
+    const destinationText = toRowIndex === -1
+      ? "in a new row"
+      : toRowIndex === undefined ? "in their hand" : "on the board";
+    return this.createChat(game, `${player.name} placed ${card.color}-${card.value} ${destinationText}`);
   }
 }
