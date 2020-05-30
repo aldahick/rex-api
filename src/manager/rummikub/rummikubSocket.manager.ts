@@ -59,11 +59,7 @@ export class RummikubSocketManager {
   }
 
   async sendStart(game: RummikubGame) {
-    this.sendToGameEach<IRummikubServerHandPayload>(
-      game,
-      "rummikub.server.hand",
-      ({ hand }) => ({ hand })
-    );
+    this.sendAllHands(game);
     this.sendTurn(game);
   }
 
@@ -89,6 +85,14 @@ export class RummikubSocketManager {
     socket.emit("rummikub.server.hand", payload);
   }
 
+  sendAllHands(game: RummikubGame) {
+    this.sendToGameEach<IRummikubServerHandPayload>(
+      game,
+      "rummikub.server.hand",
+      ({ hand }) => ({ hand })
+    );
+  }
+
   sendPlayers(game: RummikubGame) {
     const players = game.players.filter(p => this.isConnected(p)).map(p => ({
       _id: p._id,
@@ -108,6 +112,7 @@ export class RummikubSocketManager {
     this.sendToGame<IRummikubServerTurnPayload>(game, "rummikub.server.turn", {
       player
     });
+    this.sendAllHands(game);
   }
 
   sendToGame<Payload>(game: RummikubGame, eventName: string, payload: Payload) {

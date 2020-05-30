@@ -115,11 +115,14 @@ export class RummikubGameManager {
     if (nextPlayerIndex >= game.players.length) {
       nextPlayerIndex = 0;
     }
+    const nextPlayer = game.players[nextPlayerIndex];
+    game.drawCard(nextPlayer);
     await this.db.rummikubGames.updateOne({
       _id: game._id
     }, {
       $set: {
-        currentPlayerId: game.players[nextPlayerIndex]._id
+        currentPlayerId: nextPlayer._id,
+        [`players.${nextPlayerIndex}.hand`]: nextPlayer.hand
       }
     });
   }
