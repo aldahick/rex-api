@@ -121,7 +121,9 @@ export class RummikubWebsocketHandler {
       const chatMessage = await this.rummikubManager.game.placeCard(game, player, data);
       game = await this.rummikubManager.game.get(game._id);
       this.rummikubManager.socket.sendBoard(game);
-      this.rummikubManager.socket.sendChat(game, chatMessage);
+      if (chatMessage) {
+        this.rummikubManager.socket.sendChat(game, chatMessage);
+      }
     } catch (err) {
       this.rummikubManager.socket.sendBoard(game, socket);
       throw err;

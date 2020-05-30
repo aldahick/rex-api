@@ -168,7 +168,7 @@ export class RummikubGameManager {
     fromCardIndex: number;
     toRowIndex?: number;
     toCardIndex: number;
-  }): Promise<RummikubChatMessage> {
+  }): Promise<RummikubChatMessage | undefined> {
     if (game.currentPlayerId !== player._id) {
       throw HttpError.forbidden("It's not your turn!");
     }
@@ -207,6 +207,10 @@ export class RummikubGameManager {
       }
     });
 
+    // don't send chat if they're just rearranging something
+    if (fromRowIndex === toRowIndex) {
+      return undefined;
+    }
     const destinationText = toRowIndex === -1
       ? "in a new row"
       : toRowIndex === undefined ? "in their hand" : "on the board";
