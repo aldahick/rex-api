@@ -2,7 +2,7 @@ import { HttpError } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
 import { IRummikubGamePrivacy } from "../../graphql/types";
-import { RummikubCard,RummikubChatMessage,RummikubGame, RummikubGameStatus,RummikubPlayer } from "../../model/RummikubGame";
+import { RummikubChatMessage,RummikubGame, RummikubGameStatus,RummikubPlayer } from "../../model/RummikubGame";
 import { DatabaseService } from "../../service/database";
 
 @singleton()
@@ -111,54 +111,32 @@ export class RummikubGameManager {
 
   async nextTurn(game: RummikubGame): Promise<RummikubChatMessage> {
     const currentPlayerIndex = game.players.findIndex(p => p._id === game.currentPlayerId);
+    const currentPlayer = game.players[currentPlayerIndex];
     let nextPlayerIndex = currentPlayerIndex + 1;
     if (nextPlayerIndex >= game.players.length) {
       nextPlayerIndex = 0;
     }
+    const allBoardCards = _.flatten(game.board);
+    if (!allBoardCards.some(c => !!c.source)) {
+      game.drawCard(currentPlayer);
+    }
     const nextPlayer = game.players[nextPlayerIndex];
-    game.drawCard(nextPlayer);
     await this.db.rummikubGames.updateOne({
       _id: game._id
     }, {
       $set: {
         currentPlayerId: nextPlayer._id,
-        [`players.${nextPlayerIndex}.hand`]: nextPlayer.hand
+        [`players.${currentPlayerIndex}.hand`]: currentPlayer.hand,
       }
     });
-    return this.createChat(game, `It's ${nextPlayer.name}'s turn!`);
-  }
-
-  async placeCards(game: RummikubGame, player: RummikubPlayer, { cards, boardIndex, rowIndex }: {
-    cards: RummikubCard[];
-    boardIndex: number;
-    rowIndex: number;
-  }): Promise<void> {
-    if (game.currentPlayerId !== player._id) {
-      throw HttpError.forbidden("It's not your turn!");
-    }
-    const missingCards = _.differenceBy(cards, player.hand, c => `${c.color}-${c.value}`);
-    if (missingCards.length > 0) {
-      throw HttpError.forbidden("You can't play cards that aren't in your hand!");
-    }
-    if (boardIndex >= game.board.length) {
-      throw HttpError.conflict("Board index out of bounds");
-    }
-    // TODO validate against game rules
-    if (boardIndex === -1) { // new row
-      game.board.push(cards);
-    } else {
-      game.board[boardIndex].splice(rowIndex, 0, ...cards);
-    }
-    const newHand = _.differenceBy(player.hand, cards, c => `${c.color}-${c.value}`);
-    const playerIndex = game.players.findIndex(p => p._id === player._id);
     await this.db.rummikubGames.updateOne({
       _id: game._id
     }, {
-      $set: {
-        board: game.board,
-        [`players.${playerIndex}.hand`]: newHand
+      $unset: {
+        "board.$[].$[].source": ""
       }
     });
+    return this.createChat(game, `It's ${nextPlayer.name}'s turn!`);
   }
 
   async placeCard(game: RummikubGame, player: RummikubPlayer, {
@@ -190,10 +168,15 @@ export class RummikubGameManager {
     const toRow = getRow(toRowIndex);
 
     const [card] = fromRow.splice(fromCardIndex, 1);
-    card.source = {
-      rowIndex: fromRowIndex,
-      cardIndex: fromCardIndex
-    };
+    // if put from hand onto board
+    if (toRowIndex !== undefined && fromRowIndex === undefined) {
+      card.source = {
+        rowIndex: fromRowIndex,
+        cardIndex: fromCardIndex
+      };
+    } else if (toRowIndex === undefined) {
+      card.source = undefined;
+    }
     toRow.splice(toCardIndex, 0, card);
 
     const playerIndex = game.players.findIndex(p => p._id === player._id);

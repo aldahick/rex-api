@@ -2,11 +2,10 @@ import { HttpError,websocketEvent, WebsocketPayload } from "@athenajs/core";
 import * as joi from "@hapi/joi";
 import { singleton } from "tsyringe";
 import {
-  IRummikubCardColor,
   IRummikubClientChatPayload,
   IRummikubClientJoinPayload,
   IRummikubClientPlaceCardPayload,
-  IRummikubClientPlaceCardsPayload} from "../graphql/types";
+} from "../graphql/types";
 import { RummikubManager } from "../manager/rummikub";
 import { RummikubGame, RummikubGameStatus } from "../model/RummikubGame";
 
@@ -82,30 +81,6 @@ export class RummikubWebsocketHandler {
     game = await this.rummikubManager.game.get(game._id);
     this.rummikubManager.socket.sendTurn(game);
     this.rummikubManager.socket.sendChat(game, chatMessage);
-  }
-
-  @websocketEvent("rummikub.client.placeCards", joi.object({
-    cards: joi.array().items(joi.object({
-      color: joi.string().valid(...Object.values(IRummikubCardColor)).required(),
-      value: joi.number()
-    }).required()).required(),
-    boardIndex: joi.number().required(),
-    rowIndex: joi.number().required()
-  }).required())
-  async onPlaceCards({
-    data: {
-      cards,
-      boardIndex,
-      rowIndex
-    },
-    socket
-  }: WebsocketPayload<IRummikubClientPlaceCardsPayload, any>) {
-    let game = await this.rummikubManager.socket.getGame(socket);
-    const player = await this.rummikubManager.socket.getPlayer(socket, game);
-    await this.rummikubManager.game.placeCards(game, player, { cards, boardIndex, rowIndex });
-    game = await this.rummikubManager.game.get(game._id);
-    await this.rummikubManager.socket.sendHand(socket);
-    this.rummikubManager.socket.sendBoard(game);
   }
 
   @websocketEvent("rummikub.client.placeCard", joi.object({
