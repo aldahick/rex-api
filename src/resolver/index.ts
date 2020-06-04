@@ -8,6 +8,7 @@ export * from "./note.resolver";
 export * from "./progress.resolver";
 export * from "./role.resolver";
 export * from "./rummikub.resolver";
+export * from "./secret.resolver";
 export * from "./steamGame.resolver";
 export * from "./steamPlayer.resolver";
 export * from "./user.resolver";
