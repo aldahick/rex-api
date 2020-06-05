@@ -29,6 +29,7 @@
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "cheerio": "^1.0.0-rc.3",
+    "discord.js": "^12.2.0",
     "dockerode": "^3.2.0",
     "fs-extra": "^9.0.0",
     "googleapis": "^51.0.0",
@@ -42,7 +43,7 @@
   },
   "devDependencies": {
     "@aldahick/eslint-rules": "^0.7.1",
-    "@athenajs/core": "^0.4.2",
+    "@athenajs/core": "^0.4.3",
     "@graphql-codegen/cli": "^1.14.0",
     "@graphql-codegen/typescript": "^1.14.0",
     "@graphql-codegen/typescript-operations": "^1.14.0",
