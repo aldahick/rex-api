@@ -5,12 +5,10 @@ import { AuthContext } from "../manager/auth";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
 import { User } from "../model/User";
-import { DatabaseService } from "../service/database";
 
 @singleton()
 export class UserResolver {
   constructor(
-    private db: DatabaseService,
     private roleManager: RoleManager,
     private userManager: UserManager
   ) { }
@@ -30,6 +28,15 @@ export class UserResolver {
     } else {
       throw HttpError.forbidden();
     }
+  }
+
+  @guard({
+    resource: "user",
+    action: "readAny"
+  })
+  @query()
+  async users(): Promise<IQuery["users"]> {
+    return this.userManager.getAll();
   }
 
   @guard({

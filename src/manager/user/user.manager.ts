@@ -29,6 +29,10 @@ export class UserManager {
     return user?.toObject() || undefined;
   }
 
+  async getAll(): Promise<User[]> {
+    return this.db.users.find();
+  }
+
   async addRole(user: User, role: Role): Promise<void> {
     await this.db.users.updateOne({ _id: user._id }, {
       $addToSet: {

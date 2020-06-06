@@ -132,7 +132,9 @@ export type IMutation = {
   addCalendar: Scalars['Boolean'];
   removeCalendar: Scalars['Boolean'];
   createHost: IHost;
-  addMediaDownload: IProgress;
+  createNote: INote;
+  removeNote: Scalars['Boolean'];
+  updateNoteBody: Scalars['Boolean'];
   createContainer: IContainer;
   deleteContainers: Scalars['Boolean'];
   updateContainerPorts: Scalars['Boolean'];
@@ -141,17 +143,15 @@ export type IMutation = {
   startContainer: Scalars['Boolean'];
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
-  createNote: INote;
-  removeNote: Scalars['Boolean'];
-  updateNoteBody: Scalars['Boolean'];
-  setSecret: Scalars['Boolean'];
-  removeSecret: Scalars['Boolean'];
-  fetchSteamGames: IProgress;
+  addMediaDownload: IProgress;
   addPermissionsToRole: Scalars['Boolean'];
   createRole: IRole;
+  fetchSteamGames: IProgress;
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
+  setSecret: Scalars['Boolean'];
+  removeSecret: Scalars['Boolean'];
   fetchWikiPagesUntil: IProgress;
   createRummikubGame: IRummikubGame;
 };
@@ -189,9 +189,19 @@ export type IMutationCreateHostArgs = {
 };
 
 
-export type IMutationAddMediaDownloadArgs = {
-  url: Scalars['String'];
-  destinationKey: Scalars['String'];
+export type IMutationCreateNoteArgs = {
+  title: Scalars['String'];
+};
+
+
+export type IMutationRemoveNoteArgs = {
+  id: Scalars['String'];
+};
+
+
+export type IMutationUpdateNoteBodyArgs = {
+  id: Scalars['String'];
+  body: Scalars['String'];
 };
 
 
@@ -238,30 +248,9 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
-export type IMutationCreateNoteArgs = {
-  title: Scalars['String'];
-};
-
-
-export type IMutationRemoveNoteArgs = {
-  id: Scalars['String'];
-};
-
-
-export type IMutationUpdateNoteBodyArgs = {
-  id: Scalars['String'];
-  body: Scalars['String'];
-};
-
-
-export type IMutationSetSecretArgs = {
-  key: Scalars['String'];
-  value: Scalars['String'];
-};
-
-
-export type IMutationRemoveSecretArgs = {
-  key: Scalars['String'];
+export type IMutationAddMediaDownloadArgs = {
+  url: Scalars['String'];
+  destinationKey: Scalars['String'];
 };
 
 
@@ -292,6 +281,17 @@ export type IMutationCreateUserArgs = {
 export type IMutationSetUserPasswordArgs = {
   userId: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type IMutationSetSecretArgs = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+
+export type IMutationRemoveSecretArgs = {
+  key: Scalars['String'];
 };
 
 
@@ -342,19 +342,20 @@ export type IQuery = {
   calendars: Array<ICalendar>;
   host: IHost;
   hosts: Array<IHost>;
-  mediaItems: Array<IMediaItem>;
-  container: IContainer;
-  containers: Array<IContainer>;
   note: INote;
   notes: Array<INote>;
+  container: IContainer;
+  containers: Array<IContainer>;
   progress: IProgress;
-  secret: ISecret;
-  secrets: Array<ISecret>;
-  steamGames: Array<ISteamGame>;
+  mediaItems: Array<IMediaItem>;
+  roles: Array<IRole>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
-  roles: Array<IRole>;
+  steamGames: Array<ISteamGame>;
   user: IUser;
+  users: Array<IUser>;
+  secret: ISecret;
+  secrets: Array<ISecret>;
   wikiPage: IWikiPage;
   /** only shows public games */
   rummikubGames: Array<IRummikubGame>;
@@ -366,17 +367,12 @@ export type IQueryHostArgs = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
-};
-
-
-export type IQueryContainerArgs = {
+export type IQueryNoteArgs = {
   id: Scalars['String'];
 };
 
 
-export type IQueryNoteArgs = {
+export type IQueryContainerArgs = {
   id: Scalars['String'];
 };
 
@@ -386,19 +382,8 @@ export type IQueryProgressArgs = {
 };
 
 
-export type IQuerySecretArgs = {
-  key: Scalars['String'];
-};
-
-
-export type IQuerySecretsArgs = {
-  prefix: Scalars['String'];
-};
-
-
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'];
-  search: Scalars['String'];
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String'];
 };
 
 
@@ -412,8 +397,24 @@ export type IQuerySteamPlayersArgs = {
 };
 
 
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'];
+  search: Scalars['String'];
+};
+
+
 export type IQueryUserArgs = {
   id?: Maybe<Scalars['String']>;
+};
+
+
+export type IQuerySecretArgs = {
+  key: Scalars['String'];
+};
+
+
+export type IQuerySecretsArgs = {
+  prefix: Scalars['String'];
 };
 
 
