@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@aldahick/eslint-rules": "^0.7.1",
-    "@athenajs/core": "^0.4.3",
+    "@athenajs/core": "^0.4.4",
     "@graphql-codegen/cli": "^1.14.0",
     "@graphql-codegen/typescript": "^1.14.0",
     "@graphql-codegen/typescript-operations": "^1.14.0",
