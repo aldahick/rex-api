@@ -36,7 +36,7 @@ You may have given a bad user ID - make sure to use your steam ID (if your profi
       gamesCount[id] = (gamesCount[id] || 0) + 1;
     }
     const commonGames = Object.entries(gamesCount)
-      .filter(([, count]) => count === players.length)
+      .filter(([, count]) => count === playersWithGames.length)
       .map(([gameId]) => allGames.find(g => g._id === Number(gameId))!);
     const body = _.sortBy(commonGames.map(g => `* ${g.name}`), g => g.toLowerCase()).join("\n");
     const hastebinUrl = await this.hastebinService.create(body);
