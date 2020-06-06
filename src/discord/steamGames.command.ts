@@ -22,7 +22,11 @@ export class SteamGamesCommand {
       players = await this.steamPlayerManager.getMany(steamIds);
     } catch (err) {
       this.logger.error(err, "discord.steamGames");
-      return `An error occurred: ${err.message}`;
+      await res.edit(`
+An error occurred: ${err.message}
+You may have given a bad user ID - make sure to use your steam ID (if your profile URL is https://steamcommunity.com/id/tiin57, give me "tiin57")
+`.trim());
+      return;
     }
     const playersWithoutGames = players.filter(p => !p.ownedGames);
     const playersWithGames = players.filter(p => !!p.ownedGames);
