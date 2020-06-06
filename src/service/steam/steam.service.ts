@@ -1,6 +1,6 @@
 import axios from "axios";
 import { singleton } from "tsyringe";
-import * as url from "url";
+import { resolve as resolveUrl } from "url";
 import { ConfigService } from "../config";
 import * as IPlayerService from "./dto/IPlayerService";
 import * as ISteamUser from "./dto/ISteamUser";
@@ -15,15 +15,17 @@ export class SteamService {
   ) { }
 
   async getAllGames(): Promise<{ id: number; name: string }[]> {
-    const { data } = await axios.get<{ applist: { apps: any[] } }>(url.resolve(BASE_URL, "/ISteamApps/GetAppList/v2/"));
+    const url = resolveUrl(BASE_URL, "/ISteamApps/GetAppList/v2/");
+    const { data } = await axios.get<{ applist: { apps: any[] } }>(url);
     return data.applist.apps.map(({ appid, name }) => ({ id: appid, name }));
   }
 
   async getPlayerSummary(steamId64: string): Promise<SteamPlayer> {
-    const { data: { response: { players } } } = await axios.get<ISteamUser.GetPlayerSummaries>(url.resolve(BASE_URL, `/ISteamUser/GetPlayerSummaries/v2/?${new URLSearchParams({
+    const url = resolveUrl(BASE_URL, "/ISteamUser/GetPlayerSummaries/v2/?");
+    const { data: { response: { players } } } = await axios.get<ISteamUser.GetPlayerSummaries>(url + new URLSearchParams({
       key: this.config.steamApiKey,
       steamids: steamId64
-    })}`));
+    }));
     if (players.length === 0) {
       throw new Error(`no players found for steamid="${steamId64}"`);
     }
@@ -37,11 +39,21 @@ export class SteamService {
     };
   }
 
-  async getPlayerOwnedGameIds(steamId64: string): Promise<number[]> {
-    const { data: { response: { games } } } = await axios.get<IPlayerService.GetOwnedGames>(url.resolve(BASE_URL, `/IPlayerService/GetOwnedGames/v0001/?${new URLSearchParams({
+  async getPlayerOwnedGameIds(steamId64: string): Promise<number[] | undefined> {
+    const url = resolveUrl(BASE_URL, "/IPlayerService/GetOwnedGames/v0001/?");
+    const { data: { response: { games } } } = await axios.get<IPlayerService.GetOwnedGames>(url + new URLSearchParams({
       key: this.config.steamApiKey,
       steamid: steamId64
-    })}`));
-    return games.map(({ appid }) => appid);
+    }));
+    return games?.map(({ appid }) => appid);
+  }
+
+  async getSteamId64FromUsername(username: string): Promise<string | undefined> {
+    const url = resolveUrl(BASE_URL, "/ISteamUser/ResolveVanityURL/v0001/?");
+    const { data: { response: { steamid } } } = await axios.get<ISteamUser.ResolveVanityUrl>(url + new URLSearchParams({
+      key: this.config.steamApiKey,
+      vanityurl: username
+    }));
+    return steamid;
   }
 }

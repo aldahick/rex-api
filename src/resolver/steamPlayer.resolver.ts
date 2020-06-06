@@ -18,7 +18,7 @@ export class SteamPlayerResolver {
   })
   @query()
   async steamPlayer(root: void, { steamId64 }: IQuerySteamPlayerArgs): Promise<IQuery["steamPlayer"]> {
-    const { player, ownedGames } = await this.steamPlayerManager.get(steamId64);
+    const { player, ownedGames = [] } = await this.steamPlayerManager.get(steamId64);
     return this.toGqlObject(player, ownedGames);
   }
 
@@ -29,7 +29,7 @@ export class SteamPlayerResolver {
   @query()
   async steamPlayers(root: void, { steamIds64 }: IQuerySteamPlayersArgs): Promise<IQuery["steamPlayers"]> {
     const players = await this.steamPlayerManager.getMany(steamIds64);
-    return players.map(({ player, ownedGames }) => this.toGqlObject(player, ownedGames));
+    return players.map(({ player, ownedGames = [] }) => this.toGqlObject(player, ownedGames));
   }
 
   private toGqlObject(player: SteamPlayer, ownedGames: SteamGame[]) {

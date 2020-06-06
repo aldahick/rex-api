@@ -36,7 +36,7 @@ export class DiscordRegistry {
       for (const metadata of metadatas) {
         const commandHandler = this.buildCommandHandler(handler[metadata.methodName].bind(handler));
         this.logger.trace({ ...metadata, className: handler.name }, "register.discordCommand");
-        this.commandEvents.on(metadata.command, commandHandler);
+        this.commandEvents.on(metadata.command.toLowerCase(), commandHandler);
       }
     }
   }
@@ -76,6 +76,6 @@ export class DiscordRegistry {
       message,
       args,
     };
-    this.commandEvents.emit(command, payload);
+    this.commandEvents.emit(command.toLowerCase(), payload);
   }
 }
