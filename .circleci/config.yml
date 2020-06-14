@@ -74,5 +74,5 @@ jobs:
           name: Build and deploy Docker
           command: |
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin https://registry.alexhicks.net
-            docker build -t "$DOCKER_REPO:latest" .
+            docker build -t "$DOCKER_REPO:latest" /home/circleci/project/dist
             docker push "$DOCKER_REPO:latest"
