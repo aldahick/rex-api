@@ -3,20 +3,76 @@ version: 2.1
 workflows:
   build_and_deploy:
     jobs:
-      - build_and_deploy
+      - install_dependencies
+      - build:
+          requires:
+            - install_dependencies
+      - lint:
+          requires:
+            - install_dependencies
+      - deploy:
+          requires:
+            - build
+            - lint
+          filters:
+            branches:
+              only: master
 
 jobs:
-  build_and_deploy:
+  install_dependencies:
+    docker:
+      - image: circleci/node:12.18
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package-lock.json" }}
+          - v1-dependencies-
+      - run:
+          name: Install NPM modules
+          command: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+  lint:
+    docker:
+      - image: circleci/node:12.18
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Lint
+          command: npm run lint
+  build:
+    docker:
+      - image: circleci/node:12.18
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package-lock.json" }}
+      - run:
+          name: Build
+          command: npm run build
+      - save_cache:
+          paths:
+            - dist
+          key: v1-dist
+  deploy:
     docker:
       - image: circleci/python
     steps:
       - checkout
       - setup_remote_docker
+      - restore_cache:
+          keys:
+          - v1-dist
       - run:
           name: Build and deploy Docker
           command: |
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin https://registry.alexhicks.net
             docker build -t "$DOCKER_REPO:latest" .
-            if [ "$CIRCLE_BRANCH" == "master" ]; then
-              docker push "$DOCKER_REPO:latest"
-            fi
+            docker push "$DOCKER_REPO:latest"
