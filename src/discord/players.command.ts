@@ -32,7 +32,7 @@ export class PlayersCommand {
     }
     const playerNames = _.sortBy(players.map(p => p.name || ""), n => n.toLowerCase()).filter(n => !!n.trim());
     await res.edit(`
-There are ${players.length} players on ${serverUrl}${players.length > 0 ? ":" : "."} ${playerNames.join(", ")}
+There are ${playerNames.length} players on ${serverUrl}${players.length > 0 ? ":" : "."} ${playerNames.join(", ")}
 `.trim());
   }
 }
