@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/aldahick/rex-api#readme",
   "dependencies": {
+    "@athenajs/core": "^0.4.4",
     "@hapi/joi": "^17.1.1",
     "@typegoose/typegoose": "^7.1.3",
     "accesscontrol": "^2.2.1",
@@ -45,7 +46,6 @@
   },
   "devDependencies": {
     "@aldahick/eslint-rules": "^0.7.1",
-    "@athenajs/core": "^0.4.4",
     "@graphql-codegen/cli": "^1.14.0",
     "@graphql-codegen/typescript": "^1.14.0",
     "@graphql-codegen/typescript-operations": "^1.14.0",
