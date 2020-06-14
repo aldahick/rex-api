@@ -1,6 +1,7 @@
 import { LoggerService } from "@athenajs/core";
 import * as Gamedig from "gamedig";
 import * as _ from "lodash";
+import * as pluralize from "pluralize";
 import { singleton } from "tsyringe";
 import * as url from "url";
 import { discordCommand, DiscordPayload } from "../registry/discord";
@@ -32,7 +33,7 @@ export class PlayersCommand {
     }
     const playerNames = _.sortBy(players.map(p => p.name || ""), n => n.toLowerCase()).filter(n => !!n.trim());
     await res.edit(`
-There are ${playerNames.length} players on ${serverUrl}${players.length > 0 ? ":" : "."} ${playerNames.join(", ")}
+There are ${playerNames.length} ${pluralize("player", playerNames.length)} on ${serverUrl}${players.length > 0 ? ":" : "."} ${playerNames.join(", ")}
 `.trim());
   }
 }
