@@ -8,9 +8,9 @@ export class ConfigService extends BaseConfigService {
     token: ConfigUtils.optional("DISCORD_TOKEN")
   };
   readonly googleAuth = {
-    clientId: ConfigUtils.required("GOOGLE_CLIENT_ID")
+    clientId: ConfigUtils.optional("GOOGLE_CLIENT_ID")
   };
-  readonly mediaDir = ConfigUtils.required("MEDIA_DIR");
+  readonly mediaDir = ConfigUtils.optional("MEDIA_DIR");
   readonly mongoUrl = ConfigUtils.required("MONGO_URL");
-  readonly steamApiKey = ConfigUtils.required("STEAM_API_KEY");
+  readonly steamApiKey = ConfigUtils.optional("STEAM_API_KEY");
 }

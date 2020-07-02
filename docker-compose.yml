@@ -1,0 +1,33 @@
+version: "3.8"
+
+networks:
+  rex:
+    driver: bridge
+    attachable: true
+
+services:
+  mongo:
+    image: mongo:4.2
+    logging:
+      # we really don't care about logs for mongo
+      driver: none
+    ports:
+      - 27017:27017
+    networks:
+      - rex
+  api:
+    build:
+      dockerfile: docker/dev.Dockerfile
+      context: .
+    depends_on:
+      - mongo
+    networks:
+      - rex
+    ports:
+      - 8080:8080
+    environment:
+      HTTP_PORT: 8080
+      # CHANGE THIS IF YOU USE IT OUTSIDE OF LOCAL DEV
+      JWT_KEY: egiuj489t35tbeb5ger
+      MONGO_URL: mongodb://mongo:27017/rex
+

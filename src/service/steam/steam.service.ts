@@ -23,7 +23,7 @@ export class SteamService {
   async getPlayerSummary(steamId64: string): Promise<SteamPlayer> {
     const url = resolveUrl(BASE_URL, "/ISteamUser/GetPlayerSummaries/v2/?");
     const { data: { response: { players } } } = await axios.get<ISteamUser.GetPlayerSummaries>(url + new URLSearchParams({
-      key: this.config.steamApiKey,
+      key: this.apiKey,
       steamids: steamId64
     }));
     if (players.length === 0) {
@@ -42,7 +42,7 @@ export class SteamService {
   async getPlayerOwnedGameIds(steamId64: string): Promise<number[] | undefined> {
     const url = resolveUrl(BASE_URL, "/IPlayerService/GetOwnedGames/v0001/?");
     const { data: { response: { games } } } = await axios.get<IPlayerService.GetOwnedGames>(url + new URLSearchParams({
-      key: this.config.steamApiKey,
+      key: this.apiKey,
       steamid: steamId64
     }));
     return games?.map(({ appid }) => appid);
@@ -51,9 +51,17 @@ export class SteamService {
   async getSteamId64FromUsername(username: string): Promise<string | undefined> {
     const url = resolveUrl(BASE_URL, "/ISteamUser/ResolveVanityURL/v0001/?");
     const { data: { response: { steamid } } } = await axios.get<ISteamUser.ResolveVanityUrl>(url + new URLSearchParams({
-      key: this.config.steamApiKey,
+      key: this.apiKey,
       vanityurl: username
     }));
     return steamid;
+  }
+
+  private get apiKey(): string {
+    const { steamApiKey } = this.config;
+    if (!steamApiKey) {
+      throw new Error("Missing environment variable STEAM_API_KEY");
+    }
+    return steamApiKey;
   }
 }

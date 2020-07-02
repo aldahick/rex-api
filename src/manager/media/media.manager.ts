@@ -92,6 +92,9 @@ export class MediaManager {
   }
 
   private toFilename(user: User, key: string): string {
+    if (!this.config.mediaDir) {
+      throw new Error("Missing environment variable MEDIA_DIR");
+    }
     return path.resolve(this.config.mediaDir, user.email, key.replace(/^\//, "").replace(/\.\./g, ""));
   }
 }

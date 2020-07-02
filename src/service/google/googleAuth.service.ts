@@ -15,6 +15,9 @@ export class GoogleAuthService {
   ) { }
 
   async getIdTokenPayload(idToken: string): Promise<GoogleTokenPayload | undefined> {
+    if (!this.config.googleAuth.clientId) {
+      throw new Error("Missing environment variable GOOGLE_CLIENT_ID");
+    }
     const api = new google.GoogleApis();
     const ticket = await new api.auth.OAuth2().verifyIdToken({
       idToken,
