@@ -12,8 +12,13 @@ export class PlayersCommand {
     private logger: LoggerService
   ) { }
 
-  @discordCommand("players")
-  async players({ args: [serverUrl], message }: DiscordPayload) {
+  @discordCommand("players", {
+    helpText: "Tells you who's playing on a given server IP (works with lots of games)."
+  })
+  async players({ args: [serverUrl], command, message }: DiscordPayload) {
+    if (!serverUrl) {
+      return `Usage: ${command} <game>://<host>:[port] (example: ${command} minecraft://tiin57.net:25565) (port is not required)`;
+    }
     const { protocol, hostname, port } = url.parse(serverUrl);
     if (!protocol || !hostname) {
       return "I don't know how to ping that URL.";

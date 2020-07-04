@@ -10,7 +10,9 @@ export class UltimateBraveryCommand {
     private ultimateBraveryService: UltimateBraveryService
   ) { }
 
-  @discordCommand(["ultimateBravery", "ub"])
+  @discordCommand(["ultimateBravery", "ub"], {
+    helpText: "Creates an LoL Ultimate Bravery lobby on <https://ultimate-bravery.net> with the usual options."
+  })
   async ultimateBravery({ message }: DiscordPayload) {
     const res = await message.reply("Gimme a second to think about it...");
     try {

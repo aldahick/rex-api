@@ -13,8 +13,13 @@ export class SteamGamesCommand {
     private steamPlayerManager: SteamPlayerManager
   ) { }
 
-  @discordCommand("steamGames")
-  async steamGames({ args: identifiers, message }: DiscordPayload) {
+  @discordCommand(["steamGames", "commonSteamGames"], {
+    helpText: "Finds all games that given Steam users have in common."
+  })
+  async steamGames({ args: identifiers, command, message }: DiscordPayload) {
+    if (identifiers.length === 0) {
+      return `Usage: ${command} <steam usernames or ids...>`;
+    }
     const steamIds = await this.steamPlayerManager.resolveUsernames(identifiers);
     let players: SteamPlayerWithGames[];
     const res = await message.reply("Gimme a second to think about it...");

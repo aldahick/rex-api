@@ -10,16 +10,14 @@ import { DiscordPayload } from "./DiscordPayload";
 export class DiscordRegistry {
   readonly client = new discord.Client();
 
+  readonly commandMetadatas: DiscordMetadata[] = [];
+
   private readonly commandEvents = new EventEmitter();
 
   constructor(
     private config: ConfigService,
     private logger: LoggerService
   ) { }
-
-  private get commandPrefix(): string {
-    return this.config.discord.commandPrefix || "~";
-  }
 
   async init() {
     if (!this.config.discord.token) {
@@ -33,6 +31,7 @@ export class DiscordRegistry {
   register(handlers: any[]) {
     for (const handler of handlers.map(c => container.resolve<any>(c))) {
       const metadatas = DecoratorUtils.get<DiscordMetadata[]>(DISCORD_METADATA_KEY, handler) || [];
+      this.commandMetadatas.push(...metadatas);
       for (const metadata of metadatas) {
         const commandHandler = this.buildCommandHandler(handler[metadata.methodName].bind(handler));
         this.logger.trace({ ...metadata, className: handler.name }, "register.discordCommand");
@@ -67,14 +66,15 @@ export class DiscordRegistry {
 
   private async onMessage(message: discord.Message): Promise<void> {
     const { author, content } = message;
-    if (!content.startsWith(this.commandPrefix)) { // ignore non-commands
+    if (!content.startsWith(this.config.discord.commandPrefix)) { // ignore non-commands
       return;
     }
     if (author.bot) { // ignore bot messages
       return;
     }
-    const [command, ...args] = content.slice(this.commandPrefix.length).split(" ");
+    const [command, ...args] = content.slice(this.config.discord.commandPrefix.length).split(" ");
     const payload: DiscordPayload = {
+      command: `${this.config.discord.commandPrefix}${command}`,
       message,
       args,
     };

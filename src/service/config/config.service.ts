@@ -4,7 +4,7 @@ import { singleton } from "tsyringe";
 @singleton()
 export class ConfigService extends BaseConfigService {
   readonly discord = {
-    commandPrefix: ConfigUtils.optional("DISCORD_COMMAND_PREFIX"),
+    commandPrefix: ConfigUtils.optional("DISCORD_COMMAND_PREFIX") || "~",
     token: ConfigUtils.optional("DISCORD_TOKEN")
   };
   readonly googleAuth = {
