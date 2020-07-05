@@ -4,6 +4,8 @@
 
 FROM node:12.18-alpine
 
+RUN apk add python
+
 WORKDIR /app
 
 COPY package.json ./
