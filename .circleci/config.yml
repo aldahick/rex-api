@@ -60,7 +60,7 @@ jobs:
       - save_cache:
           paths:
             - dist
-          key: v1-dist
+          key: v1-dist-{{ .Revision }}
   deploy:
     docker:
       - image: circleci/python
@@ -69,7 +69,8 @@ jobs:
       - setup_remote_docker
       - restore_cache:
           keys:
-          - v1-dist
+          - v1-dist-{{ .Revision }}
+          - v1-dist-
       - run:
           name: Build and deploy Docker
           command: |
