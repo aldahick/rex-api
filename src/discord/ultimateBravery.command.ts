@@ -17,12 +17,12 @@ export class UltimateBraveryCommand {
     const res = await message.reply("Gimme a second to think about it...");
     try {
       const url = await this.ultimateBraveryService.createGroup({
-        username: "Vulcan (leaving soon, I promise)",
-        mapName: "ARAM",
-        regionName: "NA",
+        username: "Vulcan (leaving)",
+        participantCount: 10,
+        level: 10,
         isPublic: false
       });
-      await res.edit(`Here there be random bullshit: ${url}`);
+      await res.edit(`Here there be random bullshit: <${url}>`);
     } catch (err) {
       await res.edit(`An error occurred: ${err.message}`);
       this.logger.error(err, "discord.ultimateBravery");

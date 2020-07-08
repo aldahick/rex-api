@@ -1,58 +1,56 @@
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import axios from "axios";
-import * as cheerio from "cheerio";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
 
-const BASE_URL = "https://group.ultimate-bravery.net";
+const GROUP_BASE_URL = "https://ultimate-bravery.net/Classic/Group";
+const API_BASE_URL = "https://api.ultimate-bravery.net";
 
 @singleton()
 export class UltimateBraveryService {
-  async createGroup({ username, mapName, regionName, isPublic }: {
+  async createGroup({ username, level, participantCount, isPublic }: {
     username: string;
-    mapName: string;
-    regionName: string;
     isPublic: boolean;
+    level: number;
+    participantCount: number;
   }) {
-    const { data: html } = await axios.get(`${BASE_URL}/Home/Group`);
-    const $ = cheerio.load(html);
+    const connection = await this.connect();
 
-    // use the default level
-    const level = Number($("#Level").val());
-
-    // find the map ID
-    const mapId = Number($("input[name=SelectedMap]")
-      .parent(`:contains("${mapName}")`)
-      .children("input")
-      .val());
-
-    // find region ID
-    const regionId = Number($(`#Region option:contains("${regionName}")`).val());
-
-    // use max number of participants
-    const participantCount = Number($("#NumberOfParticipants").attr("data-val-range-max"));
-
-    const connection = new HubConnectionBuilder()
-      .withUrl(`${BASE_URL}/grouphub`)
-      .configureLogging(LogLevel.None)
-      .build();
-    await connection.start();
-
-    const onJoin = new Promise<number>(resolve => {
-      connection.on("JoinedSuccessfully", (gid: number) => {
-        connection.off("JoinedSuccessfully");
+    const onCreate = new Promise<number>(resolve => {
+      connection.on("CreatedGroupSuccessfully", (gid: number) => {
+        connection.off("CreatedGroupSuccessfully");
         resolve(gid);
       });
     });
 
+    const regionId = "NA1";
+    const mapId = 12;
+
     await connection.invoke("CreateGroup", username, level, mapId, regionId, participantCount, isPublic);
 
-    const groupId = await onJoin;
+    const groupId = await onCreate;
 
     connection.on("PlayerJoined", () => {
       connection.stop().catch(_.noop);
     });
 
-    return `${BASE_URL}/Home/Group/${groupId}`;
+    return `${GROUP_BASE_URL}/?groupId=${groupId}`;
+  }
+
+  private async connect() {
+    const { data: { token } } = await axios.post<{
+      id: string;
+      token: string;
+    }>(`${API_BASE_URL}/bo/api/ultimate-bravery/v1/authenticate`);
+
+    const connection = new HubConnectionBuilder()
+      .withUrl(`${API_BASE_URL}/grouphub`, {
+        accessTokenFactory: () => token
+      })
+      .configureLogging(LogLevel.None)
+      .build();
+    await connection.start();
+
+    return connection;
   }
 }
