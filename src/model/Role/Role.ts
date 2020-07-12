@@ -1,5 +1,5 @@
 import { MongoService } from "@athenajs/core";
-import { arrayProp,prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import { RolePermission } from "./RolePermission";
 
 export class Role {
@@ -9,7 +9,7 @@ export class Role {
   @prop({ required: true })
   name!: string;
 
-  @arrayProp({ required: true, items: RolePermission, _id: false })
+  @prop({ required: true, type: RolePermission, _id: false })
   permissions!: RolePermission[];
 
   constructor(init?: Omit<Role, "_id">) {

@@ -1,5 +1,5 @@
 import { MongoService } from "@athenajs/core";
-import { arrayProp,prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import * as randomstring from "randomstring";
 import { RummikubCard } from "./RummikubCard";
 
@@ -10,7 +10,7 @@ export class RummikubPlayer {
   @prop({ required: true })
   name!: string;
 
-  @arrayProp({ required: true, items: RummikubCard, _id: false })
+  @prop({ required: true, type: RummikubCard, _id: false })
   hand!: RummikubCard[];
 
   @prop({ required: true })

@@ -1,5 +1,5 @@
 import { MongoService } from "@athenajs/core";
-import { arrayProp,prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import { IProgress, IProgressStatus } from "../../graphql/types";
 import { ProgressLog } from "./ProgressLog";
 import { ProgressStatus } from "./ProgressStatus";
@@ -17,7 +17,7 @@ export class Progress {
   @prop({ required: true, enum: ProgressStatus })
   status!: ProgressStatus;
 
-  @arrayProp({ required: true, items: ProgressLog, _id: false })
+  @prop({ required: true, type: ProgressLog, _id: false })
   logs!: ProgressLog[];
 
   constructor(init?: Omit<Progress, "_id" | "toGqlObject">) {

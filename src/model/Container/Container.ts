@@ -1,5 +1,5 @@
 import { MongoService } from "@athenajs/core";
-import { arrayProp,prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import { ContainerPort } from "./ContainerPort";
 import { ContainerVariable } from "./ContainerVariable";
 import { ContainerVolume } from "./ContainerVolume";
@@ -26,13 +26,13 @@ export class Container {
   @prop({ required: true })
   networkName!: string;
 
-  @arrayProp({ required: true, items: ContainerPort, _id: false })
+  @prop({ required: true, type: ContainerPort, _id: false })
   ports!: ContainerPort[];
 
-  @arrayProp({ required: true, items: ContainerVariable, _id: false })
+  @prop({ required: true, type: ContainerVariable, _id: false })
   variables!: ContainerVariable[];
 
-  @arrayProp({ required: true, items: ContainerVolume, _id: false })
+  @prop({ required: true, type: ContainerVolume, _id: false })
   volumes!: ContainerVolume[];
 
   constructor(init?: Omit<Container, "_id">) {

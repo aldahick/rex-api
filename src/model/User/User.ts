@@ -1,5 +1,5 @@
 import { MongoService } from "@athenajs/core";
-import { arrayProp,prop } from "@typegoose/typegoose";
+import { prop } from "@typegoose/typegoose";
 import { UserAuth } from "./UserAuth";
 import { UserCalendar } from "./UserCalendar";
 import { UserNote } from "./UserNote";
@@ -17,13 +17,13 @@ export class User {
   @prop()
   username?: string;
 
-  @arrayProp({ required: true, items: String })
+  @prop({ required: true, type: String })
   roleIds!: string[];
 
-  @arrayProp({ required: true, items: UserCalendar })
+  @prop({ required: true, type: UserCalendar })
   calendars!: UserCalendar[];
 
-  @arrayProp({ required: true, items: UserNote })
+  @prop({ required: true, type: UserNote })
   notes!: UserNote[];
 
   constructor(init?: Omit<User, "_id">) {
