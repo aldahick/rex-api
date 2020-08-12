@@ -9,7 +9,7 @@
     "docker:up": "cross-env COMPOSE_PROJECT_NAME=rex docker-compose up",
     "build": "tsc",
     "lint": "eslint --ext .ts .",
-    "generate": "npm run generate:graphql",
+    "generate": "yarn generate:graphql",
     "generate:graphql": "graphql-codegen --config codegen.graphql.yml",
     "createToken": "node scripts/createToken.js"
   },
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/aldahick/rex-api#readme",
   "dependencies": {
-    "@athenajs/core": "^0.5.0",
+    "@athenajs/core": "^0.5.2",
     "@hapi/joi": "^17.1.1",
     "@microsoft/signalr": "^3.1.5",
     "@typegoose/typegoose": "^7.3.0",

@@ -54,10 +54,10 @@
   resolved "https://registry.yarnpkg.com/@ardatan/aggregate-error/-/aggregate-error-0.0.1.tgz#1403ac5de10d8ca689fc1f65844c27179ae1d44f"
   integrity sha512-UQ9BequOTIavs0pTHLMwQwKQF8tTV1oezY/H2O9chA+JNPFZSua55xpU5dPSjAU9/jLJ1VwU+HJuTVN8u7S6Fg==
 
-"@athenajs/core@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@athenajs/core/-/core-0.5.0.tgz#01425e2fa6bcd677f51ee90c765dacf50f7649ec"
-  integrity sha512-modG9hdXESJPz52BRpubprrz3QjqpNVuackVyUbGBBSumkr4LMERDAhTl+UD/dfdhFbhhcqn9QCOvD6SJ6tIXQ==
+"@athenajs/core@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@athenajs/core/-/core-0.5.2.tgz#6e4bbb4163a988741bc8d22cc8d4ce048987907a"
+  integrity sha512-rWRlXBJKrZkSXJO3pfGfc0j3uSH2Xu2TZCZ09utrJseka1CU0nCkbT2zU6Bautusw6srrSpbUPph4sezaU4F7g==
   dependencies:
     "@hapi/joi" "^17.1.1"
     "@typegoose/typegoose" "^7.3.0"
