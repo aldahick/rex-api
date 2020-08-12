@@ -6,12 +6,12 @@ RUN apk add python
 
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install
+RUN yarn
 
 COPY tsconfig.json ./
 COPY src ./src
-RUN npx tsc
+RUN yarn build
 
 COPY graphql ./graphql
 
-CMD npm run start:dev
+CMD yarn start:dev

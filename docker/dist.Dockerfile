@@ -10,10 +10,10 @@ WORKDIR /app
 
 COPY package.json ./
 COPY package-lock.json ./
-RUN npm install --production
+RUN yarn --production
 
 COPY dist ./dist
 
 COPY graphql ./graphql
 
-CMD npm start
+CMD yarn start
