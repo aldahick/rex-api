@@ -17,14 +17,15 @@ import {
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Container } from "../model/Container";
+import { Host } from "../model/Host";
 import { DatabaseService } from "../service/database";
 
 @singleton()
 export class ContainerResolver {
   constructor(
-    private containerManager: ContainerManager,
-    private db: DatabaseService,
-    private hostManager: HostManager
+    private readonly containerManager: ContainerManager,
+    private readonly db: DatabaseService,
+    private readonly hostManager: HostManager
   ) { }
 
   @guard({
@@ -32,7 +33,7 @@ export class ContainerResolver {
     action: "readAny"
   })
   @query()
-  async container(root: void, { id }: IQueryContainerArgs): Promise<IQuery["container"]> {
+  async container(root: unknown, { id }: IQueryContainerArgs): Promise<IQuery["container"]> {
     const { container, host } = await this.getContainerAndHost(id);
     return {
       ...container,
@@ -55,7 +56,7 @@ export class ContainerResolver {
     action: "createAny"
   })
   @mutation()
-  async createContainer(root: void, { container }: IMutationCreateContainerArgs): Promise<IMutation["createContainer"]> {
+  async createContainer(root: unknown, { container }: IMutationCreateContainerArgs): Promise<IMutation["createContainer"]> {
     const host = await this.hostManager.get(container.hostId);
     const newContainer = new Container({
       ...container,
@@ -77,7 +78,7 @@ export class ContainerResolver {
     action: "deleteAny"
   })
   @mutation()
-  async deleteContainers(root: void, { ids }: IMutationDeleteContainersArgs): Promise<IMutation["deleteContainers"]> {
+  async deleteContainers(root: unknown, { ids }: IMutationDeleteContainersArgs): Promise<IMutation["deleteContainers"]> {
     await this.containerManager.delete(ids);
     return true;
   }
@@ -88,7 +89,7 @@ export class ContainerResolver {
     attributes: "ports"
   })
   @mutation()
-  async updateContainerPorts(root: void, { containerId, ports }: IMutationUpdateContainerPortsArgs): Promise<IMutation["updateContainerPorts"]> {
+  async updateContainerPorts(root: unknown, { containerId, ports }: IMutationUpdateContainerPortsArgs): Promise<IMutation["updateContainerPorts"]> {
     await this.containerManager.updateField(containerId, "ports", ports);
     return true;
   }
@@ -99,7 +100,7 @@ export class ContainerResolver {
     attributes: "variables"
   })
   @mutation()
-  async updateContainerVariables(root: void, { containerId, variables }: IMutationUpdateContainerVariablesArgs): Promise<IMutation["updateContainerVariables"]> {
+  async updateContainerVariables(root: unknown, { containerId, variables }: IMutationUpdateContainerVariablesArgs): Promise<IMutation["updateContainerVariables"]> {
     await this.containerManager.updateField(containerId, "variables", variables);
     return true;
   }
@@ -110,7 +111,7 @@ export class ContainerResolver {
     attributes: "volumes"
   })
   @mutation()
-  async updateContainerVolumes(root: void, { containerId, volumes }: IMutationUpdateContainerVolumesArgs): Promise<IMutation["updateContainerVolumes"]> {
+  async updateContainerVolumes(root: unknown, { containerId, volumes }: IMutationUpdateContainerVolumesArgs): Promise<IMutation["updateContainerVolumes"]> {
     await this.containerManager.updateField(containerId, "volumes", volumes);
     return true;
   }
@@ -121,7 +122,7 @@ export class ContainerResolver {
     attributes: "deploy"
   })
   @mutation()
-  async redeployContainer(root: void, { containerId }: IMutationRedeployContainerArgs): Promise<IMutation["redeployContainer"]> {
+  async redeployContainer(root: unknown, { containerId }: IMutationRedeployContainerArgs): Promise<IMutation["redeployContainer"]> {
     const { container, host } = await this.getContainerAndHost(containerId);
     const dockerId = await this.containerManager.deploy(container, host);
     await this.db.containers.updateOne({
@@ -138,7 +139,7 @@ export class ContainerResolver {
     attributes: "start"
   })
   @mutation()
-  async startContainer(root: void, { containerId }: IMutationStartContainerArgs): Promise<IMutation["startContainer"]> {
+  async startContainer(root: unknown, { containerId }: IMutationStartContainerArgs): Promise<IMutation["startContainer"]> {
     const { container, host } = await this.getContainerAndHost(containerId);
     await this.containerManager.start(container, host);
     return true;
@@ -150,7 +151,7 @@ export class ContainerResolver {
     attributes: "stop"
   })
   @mutation()
-  async stopContainer(root: void, { containerId }: IMutationStopContainerArgs): Promise<IMutation["stopContainer"]> {
+  async stopContainer(root: unknown, { containerId }: IMutationStopContainerArgs): Promise<IMutation["stopContainer"]> {
     const { container, host } = await this.getContainerAndHost(containerId);
     await this.containerManager.stop(container, host);
     return true;
@@ -161,11 +162,14 @@ export class ContainerResolver {
     action: "readAny"
   })
   @resolver("Container.host")
-  host(root: IContainer) {
+  host(root: IContainer): IContainer["host"] {
     return root.host;
   }
 
-  private async getContainerAndHost(containerId: string) {
+  private async getContainerAndHost(containerId: string): Promise<{
+    container: Container;
+    host: Host;
+  }> {
     const container = await this.containerManager.get(containerId);
     const host = await this.hostManager.get(container.hostId);
     return { container, host };

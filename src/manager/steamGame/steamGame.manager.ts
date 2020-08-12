@@ -11,9 +11,9 @@ const FETCH_CHUNK_SIZE = 1000;
 @singleton()
 export class SteamGameManager {
   constructor(
-    private db: DatabaseService,
-    private progressManager: ProgressManager,
-    private steamService: SteamService
+    private readonly db: DatabaseService,
+    private readonly progressManager: ProgressManager,
+    private readonly steamService: SteamService
   ) { }
 
   getMany(ids: number[]): Promise<SteamGame[]> {
@@ -22,8 +22,8 @@ export class SteamGameManager {
     }).exec();
   }
 
-  async fetchAll(progress: Progress) {
-    await this.progressManager.addLogs(progress, "Deleting all previous games...", ProgressStatus.InProgress);
+  async fetchAll(progress: Progress): Promise<void> {
+    await this.progressManager.addLogs(progress, "Deleting all previous games...", ProgressStatus.inProgress);
     await this.db.steamGames.deleteMany({});
     await this.progressManager.addLogs(progress, "Fetching games...");
     const allGames = await this.steamService.getAllGames();
@@ -35,7 +35,7 @@ export class SteamGameManager {
         name: game.name
       })));
     }
-    await this.progressManager.addLogs(progress, `Finished inserting ${allGames.length} games.`, ProgressStatus.Complete);
+    await this.progressManager.addLogs(progress, `Finished inserting ${allGames.length} games.`, ProgressStatus.completed);
   }
 
   async search(text: string, { offset, limit }: { offset: number; limit: number }): Promise<SteamGame[]> {

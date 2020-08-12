@@ -8,10 +8,12 @@ import { AuthManager } from "./auth.manager";
 import { AuthTokenPayload } from "./AuthTokenPayload";
 
 export class AuthContext implements BaseAuthContext {
-  private authManager = container.resolve(AuthManager);
-  private userManager = container.resolve(UserManager);
+  private readonly authManager = container.resolve(AuthManager);
+
+  private readonly userManager = container.resolve(UserManager);
 
   private _user?: User | "notFound";
+
   private _roles?: Role[];
 
   constructor(
@@ -19,7 +21,7 @@ export class AuthContext implements BaseAuthContext {
     private payload?: AuthTokenPayload
   ) { }
 
-  setPayload(payload: AuthTokenPayload) {
+  setPayload(payload: AuthTokenPayload): void {
     this.payload = payload;
     this._user = undefined;
   }
@@ -29,13 +31,13 @@ export class AuthContext implements BaseAuthContext {
   }
 
   async user(): Promise<User | undefined> {
-    if (!this.payload?.userId || this._user === "notFound") {
+    if (this.payload?.userId === undefined || this._user === "notFound") {
       return undefined;
     }
     if (this._user) {
       return this._user;
     }
-    this._user = await this.userManager.getSafe(this.payload?.userId);
+    this._user = await this.userManager.getSafe(this.payload.userId);
     if (!this._user) {
       this._user = "notFound";
       return undefined;

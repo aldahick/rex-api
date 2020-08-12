@@ -6,12 +6,14 @@ import { IContainer, IContainerStatus } from "../../graphql/types";
 import { Container } from "../../model/Container";
 import { Host } from "../../model/Host";
 import { DatabaseService } from "../../service/database";
-import { DockerContainerState,DockerService } from "../../service/docker";
+import { DockerContainerState, DockerService } from "../../service/docker";
+
+type GqlContainer = Container & IContainer & { host: Host };
 
 @singleton()
 export class ContainerManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async get(id: string): Promise<Container> {
@@ -19,10 +21,10 @@ export class ContainerManager {
     if (!container) {
       throw HttpError.notFound(`container id=${id}`);
     }
-    return container.toObject();
+    return container.toObject() as Container;
   }
 
-  async getAll() {
+  async getAll(): Promise<GqlContainer[]> {
     const containers = await this.db.containers.find();
     const hosts = await this.db.hosts.find({
       _id: { $in: containers.map(c => c.hostId) }
@@ -96,7 +98,7 @@ export class ContainerManager {
     await docker.stopContainer({ id: container.dockerId });
   }
 
-  toGqlObjects(containers: DocumentType<Container>[], hosts: Host[]): (Container & Omit<IContainer, "status"> & { host: Host })[] {
+  toGqlObjects(containers: DocumentType<Container>[], hosts: Host[]): Omit<GqlContainer, "status">[] {
     return containers.map(container => {
       const host = hosts.find(h => h._id === container.hostId);
       if (!host) {

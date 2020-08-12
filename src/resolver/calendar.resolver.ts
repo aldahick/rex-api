@@ -1,13 +1,13 @@
-import { guard, HttpError, mutation,query } from "@athenajs/core";
+import { guard, HttpError, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationAddCalendarArgs, IMutationRemoveCalendarArgs,IQuery } from "../graphql/types";
+import { IMutation, IMutationAddCalendarArgs, IMutationRemoveCalendarArgs, IQuery } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
 import { UserManager } from "../manager/user";
 
 @singleton()
 export class CalendarResolver {
   constructor(
-    private userManager: UserManager
+    private readonly userManager: UserManager
   ) { }
 
   @guard({
@@ -16,7 +16,7 @@ export class CalendarResolver {
     attributes: "calendars"
   })
   @query()
-  async calendars(root: void, args: void, context: AuthContext): Promise<IQuery["calendars"]> {
+  async calendars(root: unknown, args: unknown, context: AuthContext): Promise<IQuery["calendars"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Query.calendars requires a user token");
@@ -30,7 +30,7 @@ export class CalendarResolver {
     attributes: "calendars"
   })
   @mutation()
-  async addCalendar(root: void, { name, url }: IMutationAddCalendarArgs, context: AuthContext): Promise<IMutation["addCalendar"]> {
+  async addCalendar(root: unknown, { name, url }: IMutationAddCalendarArgs, context: AuthContext): Promise<IMutation["addCalendar"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Mutation.addCalendar requires a user token");
@@ -45,7 +45,7 @@ export class CalendarResolver {
     attributes: "calendars"
   })
   @mutation()
-  async removeCalendar(root: void, { id }: IMutationRemoveCalendarArgs, context: AuthContext): Promise<IMutation["removeCalendar"]> {
+  async removeCalendar(root: unknown, { id }: IMutationRemoveCalendarArgs, context: AuthContext): Promise<IMutation["removeCalendar"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Mutation.addCalendar requires a user token");

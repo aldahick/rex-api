@@ -6,7 +6,7 @@ import { RummikubManager } from "../manager/rummikub";
 @singleton()
 export class RummikubResolver {
   constructor(
-    private rummikubManager: RummikubManager
+    private readonly rummikubManager: RummikubManager
   ) { }
 
   @guard({
@@ -14,7 +14,7 @@ export class RummikubResolver {
     action: "createAny"
   })
   @mutation()
-  async createRummikubGame(root: void, { name, privacy }: IMutationCreateRummikubGameArgs): Promise<IMutation["createRummikubGame"]> {
+  async createRummikubGame(root: unknown, { name, privacy }: IMutationCreateRummikubGameArgs): Promise<IMutation["createRummikubGame"]> {
     const game = await this.rummikubManager.game.create(privacy, name);
     return game.toGqlObject();
   }

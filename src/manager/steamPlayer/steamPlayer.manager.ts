@@ -13,8 +13,8 @@ export interface SteamPlayerWithGames {
 @singleton()
 export class SteamPlayerManager {
   constructor(
-    private steamGameManager: SteamGameManager,
-    private steamService: SteamService
+    private readonly steamGameManager: SteamGameManager,
+    private readonly steamService: SteamService
   ) { }
 
   async get(steamId64: string): Promise<SteamPlayerWithGames> {
@@ -33,18 +33,15 @@ export class SteamPlayerManager {
   async getMany(steamIds64: string[]): Promise<SteamPlayerWithGames[]> {
     const players = _.compact(await Promise.all(steamIds64.map(async steamId64 => {
       const player = await this.steamService.getPlayerSummary(steamId64);
-      if (!player) {
-        return undefined;
-      }
-      return {
+      return player ? {
         player,
         ownedGameIds: await this.steamService.getPlayerOwnedGameIds(player.id)
-      };
+      } : undefined;
     })));
-    if (players.some(p => p === undefined)) {
+    if (players.length !== steamIds64.length) {
       throw HttpError.notFound("steam players");
     }
-    const ownedGames = await this.steamGameManager.getMany(_.flatten(players.map(p => p.ownedGameIds || [])));
+    const ownedGames = await this.steamGameManager.getMany(_.flatten(players.map(p => p.ownedGameIds ?? [])));
     return players.map(({ player, ownedGameIds }) => ({
       player,
       ownedGames: ownedGameIds ? ownedGames.filter(g => ownedGameIds.includes(g._id)) : ownedGameIds
@@ -54,7 +51,7 @@ export class SteamPlayerManager {
   async resolveUsernames(identifiers: string[]): Promise<string[]> {
     return Promise.all(identifiers.map(async identifier => {
       const steamId = await this.steamService.getSteamId64FromUsername(identifier);
-      return steamId || identifier;
+      return steamId ?? identifier;
     }));
   }
 }

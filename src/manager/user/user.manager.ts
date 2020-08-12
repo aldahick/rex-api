@@ -13,7 +13,7 @@ export class UserManager {
     readonly calendar: UserCalendarManager,
     readonly note: UserNoteManager,
     readonly password: UserPasswordManager,
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async get(id: string): Promise<User> {
@@ -26,7 +26,7 @@ export class UserManager {
 
   async getSafe(id: string): Promise<User | undefined> {
     const user = await this.db.users.findById(id);
-    return user?.toObject() || undefined;
+    return user?.toObject() as User | undefined ?? undefined;
   }
 
   async getAll(): Promise<User[]> {
@@ -51,15 +51,15 @@ export class UserManager {
     email: string;
     username?: string;
     password?: string;
-  }) {
+  }): Promise<User> {
     const existing = await this.db.users.findOne({
       $or: [
         { email },
         { username: email },
-        ...(username ? [
+        ...username !== undefined && username.length > 0 ? [
           { username },
           { email: username }
-        ] : [])
+        ] : []
       ]
     });
     if (existing) {
@@ -69,7 +69,9 @@ export class UserManager {
       email,
       username,
       auth: {
-        passwordHash: password ? await this.password.hash(password) : undefined
+        passwordHash: password !== undefined && password.length > 0
+          ? await this.password.hash(password)
+          : undefined
       },
       roleIds: [],
       calendars: [],

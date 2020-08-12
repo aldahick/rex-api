@@ -1,18 +1,18 @@
 import { singleton } from "tsyringe";
-import { discordCommand,DiscordRegistry } from "../registry/discord";
+import { discordCommand, DiscordRegistry } from "../registry/discord";
 import { ConfigService } from "../service/config";
 
 @singleton()
 export class HelpCommand {
   constructor(
-    private config: ConfigService,
-    private discordRegistry: DiscordRegistry
+    private readonly config: ConfigService,
+    private readonly discordRegistry: DiscordRegistry
   ) { }
 
   @discordCommand("help", {
     helpText: "Don't read this."
   })
-  async help() {
+  help(): string {
     /*
     ends up like:
     **Commands:**

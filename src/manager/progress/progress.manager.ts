@@ -1,12 +1,12 @@
 import { HttpError } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { Progress, ProgressLog,ProgressStatus } from "../../model/Progress";
+import { Progress, ProgressLog, ProgressStatus } from "../../model/Progress";
 import { DatabaseService } from "../../service/database";
 
 @singleton()
 export class ProgressManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async get(id: string): Promise<Progress> {
@@ -21,12 +21,12 @@ export class ProgressManager {
     return this.db.progress.create(new Progress({
       action,
       createdAt: new Date(),
-      status: ProgressStatus.Created,
+      status: ProgressStatus.created,
       logs: []
     }));
   }
 
-  async addLogs(progress: Progress, logs: string | string[], status?: ProgressStatus) {
+  async addLogs(progress: Progress, logs: string | string[], status?: ProgressStatus): Promise<void> {
     await this.db.progress.updateOne({
       _id: progress._id
     }, {
@@ -39,7 +39,7 @@ export class ProgressManager {
         }
       }
     });
-    if (status) {
+    if (status !== undefined) {
       await this.db.progress.updateOne({
         _id: progress._id
       }, {
@@ -50,9 +50,10 @@ export class ProgressManager {
     }
   }
 
-  resolveSafe(progress: Progress, promise: Promise<void>) {
-    promise.catch(async err => {
-      await this.addLogs(progress, `An unexpected error occurred: ${err.message}`);
+  resolveSafe(progress: Progress, promise: Promise<void>): void {
+    promise.catch(async (err: unknown) => {
+      const errorMessage = err instanceof Error ? err.message : err as string;
+      await this.addLogs(progress, `An unexpected error occurred: ${errorMessage}`);
     });
   }
 }

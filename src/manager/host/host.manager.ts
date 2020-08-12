@@ -6,7 +6,7 @@ import { DatabaseService } from "../../service/database";
 @singleton()
 export class HostManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async get(id: string): Promise<Host> {

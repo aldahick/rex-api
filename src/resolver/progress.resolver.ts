@@ -6,7 +6,7 @@ import { ProgressManager } from "../manager/progress";
 @singleton()
 export class ProgressResolver {
   constructor(
-    private progressManager: ProgressManager
+    private readonly progressManager: ProgressManager
   ) { }
 
   @guard({
@@ -14,7 +14,7 @@ export class ProgressResolver {
     action: "readAny"
   })
   @query()
-  async progress(root: void, { id }: IQueryProgressArgs): Promise<IQuery["progress"]> {
+  async progress(root: unknown, { id }: IQueryProgressArgs): Promise<IQuery["progress"]> {
     return (await this.progressManager.get(id)).toGqlObject();
   }
 }

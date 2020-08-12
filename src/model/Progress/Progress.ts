@@ -36,11 +36,10 @@ export class Progress {
 
   private get gqlStatus(): IProgressStatus {
     switch (this.status) {
-      case ProgressStatus.Complete: return IProgressStatus.Complete;
-      case ProgressStatus.Created: return IProgressStatus.Created;
-      case ProgressStatus.Errored: return IProgressStatus.Errored;
-      case ProgressStatus.InProgress: return IProgressStatus.InProgress;
-      default: throw new Error(`unknown status value ${this.status}`);
+      case ProgressStatus.completed: return IProgressStatus.Complete;
+      case ProgressStatus.created: return IProgressStatus.Created;
+      case ProgressStatus.errored: return IProgressStatus.Errored;
+      case ProgressStatus.inProgress: return IProgressStatus.InProgress;
     }
   }
 }

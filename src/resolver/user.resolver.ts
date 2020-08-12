@@ -1,6 +1,6 @@
-import { guard, HttpError, mutation,query, resolver } from "@athenajs/core";
+import { guard, HttpError, mutation, query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs,IQuery, IQueryUserArgs, IUser } from "../graphql/types";
+import { IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs, IQuery, IQueryUserArgs, IUser } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";
@@ -9,18 +9,18 @@ import { User } from "../model/User";
 @singleton()
 export class UserResolver {
   constructor(
-    private roleManager: RoleManager,
-    private userManager: UserManager
+    private readonly roleManager: RoleManager,
+    private readonly userManager: UserManager
   ) { }
 
   @query()
-  async user(root: void, { id }: IQueryUserArgs, context: AuthContext): Promise<IQuery["user"]> {
-    if (id && await context.isAuthorized({
+  async user(root: unknown, { id }: IQueryUserArgs, context: AuthContext): Promise<IQuery["user"]> {
+    if (id !== undefined && await context.isAuthorized({
       resource: "user",
       action: "readAny"
     })) {
       return this.userManager.get(id);
-    } else if (context.userId && await context.isAuthorized({
+    } else if (context.userId !== undefined && await context.isAuthorized({
       resource: "user",
       action: "readOwn"
     })) {
@@ -64,7 +64,7 @@ export class UserResolver {
     attributes: "role"
   })
   @mutation()
-  async addRoleToUser(root: void, { userId, roleId }: IMutationAddRoleToUserArgs): Promise<IMutation["addRoleToUser"]> {
+  async addRoleToUser(root: unknown, { userId, roleId }: IMutationAddRoleToUserArgs): Promise<IMutation["addRoleToUser"]> {
     const user = await this.userManager.get(userId);
     const role = await this.roleManager.get(roleId);
 
@@ -78,7 +78,7 @@ export class UserResolver {
     action: "createAny"
   })
   @mutation()
-  async createUser(root: void, { email, username, password }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
+  async createUser(root: unknown, { email, username, password }: IMutationCreateUserArgs): Promise<IMutation["createUser"]> {
     return this.userManager.create({ email, username, password });
   }
 
@@ -88,7 +88,7 @@ export class UserResolver {
     attributes: "password"
   })
   @mutation()
-  async setUserPassword(root: void, { userId, password }: IMutationSetUserPasswordArgs): Promise<IMutation["setUserPassword"]> {
+  async setUserPassword(root: unknown, { userId, password }: IMutationSetUserPasswordArgs): Promise<IMutation["setUserPassword"]> {
     const user = await this.userManager.get(userId);
     await this.userManager.password.set(user, password);
     return true;

@@ -1,14 +1,14 @@
-import { guard, HttpError,mutation, query } from "@athenajs/core";
+import { guard, HttpError, mutation, query } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationAddPermissionsToRoleArgs,IMutationCreateRoleArgs, IQuery } from "../graphql/types";
+import { IMutation, IMutationAddPermissionsToRoleArgs, IMutationCreateRoleArgs, IQuery } from "../graphql/types";
 import { Role } from "../model/Role";
 import { DatabaseService } from "../service/database";
 
 @singleton()
 export class RoleResolver {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   @guard({
@@ -25,7 +25,7 @@ export class RoleResolver {
     action: "createAny"
   })
   @mutation()
-  async createRole(root: void, { name }: IMutationCreateRoleArgs): Promise<IMutation["createRole"]> {
+  async createRole(root: unknown, { name }: IMutationCreateRoleArgs): Promise<IMutation["createRole"]> {
     return this.db.roles.create(new Role({
       name,
       permissions: []
@@ -38,7 +38,7 @@ export class RoleResolver {
     attributes: "permissions"
   })
   @mutation()
-  async addPermissionsToRole(root: void, { roleId, permissions }: IMutationAddPermissionsToRoleArgs): Promise<IMutation["addPermissionsToRole"]> {
+  async addPermissionsToRole(root: unknown, { roleId, permissions }: IMutationAddPermissionsToRoleArgs): Promise<IMutation["addPermissionsToRole"]> {
     const role = await this.db.roles.findById(roleId);
     if (!role) {
       throw HttpError.notFound(`role id=${roleId} does not exist`);

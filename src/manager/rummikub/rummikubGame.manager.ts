@@ -2,13 +2,13 @@ import { HttpError } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
 import { IRummikubGamePrivacy } from "../../graphql/types";
-import { RummikubChatMessage,RummikubGame, RummikubGameStatus,RummikubPlayer } from "../../model/RummikubGame";
+import { RummikubCard, RummikubChatMessage, RummikubGame, RummikubGameStatus, RummikubPlayer } from "../../model/RummikubGame";
 import { DatabaseService } from "../../service/database";
 
 @singleton()
 export class RummikubGameManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async get(id: string): Promise<RummikubGame> {
@@ -21,7 +21,7 @@ export class RummikubGameManager {
 
   getJoinable(): Promise<RummikubGame[]> {
     return this.db.rummikubGames.find({
-      status: RummikubGameStatus.Lobby,
+      status: RummikubGameStatus.lobby,
       privacy: IRummikubGamePrivacy.Public
     }).exec();
   }
@@ -29,7 +29,7 @@ export class RummikubGameManager {
   create(privacy: IRummikubGamePrivacy, name: string): Promise<RummikubGame> {
     return this.db.rummikubGames.create(new RummikubGame({
       name,
-      status: RummikubGameStatus.Lobby,
+      status: RummikubGameStatus.lobby,
       privacy,
       players: [],
       chatMessages: [],
@@ -51,7 +51,7 @@ export class RummikubGameManager {
         }
       });
     } else {
-      if (game.status !== RummikubGameStatus.Lobby) {
+      if (game.status !== RummikubGameStatus.lobby) {
         throw HttpError.conflict("You can only join a game while it hasn't yet started");
       }
       player = new RummikubPlayer({
@@ -104,7 +104,7 @@ export class RummikubGameManager {
       $set: {
         currentPlayerId: game.players[0]._id,
         players: game.players,
-        status: RummikubGameStatus.InProgress
+        status: RummikubGameStatus.inProgress
       }
     });
   }
@@ -150,7 +150,7 @@ export class RummikubGameManager {
     if (game.currentPlayerId !== player._id) {
       throw HttpError.forbidden("It's not your turn!");
     }
-    const getRow = (rowIndex?: number) => {
+    const getRow = (rowIndex?: number): RummikubCard[] => {
       if (rowIndex === -1) {
         game.board.push([]);
         return game.board[game.board.length - 1];
@@ -197,6 +197,6 @@ export class RummikubGameManager {
     const destinationText = toRowIndex === -1
       ? "in a new row"
       : toRowIndex === undefined ? "in their hand" : "on the board";
-    return this.createChat(game, `${player.name} placed ${card.color}-${card.value} ${destinationText}`);
+    return this.createChat(game, `${player.name} placed ${card.color}-${card.value ?? "joker"} ${destinationText}`);
   }
 }

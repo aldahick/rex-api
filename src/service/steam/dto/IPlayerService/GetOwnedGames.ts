@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 export interface GetOwnedGames {
   response: {
     game_count: number;

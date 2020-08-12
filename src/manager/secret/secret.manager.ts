@@ -7,7 +7,7 @@ import { DatabaseService } from "../../service/database";
 @singleton()
 export class SecretManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async getAll(prefix: string): Promise<Secret[]> {

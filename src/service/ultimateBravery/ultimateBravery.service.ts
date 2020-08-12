@@ -1,6 +1,5 @@
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnection, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import axios from "axios";
-import * as _ from "lodash";
 import { singleton } from "tsyringe";
 
 const GROUP_BASE_URL = "https://ultimate-bravery.net/Classic/Group";
@@ -13,7 +12,7 @@ export class UltimateBraveryService {
     isPublic: boolean;
     level: number;
     participantCount: number;
-  }) {
+  }): Promise<string> {
     const connection = await this.connect();
 
     const onCreate = new Promise<number>(resolve => {
@@ -31,13 +30,13 @@ export class UltimateBraveryService {
     const groupId = await onCreate;
 
     connection.on("PlayerJoined", () => {
-      connection.stop().catch(_.noop);
+      connection.stop().catch(null);
     });
 
     return `${GROUP_BASE_URL}/?groupId=${groupId}`;
   }
 
-  private async connect() {
+  private async connect(): Promise<HubConnection> {
     const { data: { token } } = await axios.post<{
       id: string;
       token: string;

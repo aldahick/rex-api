@@ -8,7 +8,7 @@ import { DatabaseService } from "../../service/database";
 @singleton()
 export class RoleManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async get(id: string): Promise<Role> {
@@ -16,13 +16,13 @@ export class RoleManager {
     if (!role) {
       throw HttpError.notFound(`role id=${id} not found`);
     }
-    return role.toObject();
+    return role.toObject() as Role;
   }
 
   toPermissions(roles: Role[]): (RolePermission & { roleName: string })[] {
     return _.flatten(roles.map(role =>
       (role.permissions as DocumentType<RolePermission>[]).map(permission => ({
-        ...permission.toObject(),
+        ...permission.toObject() as RolePermission,
         roleName: role.name
       }))
     ));

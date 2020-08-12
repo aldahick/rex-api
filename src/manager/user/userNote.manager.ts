@@ -6,7 +6,7 @@ import { DatabaseService } from "../../service/database";
 @singleton()
 export class UserNoteManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async update(user: User, { id, body }: { id: string; body: string }): Promise<void> {

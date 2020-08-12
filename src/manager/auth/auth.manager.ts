@@ -1,4 +1,4 @@
-import { AuthCheck,authProvider, AuthService } from "@athenajs/core";
+import { AuthCheck, authProvider, AuthService } from "@athenajs/core";
 import * as express from "express";
 import { singleton } from "tsyringe";
 import { Role } from "../../model/Role";
@@ -10,8 +10,8 @@ import { AuthTokenPayload } from "./AuthTokenPayload";
 @singleton()
 export class AuthManager {
   constructor(
-    private authService: AuthService,
-    private roleManager: RoleManager
+    private readonly authService: AuthService,
+    private readonly roleManager: RoleManager
   ) { }
 
   signToken(payload: AuthTokenPayload): string {
@@ -20,7 +20,7 @@ export class AuthManager {
 
   isAuthorized(roles: Role[], check: AuthCheck): boolean {
     const permissions = this.roleManager.toPermissions(roles);
-    if (permissions.length === 0) {
+    if (!permissions.length) {
       return false;
     }
     return this.authService.isCheckValid(permissions, check);

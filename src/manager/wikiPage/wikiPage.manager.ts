@@ -9,14 +9,14 @@ import { ProgressManager } from "../progress";
 @singleton()
 export class WikiPageManager {
   constructor(
-    private db: DatabaseService,
-    private progressManager: ProgressManager
+    private readonly db: DatabaseService,
+    private readonly progressManager: ProgressManager
   ) { }
 
   async fetchUntil(progress: Progress, firstPageName: string, untilPageName: string): Promise<void> {
     let lastPageName = firstPageName;
     let count = 0;
-    await this.progressManager.addLogs(progress, `Fetching until "${untilPageName}", starting with "${firstPageName}"`, ProgressStatus.InProgress);
+    await this.progressManager.addLogs(progress, `Fetching until "${untilPageName}", starting with "${firstPageName}"`, ProgressStatus.inProgress);
     while (lastPageName !== untilPageName) {
       try {
         const page = await this.fetchOne(lastPageName);
@@ -24,7 +24,7 @@ export class WikiPageManager {
         count++;
         lastPageName = page.firstLinkName;
       } catch (err) {
-        await this.progressManager.addLogs(progress, `Error: ${err.message}`, ProgressStatus.Errored);
+        await this.progressManager.addLogs(progress, `Error: ${err instanceof Error ? err.message : err as string}`, ProgressStatus.errored);
         return;
       }
       if (lastPageName !== untilPageName) { // don't wait on the last iteration
@@ -32,7 +32,7 @@ export class WikiPageManager {
         await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
-    await this.progressManager.addLogs(progress, `Done, fetched ${count} pages.`, ProgressStatus.Complete);
+    await this.progressManager.addLogs(progress, `Done, fetched ${count} pages.`, ProgressStatus.completed);
   }
 
   private async fetchOne(name: string): Promise<WikiPage> {

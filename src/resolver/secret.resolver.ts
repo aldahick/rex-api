@@ -1,12 +1,12 @@
-import { guard,mutation, query } from "@athenajs/core";
+import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationRemoveSecretArgs,IMutationSetSecretArgs, IQuery, IQuerySecretArgs, IQuerySecretsArgs } from "../graphql/types";
+import { IMutation, IMutationRemoveSecretArgs, IMutationSetSecretArgs, IQuery, IQuerySecretArgs, IQuerySecretsArgs } from "../graphql/types";
 import { SecretManager } from "../manager/secret";
 
 @singleton()
 export class SecretResolver {
   constructor(
-    private secretManager: SecretManager
+    private readonly secretManager: SecretManager
   ) { }
 
   @guard({
@@ -14,23 +14,23 @@ export class SecretResolver {
     action: "readAny"
   })
   @query()
-  async secrets(root: void, { prefix }: IQuerySecretsArgs): Promise<IQuery["secrets"]> {
+  async secrets(root: unknown, { prefix }: IQuerySecretsArgs): Promise<IQuery["secrets"]> {
     return this.secretManager.getAll(prefix);
   }
 
   @query()
-  async secret(root: void, { key }: IQuerySecretArgs): Promise<IQuery["secret"]> {
+  async secret(root: unknown, { key }: IQuerySecretArgs): Promise<IQuery["secret"]> {
     return this.secretManager.get(key);
   }
 
   @mutation()
-  async setSecret(root: void, { key, value }: IMutationSetSecretArgs): Promise<IMutation["setSecret"]> {
+  async setSecret(root: unknown, { key, value }: IMutationSetSecretArgs): Promise<IMutation["setSecret"]> {
     await this.secretManager.set(key, value);
     return true;
   }
 
   @mutation()
-  async removeSecret(root: void, { key }: IMutationRemoveSecretArgs): Promise<IMutation["removeSecret"]> {
+  async removeSecret(root: unknown, { key }: IMutationRemoveSecretArgs): Promise<IMutation["removeSecret"]> {
     await this.secretManager.remove(key);
     return true;
   }

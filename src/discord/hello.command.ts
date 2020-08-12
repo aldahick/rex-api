@@ -6,7 +6,7 @@ export class HelloCommand {
   @discordCommand("hello", {
     helpText: "This is pretty simple."
   })
-  async hello() {
+  hello(): string {
     return "hello!";
   }
 }

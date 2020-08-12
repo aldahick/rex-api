@@ -15,21 +15,29 @@ import { ConfigService } from "../config";
 @singleton()
 export class DatabaseService {
   containers!: ReturnModelType<typeof Container>;
+
   hosts!: ReturnModelType<typeof Host>;
+
   progress!: ReturnModelType<typeof Progress>;
+
   roles!: ReturnModelType<typeof Role>;
+
   rummikubGames!: ReturnModelType<typeof RummikubGame>;
+
   secrets!: ReturnModelType<typeof Secret>;
+
   steamGames!: ReturnModelType<typeof SteamGame>;
+
   users!: ReturnModelType<typeof User>;
+
   wikiPages!: ReturnModelType<typeof WikiPage>;
 
   constructor(
-    private config: ConfigService,
-    private mongo: MongoService
+    private readonly config: ConfigService,
+    private readonly mongo: MongoService
   ) { }
 
-  async init() {
+  async init(): Promise<void> {
     await this.mongo.init(this.config.mongoUrl);
 
     this.containers = this.mongo.getModel(Container, "containers");

@@ -9,8 +9,8 @@ const SEARCH_PAGE_SIZE = 100;
 @singleton()
 export class SteamGameResolver {
   constructor(
-    private progressManager: ProgressManager,
-    private steamGameManager: SteamGameManager
+    private readonly progressManager: ProgressManager,
+    private readonly steamGameManager: SteamGameManager
   ) { }
 
   @guard({
@@ -29,7 +29,7 @@ export class SteamGameResolver {
     action: "readAny"
   })
   @query()
-  async steamGames(root: void, { page, search }: IQuerySteamGamesArgs): Promise<IQuery["steamGames"]> {
+  async steamGames(root: unknown, { page, search }: IQuerySteamGamesArgs): Promise<IQuery["steamGames"]> {
     return this.steamGameManager.search(search, {
       offset: page * SEARCH_PAGE_SIZE,
       limit: SEARCH_PAGE_SIZE

@@ -1,6 +1,6 @@
 import { guard, mutation, query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation,IMutationCreateHostArgs, IQuery, IQueryHostArgs } from "../graphql/types";
+import { IContainer, IMutation, IMutationCreateHostArgs, IQuery, IQueryHostArgs } from "../graphql/types";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Host } from "../model/Host";
@@ -9,9 +9,9 @@ import { DatabaseService } from "../service/database";
 @singleton()
 export class HostResolver {
   constructor(
-    private containerManager: ContainerManager,
-    private db: DatabaseService,
-    private hostManager: HostManager
+    private readonly containerManager: ContainerManager,
+    private readonly db: DatabaseService,
+    private readonly hostManager: HostManager
   ) { }
 
   @guard({
@@ -19,7 +19,7 @@ export class HostResolver {
     action: "readAny"
   })
   @query()
-  async host(root: void, { id }: IQueryHostArgs): Promise<IQuery["host"]> {
+  async host(root: unknown, { id }: IQueryHostArgs): Promise<IQuery["host"]> {
     return this.hostManager.get(id);
   }
 
@@ -37,7 +37,7 @@ export class HostResolver {
     action: "createAny"
   })
   @mutation()
-  async createHost(root: void, { host }: IMutationCreateHostArgs): Promise<IMutation["createHost"]> {
+  async createHost(root: unknown, { host }: IMutationCreateHostArgs): Promise<IMutation["createHost"]> {
     return this.db.hosts.create(new Host(host));
   }
 
@@ -46,7 +46,7 @@ export class HostResolver {
     action: "readAny"
   })
   @resolver("Host.containers")
-  async containers(root: Host) {
+  async containers(root: Host): Promise<Omit<IContainer, "status">[]> {
     const containers = await this.db.containers.find({
       hostId: root._id
     });

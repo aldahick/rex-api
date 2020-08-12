@@ -1,5 +1,5 @@
 export enum RummikubGameStatus {
-  Lobby = "lobby",
-  InProgress = "inProgress",
-  Complete = "complete"
+  lobby = "lobby",
+  inProgress = "inProgress",
+  completed = "completed"
 }

@@ -1,13 +1,13 @@
-import { guard,HttpError,mutation, query } from "@athenajs/core";
+import { guard, HttpError, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationCreateNoteArgs, IMutationRemoveNoteArgs,IMutationUpdateNoteBodyArgs,IQuery, IQueryNoteArgs } from "../graphql/types";
+import { IMutation, IMutationCreateNoteArgs, IMutationRemoveNoteArgs, IMutationUpdateNoteBodyArgs, IQuery, IQueryNoteArgs } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
 import { UserManager } from "../manager/user";
 
 @singleton()
 export class NoteResolver {
   constructor(
-    private userManager: UserManager
+    private readonly userManager: UserManager
   ) { }
 
   @guard({
@@ -15,7 +15,7 @@ export class NoteResolver {
     action: "readOwn"
   })
   @query()
-  async note(root: void, { id }: IQueryNoteArgs, context: AuthContext): Promise<IQuery["note"]> {
+  async note(root: unknown, { id }: IQueryNoteArgs, context: AuthContext): Promise<IQuery["note"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Query.note requires a user token");
@@ -32,7 +32,7 @@ export class NoteResolver {
     action: "readOwn"
   })
   @query()
-  async notes(root: void, args: void, context: AuthContext): Promise<IQuery["notes"]> {
+  async notes(root: unknown, args: unknown, context: AuthContext): Promise<IQuery["notes"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Query.notes requires a user token");
@@ -45,7 +45,7 @@ export class NoteResolver {
     action: "updateOwn"
   })
   @mutation()
-  async updateNoteBody(root: void, { id, body }: IMutationUpdateNoteBodyArgs, context: AuthContext): Promise<IMutation["updateNoteBody"]> {
+  async updateNoteBody(root: unknown, { id, body }: IMutationUpdateNoteBodyArgs, context: AuthContext): Promise<IMutation["updateNoteBody"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Mutation.updateNoteBody requires a user token");
@@ -59,7 +59,7 @@ export class NoteResolver {
     action: "createOwn"
   })
   @mutation()
-  async createNote(root: void, { title }: IMutationCreateNoteArgs, context: AuthContext): Promise<IMutation["createNote"]> {
+  async createNote(root: unknown, { title }: IMutationCreateNoteArgs, context: AuthContext): Promise<IMutation["createNote"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Mutation.createNote requires a user token");
@@ -72,7 +72,7 @@ export class NoteResolver {
     action: "deleteOwn"
   })
   @mutation()
-  async removeNote(root: void, { id }: IMutationRemoveNoteArgs, context: AuthContext): Promise<IMutation["removeNote"]> {
+  async removeNote(root: unknown, { id }: IMutationRemoveNoteArgs, context: AuthContext): Promise<IMutation["removeNote"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.badRequest("Mutation.removeNote requires a user token");

@@ -1,7 +1,7 @@
 import { MongoService } from "@athenajs/core";
 import { prop } from "@typegoose/typegoose";
 import * as _ from "lodash";
-import { IRummikubCardColor,IRummikubGame,IRummikubGamePrivacy } from "../../graphql/types";
+import { IRummikubCardColor, IRummikubGame, IRummikubGamePrivacy } from "../../graphql/types";
 import { RummikubCard } from "./RummikubCard";
 import { RummikubChatMessage } from "./RummikubChatMessage";
 import { RummikubGameStatus } from "./RummikubGameStatus";
@@ -47,7 +47,7 @@ export class RummikubGame {
     };
   }
 
-  drawCard(player: RummikubPlayer) {
+  drawCard(player: RummikubPlayer): void {
     const availableCards = this.availableCards;
     player.hand.push(availableCards[_.random(0, availableCards.length - 1)]);
   }
@@ -59,7 +59,7 @@ export class RummikubGame {
     return _.differenceBy(
       allCards,
       boardCards.concat(playerCards),
-      c => `${c.value}-${c.color}`
+      c => `${c.value ?? "joker"}-${c.color}`
     );
   }
 

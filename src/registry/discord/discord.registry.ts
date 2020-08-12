@@ -1,9 +1,9 @@
-import { DecoratorUtils,LoggerService } from "@athenajs/core";
+import { decoratorUtils, LoggerService } from "@athenajs/core";
 import * as discord from "discord.js";
 import { EventEmitter } from "events";
-import { container,singleton } from "tsyringe";
+import { container, InjectionToken, singleton } from "tsyringe";
 import { ConfigService } from "../../service/config";
-import { DISCORD_METADATA_KEY,DiscordMetadata } from "./discord.decorators";
+import { DISCORD_METADATA_KEY, DiscordMetadata } from "./discord.decorators";
 import { DiscordPayload } from "./DiscordPayload";
 
 @singleton()
@@ -15,12 +15,12 @@ export class DiscordRegistry {
   private readonly commandEvents = new EventEmitter();
 
   constructor(
-    private config: ConfigService,
-    private logger: LoggerService
+    private readonly config: ConfigService,
+    private readonly logger: LoggerService
   ) { }
 
-  async init() {
-    if (!this.config.discord.token) {
+  async init(): Promise<void> {
+    if (this.config.discord.token === undefined) {
       return;
     }
     this.client.on("message", m => this.onMessage(m));
@@ -28,43 +28,50 @@ export class DiscordRegistry {
     this.logger.info("discord.connected");
   }
 
-  register(handlers: any[]) {
-    for (const handler of handlers.map(c => container.resolve<any>(c))) {
-      const metadatas = DecoratorUtils.get<DiscordMetadata[]>(DISCORD_METADATA_KEY, handler) || [];
+  register(handlerClasses: unknown[]): void {
+    const handlers = handlerClasses.map(c =>
+      container.resolve<Record<string, unknown>>(c as InjectionToken)
+    );
+    for (const handler of handlers) {
+      const metadatas = decoratorUtils.get<DiscordMetadata[]>(DISCORD_METADATA_KEY, handler) ?? [];
       this.commandMetadatas.push(...metadatas);
       for (const metadata of metadatas) {
-        const commandHandler = this.buildCommandHandler(handler[metadata.methodName].bind(handler));
+        const callback = handler[metadata.methodName];
+        if (typeof callback !== "function") {
+          continue;
+        }
+        const commandHandler = this.buildCommandHandler(callback.bind(handler));
         this.logger.trace({ ...metadata, className: handler.name }, "register.discordCommand");
         metadata.commands.forEach(command => {
-          this.commandEvents.on(command.toLowerCase(), commandHandler);
+          this.commandEvents.on(command.toLowerCase(), (payload: DiscordPayload) => {
+            commandHandler(payload).catch(async (err: unknown) => {
+              this.logger.error(err, "discord.uncaught");
+              await payload.message.reply("sorry, an internal error occurred.");
+            });
+          });
         });
       }
     }
   }
 
-  close() {
-    if (!this.config.discord.token) {
+  close(): void {
+    if (this.config.discord.token === undefined) {
       return;
     }
     this.client.destroy();
     this.logger.info("discord.disconnected");
   }
 
-  private buildCommandHandler(callback: (payload: DiscordPayload) => Promise<void | string>) {
-    return async (payload: DiscordPayload) => {
-      try {
-        const result = await callback(payload);
-        if (result) {
-          await payload.message.reply(result);
-        }
-      } catch (err) {
-        await payload.message.reply("sorry, an internal error occurred.");
-        this.logger.error(err, "discord.uncaught");
+  private buildCommandHandler(callback: (payload: DiscordPayload) => Promise<string | undefined>) {
+    return async (payload: DiscordPayload): Promise<void> => {
+      const result = await callback(payload);
+      if (result !== undefined) {
+        await payload.message.reply(result);
       }
     };
   }
 
-  private async onMessage(message: discord.Message): Promise<void> {
+  private onMessage(message: discord.Message): void {
     const { author, content } = message;
     if (!content.startsWith(this.config.discord.commandPrefix)) { // ignore non-commands
       return;

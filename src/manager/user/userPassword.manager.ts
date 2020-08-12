@@ -6,7 +6,7 @@ import { DatabaseService } from "../../service/database";
 @singleton()
 export class UserPasswordManager {
   constructor(
-    private db: DatabaseService
+    private readonly db: DatabaseService
   ) { }
 
   async set(user: User, password: string): Promise<void> {

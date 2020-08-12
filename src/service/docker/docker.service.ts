@@ -6,28 +6,29 @@ import * as url from "url";
 export type DockerContainerState = "created" | "running" | "exited";
 
 export class DockerService {
-  private docker: Dockerode;
+  private readonly docker: Dockerode;
 
   constructor(
-    private endpoint: string
+    private readonly endpoint: string
   ) {
     const { hostname, protocol, port, path, auth } = url.parse(this.endpoint);
-    if (!hostname || !protocol || !path || !auth) {
+    if (hostname === null || protocol === null || path === null || auth === null) {
       throw HttpError.internalError(`Bad Docker endpoint ${this.endpoint}`);
     }
     this.docker = new Dockerode({
       host: hostname,
       protocol: protocol === "https:" ? "https" : "http",
-      port: port || (protocol === "https:" ? 443 : 80),
+      port: port ?? (protocol === "https:" ? 443 : 80),
       version: "v1.40",
       headers: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         Authorization: `Basic ${Buffer.from(auth).toString("base64")}`
       },
       socketPath: undefined
     } as Dockerode.DockerOptions & {
-      headers: { [key: string]: any };
+      headers: Record<string, string>;
     });
-    this.docker.modem.path = path;
+    (this.docker.modem as Record<string, unknown>).path = path;
   }
 
   async createContainer({ image, tag, name, networkName, ports, variables, volumes }: {
@@ -47,11 +48,12 @@ export class DockerService {
       fullImage = `docker.io/${fullImage}`;
     }
     await this.docker.pull(fullImage, {});
+    /* eslint-disable @typescript-eslint/naming-convention */
     const portBindings = _.mapValues(
-      _.mapKeys(ports.filter(p => !!p.hostPort), p => `${p.containerPort}/tcp`),
+      _.mapKeys(ports.filter(p => p.hostPort !== undefined), p => `${p.containerPort}/tcp`),
       p => [{
         HostPort: p.hostPort?.toString(),
-        HostIp: p.hostBindIp?.toString() || ""
+        HostIp: p.hostBindIp?.toString() ?? ""
       }]
     );
     const container = await this.docker.createContainer({
@@ -67,6 +69,7 @@ export class DockerService {
         }
       }
     });
+    /* eslint-enable @typescript-eslint/naming-convention */
     return container.id;
   }
 
@@ -81,7 +84,7 @@ export class DockerService {
       await container.remove({});
       return true;
     } catch (err) {
-      if (err.statusCode === 404) {
+      if ("statusCode" in err && (err as { statusCode: unknown }).statusCode === 404) {
         return false;
       }
       throw err;
@@ -90,19 +93,19 @@ export class DockerService {
 
   async startContainer({ id }: {
     id: string;
-  }) {
+  }): Promise<void> {
     const container = this.docker.getContainer(id);
     await container.start();
   }
 
   async stopContainer({ id }: {
     id: string;
-  }) {
+  }): Promise<void> {
     const container = this.docker.getContainer(id);
     await container.stop();
   }
 
-  async listContainers() {
+  async listContainers(): Promise<Dockerode.ContainerInfo[]> {
     return this.docker.listContainers({
       all: true
     });

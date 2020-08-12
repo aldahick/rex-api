@@ -1,4 +1,4 @@
-import { HttpError,websocketEvent, WebsocketPayload } from "@athenajs/core";
+import { HttpError, websocketEvent, WebsocketPayload } from "@athenajs/core";
 import * as joi from "@hapi/joi";
 import { singleton } from "tsyringe";
 import {
@@ -12,11 +12,11 @@ import { RummikubGame, RummikubGameStatus } from "../model/RummikubGame";
 @singleton()
 export class RummikubWebsocketHandler {
   constructor(
-    private rummikubManager: RummikubManager
+    private readonly rummikubManager: RummikubManager
   ) { }
 
   @websocketEvent("disconnect")
-  async onDisconnect({ socket }: WebsocketPayload<void, any>) {
+  async onDisconnect({ socket }: WebsocketPayload<void>): Promise<void> {
     let game: RummikubGame;
     try {
       game = await this.rummikubManager.socket.getGame(socket);
@@ -32,7 +32,7 @@ export class RummikubWebsocketHandler {
     gameId: joi.string().required(),
     displayName: joi.string().required()
   }).required())
-  async onJoin({ data: { gameId, displayName }, socket }: WebsocketPayload<IRummikubClientJoinPayload, any>) {
+  async onJoin({ data: { gameId, displayName }, socket }: WebsocketPayload<IRummikubClientJoinPayload>): Promise<void> {
     let game = await this.rummikubManager.game.get(gameId);
     const player = await this.rummikubManager.game.join(game, displayName, socket.id);
     // refetch game after operations are complete
@@ -46,7 +46,7 @@ export class RummikubWebsocketHandler {
       setTimeout(() => {
         try {
           this.rummikubManager.socket.sendPlayers(game);
-          if (game.status === RummikubGameStatus.InProgress) {
+          if (game.status === RummikubGameStatus.inProgress) {
             this.rummikubManager.socket.sendTurn(game);
             this.rummikubManager.socket.sendBoard(game);
             this.rummikubManager.socket.sendHand(socket).then(resolve).catch(reject);
@@ -63,7 +63,7 @@ export class RummikubWebsocketHandler {
   @websocketEvent("rummikub.client.chat", joi.object({
     message: joi.string().required()
   }).required())
-  async onChat({ data: { message }, socket }: WebsocketPayload<IRummikubClientChatPayload, any>) {
+  async onChat({ data: { message }, socket }: WebsocketPayload<IRummikubClientChatPayload>): Promise<void> {
     const game = await this.rummikubManager.socket.getGame(socket);
     const player = await this.rummikubManager.socket.getPlayer(socket, game);
     const chatMessage = await this.rummikubManager.game.createChat(game, message, player);
@@ -71,7 +71,7 @@ export class RummikubWebsocketHandler {
   }
 
   @websocketEvent("rummikub.client.endTurn")
-  async onEndTurn({ socket }: WebsocketPayload<void, any>) {
+  async onEndTurn({ socket }: WebsocketPayload<void>): Promise<void> {
     let game = await this.rummikubManager.socket.getGame(socket);
     const playerId = this.rummikubManager.socket.getPlayerId(socket);
     if (game.currentPlayerId !== playerId) {
@@ -89,7 +89,7 @@ export class RummikubWebsocketHandler {
     toRowIndex: joi.number(),
     toCardIndex: joi.number().required()
   }).required())
-  async onPlaceCard({ data, socket }: WebsocketPayload<IRummikubClientPlaceCardPayload, any>) {
+  async onPlaceCard({ data, socket }: WebsocketPayload<IRummikubClientPlaceCardPayload>): Promise<void> {
     let game = await this.rummikubManager.socket.getGame(socket);
     try {
       const player = await this.rummikubManager.socket.getPlayer(socket, game);
@@ -108,14 +108,14 @@ export class RummikubWebsocketHandler {
   }
 
   @websocketEvent("rummikub.client.start")
-  async onStart({ socket }: WebsocketPayload<void, any>) {
+  async onStart({ socket }: WebsocketPayload<void>): Promise<boolean> {
     let game = await this.rummikubManager.socket.getGame(socket);
-    if (game.status !== RummikubGameStatus.Lobby) {
+    if (game.status !== RummikubGameStatus.lobby) {
       return true;
     }
     await this.rummikubManager.game.start(game);
     game = await this.rummikubManager.game.get(game._id);
-    await this.rummikubManager.socket.sendStart(game);
+    this.rummikubManager.socket.sendStart(game);
     return true;
   }
 }

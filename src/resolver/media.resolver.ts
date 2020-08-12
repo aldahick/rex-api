@@ -1,6 +1,6 @@
-import { guard, HttpError,mutation, query } from "@athenajs/core";
+import { guard, HttpError, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation,IMutationAddMediaDownloadArgs, IQuery, IQueryMediaItemsArgs } from "../graphql/types";
+import { IMutation, IMutationAddMediaDownloadArgs, IQuery, IQueryMediaItemsArgs } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
 import { MediaManager } from "../manager/media";
 import { ProgressManager } from "../manager/progress";
@@ -8,8 +8,8 @@ import { ProgressManager } from "../manager/progress";
 @singleton()
 export class MediaResolver {
   constructor(
-    private mediaManager: MediaManager,
-    private progressManager: ProgressManager
+    private readonly mediaManager: MediaManager,
+    private readonly progressManager: ProgressManager
   ) { }
 
   @guard({
@@ -17,7 +17,7 @@ export class MediaResolver {
     action: "readOwn"
   })
   @query()
-  async mediaItems(root: void, { dir }: IQueryMediaItemsArgs, context: AuthContext): Promise<IQuery["mediaItems"]> {
+  async mediaItems(root: unknown, { dir }: IQueryMediaItemsArgs, context: AuthContext): Promise<IQuery["mediaItems"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.forbidden("Requires user token");
@@ -30,7 +30,7 @@ export class MediaResolver {
     action: "createOwn"
   })
   @mutation()
-  async addMediaDownload(root: void, { url, destinationKey }: IMutationAddMediaDownloadArgs, context: AuthContext): Promise<IMutation["addMediaDownload"]> {
+  async addMediaDownload(root: unknown, { url, destinationKey }: IMutationAddMediaDownloadArgs, context: AuthContext): Promise<IMutation["addMediaDownload"]> {
     const user = await context.user();
     if (!user) {
       throw HttpError.forbidden("Requires user token");

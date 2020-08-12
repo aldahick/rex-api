@@ -11,11 +11,12 @@ export interface GoogleTokenPayload {
 @singleton()
 export class GoogleAuthService {
   constructor(
-    private config: ConfigService
+    private readonly config: ConfigService
   ) { }
 
   async getIdTokenPayload(idToken: string): Promise<GoogleTokenPayload | undefined> {
-    if (!this.config.googleAuth.clientId) {
+    const { clientId } = this.config.googleAuth;
+    if (clientId === undefined) {
       throw new Error("Missing environment variable GOOGLE_CLIENT_ID");
     }
     const api = new google.GoogleApis();
@@ -25,11 +26,11 @@ export class GoogleAuthService {
     });
     const payload = ticket.getPayload();
     const userId = ticket.getUserId();
-    if (!userId || !payload?.email) {
+    if (userId === null || payload?.email === undefined) {
       return undefined;
     }
     return {
-      domain: payload.hd || "gmail.com",
+      domain: payload.hd ?? "gmail.com",
       email: payload.email,
       userId,
     };

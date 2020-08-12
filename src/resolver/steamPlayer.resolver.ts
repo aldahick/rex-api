@@ -1,7 +1,7 @@
 import { guard, query } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
-import { IQuery, IQuerySteamPlayerArgs, IQuerySteamPlayersArgs } from "../graphql/types";
+import { IQuery, IQuerySteamPlayerArgs, IQuerySteamPlayersArgs, ISteamPlayer } from "../graphql/types";
 import { SteamPlayerManager } from "../manager/steamPlayer";
 import { SteamGame } from "../model/SteamGame";
 import { SteamPlayer } from "../service/steam/SteamPlayer";
@@ -9,7 +9,7 @@ import { SteamPlayer } from "../service/steam/SteamPlayer";
 @singleton()
 export class SteamPlayerResolver {
   constructor(
-    private steamPlayerManager: SteamPlayerManager
+    private readonly steamPlayerManager: SteamPlayerManager
   ) { }
 
   @guard({
@@ -17,7 +17,7 @@ export class SteamPlayerResolver {
     action: "readAny"
   })
   @query()
-  async steamPlayer(root: void, { steamId64 }: IQuerySteamPlayerArgs): Promise<IQuery["steamPlayer"]> {
+  async steamPlayer(root: unknown, { steamId64 }: IQuerySteamPlayerArgs): Promise<IQuery["steamPlayer"]> {
     const { player, ownedGames = [] } = await this.steamPlayerManager.get(steamId64);
     return this.toGqlObject(player, ownedGames);
   }
@@ -27,16 +27,16 @@ export class SteamPlayerResolver {
     action: "readAny"
   })
   @query()
-  async steamPlayers(root: void, { steamIds64 }: IQuerySteamPlayersArgs): Promise<IQuery["steamPlayers"]> {
+  async steamPlayers(root: unknown, { steamIds64 }: IQuerySteamPlayersArgs): Promise<IQuery["steamPlayers"]> {
     const players = await this.steamPlayerManager.getMany(steamIds64);
     return players.map(({ player, ownedGames = [] }) => this.toGqlObject(player, ownedGames));
   }
 
-  private toGqlObject(player: SteamPlayer, ownedGames: SteamGame[]) {
+  private toGqlObject(player: SteamPlayer, ownedGames: SteamGame[]): ISteamPlayer {
     return {
       ...player,
       _id: player.id,
-      playingGame: player.playingGameId
+      playingGame: player.playingGameId !== undefined
         ? ownedGames.find(g => g._id === player.playingGameId)
         : undefined,
       ownedGames: _.sortBy(ownedGames, g => g.name)

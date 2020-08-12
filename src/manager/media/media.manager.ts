@@ -1,5 +1,5 @@
-import { HttpError,LoggerService } from "@athenajs/core";
-import axios from "axios";
+import { HttpError, LoggerService } from "@athenajs/core";
+import axios, { AxiosResponse as OldAxiosResponse } from "axios";
 import * as fs from "fs-extra";
 import * as path from "path";
 import { Readable } from "stream";
@@ -10,12 +10,14 @@ import { User } from "../../model/User";
 import { ConfigService } from "../../service/config";
 import { ProgressManager } from "../progress";
 
+type AxiosResponse<T> = Omit<OldAxiosResponse<T>, "headers"> & { headers: Record<string, string> };
+
 @singleton()
 export class MediaManager {
   constructor(
-    private config: ConfigService,
-    private logger: LoggerService,
-    private progressManager: ProgressManager
+    private readonly config: ConfigService,
+    private readonly logger: LoggerService,
+    private readonly progressManager: ProgressManager
   ) { }
 
   async download({ user, url, destinationKey, progress }: {
@@ -26,16 +28,16 @@ export class MediaManager {
   }): Promise<void> {
     const filename = this.toFilename(user, destinationKey);
     await fs.mkdirp(path.dirname(filename));
-    const { data: stream, headers } = await axios.get<Readable>(url, { responseType: "stream" });
+    const { data: stream, headers } = await axios.get<Readable, AxiosResponse<Readable>>(url, { responseType: "stream" });
     const totalSize = Number(headers["content-length"]);
     let fetchedSize = 0;
     const loggedPercents = [0];
-    const onLogError = (err: Error) => {
+    const onLogError = (err: Error): void => {
       this.logger.error("downloadMedia.logComplete", err, { destinationKey, progressId: progress._id, url, userId: user._id });
     };
     stream.pause();
     stream.on("data", (chunk: Buffer) => {
-      const percentComplete = Math.floor((fetchedSize / totalSize) * 100);
+      const percentComplete = Math.floor(fetchedSize / totalSize * 100);
       fetchedSize += chunk.byteLength;
       if (percentComplete % 10 === 0 && !loggedPercents.includes(percentComplete)) {
         this.progressManager.addLogs(progress, `${percentComplete}% complete`).catch(onLogError);
@@ -44,9 +46,9 @@ export class MediaManager {
     });
     stream.pipe(fs.createWriteStream(filename));
     stream.on("end", () => {
-      this.progressManager.addLogs(progress, `Finished downloading ${url} to ${destinationKey}`, ProgressStatus.Complete).catch(onLogError);
+      this.progressManager.addLogs(progress, `Finished downloading ${url} to ${destinationKey}`, ProgressStatus.completed).catch(onLogError);
     });
-    await this.progressManager.addLogs(progress, "Started download", ProgressStatus.InProgress);
+    await this.progressManager.addLogs(progress, "Started download", ProgressStatus.inProgress);
     stream.resume();
   }
 
@@ -63,11 +65,11 @@ export class MediaManager {
       const stats = await fs.stat(path.resolve(baseDir, filename));
       return {
         key: filename.split("/").slice(-1)[0],
-        type: stats.isFile() ? IMediaItemType.File : (
+        type: stats.isFile() ? IMediaItemType.File :
           await fs.pathExists(path.resolve(baseDir, filename, ".series"))
             ? IMediaItemType.Series
             : IMediaItemType.Directory
-        )
+
       };
     }));
   }
@@ -81,18 +83,26 @@ export class MediaManager {
     return fs.createReadStream(this.toFilename(user, key), { start, end });
   }
 
-  async exists(user: User, key: string): Promise<{ isFile?: boolean }> {
+  async exists(user: User, key: string): Promise<boolean> {
+    try {
+      await fs.stat(this.toFilename(user, key));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  async isFile(user: User, key: string): Promise<boolean> {
     try {
       const stats = await fs.stat(this.toFilename(user, key));
-      // console.log(stats.isFile());
-      return { isFile: stats.isFile() };
+      return stats.isFile();
     } catch (err) {
-      return { };
+      return false;
     }
   }
 
   private toFilename(user: User, key: string): string {
-    if (!this.config.mediaDir) {
+    if (this.config.mediaDir === undefined) {
       throw new Error("Missing environment variable MEDIA_DIR");
     }
     return path.resolve(this.config.mediaDir, user.email, key.replace(/^\//, "").replace(/\.\./g, ""));
