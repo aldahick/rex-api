@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apk add python
 
 COPY package.json ./
-COPY package-lock.json ./
+COPY yarn.lock ./
 RUN yarn
 
 COPY tsconfig.json ./

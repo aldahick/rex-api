@@ -9,7 +9,7 @@ RUN apk add python
 WORKDIR /app
 
 COPY package.json ./
-COPY package-lock.json ./
+COPY yarn.lock ./
 RUN yarn --production
 
 COPY dist ./dist
