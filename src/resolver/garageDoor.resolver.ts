@@ -1,6 +1,11 @@
 import { guard, mutation } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationCreateGarageDoorArgs, IMutationDeleteGarageDoorArgs, IMutationToggleGarageDoorArgs, IMutationUpdateGarageDoorArgs } from "../graphql/types";
+import {
+  IMutation,
+  IMutationCreateGarageDoorArgs,
+  IMutationDeleteGarageDoorArgs,
+  IMutationToggleGarageDoorArgs
+} from "../graphql/types";
 import { GarageDoorManager } from "../manager/garageDoor";
 
 @singleton()
@@ -15,8 +20,7 @@ export class GarageDoorResolver {
   })
   @mutation("createGarageDoor")
   async createGarageDoor(root: unknown, { name }: IMutationCreateGarageDoorArgs): Promise<IMutation["createGarageDoor"]> {
-    const garageDoor = await this.garageDoorManager.create(name);
-    return garageDoor.toGqlObject();
+    return this.garageDoorManager.create(name);
   }
 
   @guard({

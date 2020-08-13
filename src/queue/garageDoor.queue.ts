@@ -15,7 +15,7 @@ export class GarageDoorQueueHandler {
     await this.garageDoorManager.setIsOpen(garageDoor, isOpen);
     const garageDoors = await this.garageDoorManager.getAll();
     this.garageDoorManager.broadcastSockets<IGarageDoorsPayload>("garageDoors", {
-      garageDoors: garageDoors.map(g => g.toGqlObject())
+      garageDoors
     });
   }
 }

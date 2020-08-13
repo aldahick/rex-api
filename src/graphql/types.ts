@@ -104,7 +104,7 @@ export type ICreateHostInput = {
 
 export type IGarageDoor = {
   __typename?: 'GarageDoor';
-  id: Scalars['String'];
+  _id: Scalars['String'];
   name: Scalars['String'];
   isOpen: Scalars['Boolean'];
 };
@@ -164,21 +164,19 @@ export type IMutation = {
   addCalendar: Scalars['Boolean'];
   removeCalendar: Scalars['Boolean'];
   createHost: IHost;
+  addMediaDownload: IProgress;
   createNote: INote;
   removeNote: Scalars['Boolean'];
   updateNoteBody: Scalars['Boolean'];
-  addMediaDownload: IProgress;
   addPermissionsToRole: Scalars['Boolean'];
   createRole: IRole;
+  fetchSteamGames: IProgress;
   setSecret: Scalars['Boolean'];
   removeSecret: Scalars['Boolean'];
-  fetchSteamGames: IProgress;
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
   fetchWikiPagesUntil: IProgress;
-  /** called from pi */
-  updateGarageDoor: Scalars['Boolean'];
   /** called from web */
   createGarageDoor: IGarageDoor;
   deleteGarageDoor: Scalars['Boolean'];
@@ -262,6 +260,12 @@ export type IMutationCreateHostArgs = {
 };
 
 
+export type IMutationAddMediaDownloadArgs = {
+  url: Scalars['String'];
+  destinationKey: Scalars['String'];
+};
+
+
 export type IMutationCreateNoteArgs = {
   title: Scalars['String'];
 };
@@ -275,12 +279,6 @@ export type IMutationRemoveNoteArgs = {
 export type IMutationUpdateNoteBodyArgs = {
   id: Scalars['String'];
   body: Scalars['String'];
-};
-
-
-export type IMutationAddMediaDownloadArgs = {
-  url: Scalars['String'];
-  destinationKey: Scalars['String'];
 };
 
 
@@ -328,12 +326,6 @@ export type IMutationSetUserPasswordArgs = {
 export type IMutationFetchWikiPagesUntilArgs = {
   firstPageName: Scalars['String'];
   untilPageName: Scalars['String'];
-};
-
-
-export type IMutationUpdateGarageDoorArgs = {
-  id: Scalars['String'];
-  isOpen: Scalars['Boolean'];
 };
 
 
@@ -395,14 +387,14 @@ export type IQuery = {
   calendars: Array<ICalendar>;
   host: IHost;
   hosts: Array<IHost>;
+  mediaItems: Array<IMediaItem>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
-  mediaItems: Array<IMediaItem>;
   roles: Array<IRole>;
+  steamGames: Array<ISteamGame>;
   secret: ISecret;
   secrets: Array<ISecret>;
-  steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
   user: IUser;
@@ -423,6 +415,11 @@ export type IQueryHostArgs = {
 };
 
 
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String'];
+};
+
+
 export type IQueryNoteArgs = {
   id: Scalars['String'];
 };
@@ -433,8 +430,9 @@ export type IQueryProgressArgs = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'];
+  search: Scalars['String'];
 };
 
 
@@ -445,12 +443,6 @@ export type IQuerySecretArgs = {
 
 export type IQuerySecretsArgs = {
   prefix: Scalars['String'];
-};
-
-
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'];
-  search: Scalars['String'];
 };
 
 

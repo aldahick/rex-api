@@ -1,5 +1,5 @@
 type GarageDoor {
-  id: String!
+  _id: String!
   name: String!
   isOpen: Boolean!
 }
