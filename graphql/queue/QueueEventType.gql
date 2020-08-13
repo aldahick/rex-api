@@ -1,0 +1,4 @@
+enum QueueEventType {
+  garageDoorStatus
+  toggleGarageDoor
+}

@@ -1,4 +1,5 @@
 export type Maybe<T> = T | undefined;
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -101,6 +102,29 @@ export type ICreateHostInput = {
 };
 
 
+export type IGarageDoor = {
+  __typename?: 'GarageDoor';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  isOpen: Scalars['Boolean'];
+};
+
+export type IGarageDoorsPayload = {
+  __typename?: 'GarageDoorsPayload';
+  garageDoors: Array<IGarageDoor>;
+};
+
+export type IGarageDoorStatusPayload = {
+  __typename?: 'GarageDoorStatusPayload';
+  id: Scalars['String'];
+  isOpen: Scalars['Boolean'];
+};
+
+export type IGarageDoorTogglePayload = {
+  __typename?: 'GarageDoorTogglePayload';
+  id: Scalars['String'];
+};
+
 export type IHost = {
   __typename?: 'Host';
   _id: Scalars['String'];
@@ -129,12 +153,6 @@ export type IMutation = {
   createAuthTokenLocal: IAuthToken;
   /** requires auth */
   createAuthToken: IAuthToken;
-  addCalendar: Scalars['Boolean'];
-  removeCalendar: Scalars['Boolean'];
-  createHost: IHost;
-  createNote: INote;
-  removeNote: Scalars['Boolean'];
-  updateNoteBody: Scalars['Boolean'];
   createContainer: IContainer;
   deleteContainers: Scalars['Boolean'];
   updateContainerPorts: Scalars['Boolean'];
@@ -143,16 +161,28 @@ export type IMutation = {
   startContainer: Scalars['Boolean'];
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
+  addCalendar: Scalars['Boolean'];
+  removeCalendar: Scalars['Boolean'];
+  createHost: IHost;
+  createNote: INote;
+  removeNote: Scalars['Boolean'];
+  updateNoteBody: Scalars['Boolean'];
   addMediaDownload: IProgress;
   addPermissionsToRole: Scalars['Boolean'];
   createRole: IRole;
+  setSecret: Scalars['Boolean'];
+  removeSecret: Scalars['Boolean'];
   fetchSteamGames: IProgress;
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
-  setSecret: Scalars['Boolean'];
-  removeSecret: Scalars['Boolean'];
   fetchWikiPagesUntil: IProgress;
+  /** called from pi */
+  updateGarageDoor: Scalars['Boolean'];
+  /** called from web */
+  createGarageDoor: IGarageDoor;
+  deleteGarageDoor: Scalars['Boolean'];
+  toggleGarageDoor: Scalars['Boolean'];
   createRummikubGame: IRummikubGame;
 };
 
@@ -170,38 +200,6 @@ export type IMutationCreateAuthTokenLocalArgs = {
 
 export type IMutationCreateAuthTokenArgs = {
   userId: Scalars['String'];
-};
-
-
-export type IMutationAddCalendarArgs = {
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
-
-export type IMutationRemoveCalendarArgs = {
-  id: Scalars['String'];
-};
-
-
-export type IMutationCreateHostArgs = {
-  host: ICreateHostInput;
-};
-
-
-export type IMutationCreateNoteArgs = {
-  title: Scalars['String'];
-};
-
-
-export type IMutationRemoveNoteArgs = {
-  id: Scalars['String'];
-};
-
-
-export type IMutationUpdateNoteBodyArgs = {
-  id: Scalars['String'];
-  body: Scalars['String'];
 };
 
 
@@ -248,6 +246,38 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
+export type IMutationAddCalendarArgs = {
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+
+export type IMutationRemoveCalendarArgs = {
+  id: Scalars['String'];
+};
+
+
+export type IMutationCreateHostArgs = {
+  host: ICreateHostInput;
+};
+
+
+export type IMutationCreateNoteArgs = {
+  title: Scalars['String'];
+};
+
+
+export type IMutationRemoveNoteArgs = {
+  id: Scalars['String'];
+};
+
+
+export type IMutationUpdateNoteBodyArgs = {
+  id: Scalars['String'];
+  body: Scalars['String'];
+};
+
+
 export type IMutationAddMediaDownloadArgs = {
   url: Scalars['String'];
   destinationKey: Scalars['String'];
@@ -262,6 +292,17 @@ export type IMutationAddPermissionsToRoleArgs = {
 
 export type IMutationCreateRoleArgs = {
   name: Scalars['String'];
+};
+
+
+export type IMutationSetSecretArgs = {
+  key: Scalars['String'];
+  value: Scalars['String'];
+};
+
+
+export type IMutationRemoveSecretArgs = {
+  key: Scalars['String'];
 };
 
 
@@ -284,20 +325,30 @@ export type IMutationSetUserPasswordArgs = {
 };
 
 
-export type IMutationSetSecretArgs = {
-  key: Scalars['String'];
-  value: Scalars['String'];
-};
-
-
-export type IMutationRemoveSecretArgs = {
-  key: Scalars['String'];
-};
-
-
 export type IMutationFetchWikiPagesUntilArgs = {
   firstPageName: Scalars['String'];
   untilPageName: Scalars['String'];
+};
+
+
+export type IMutationUpdateGarageDoorArgs = {
+  id: Scalars['String'];
+  isOpen: Scalars['Boolean'];
+};
+
+
+export type IMutationCreateGarageDoorArgs = {
+  name: Scalars['String'];
+};
+
+
+export type IMutationDeleteGarageDoorArgs = {
+  id: Scalars['String'];
+};
+
+
+export type IMutationToggleGarageDoorArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -339,26 +390,31 @@ export enum IProgressStatus {
 export type IQuery = {
   __typename?: 'Query';
   hello: Scalars['String'];
+  container: IContainer;
+  containers: Array<IContainer>;
   calendars: Array<ICalendar>;
   host: IHost;
   hosts: Array<IHost>;
   note: INote;
   notes: Array<INote>;
-  container: IContainer;
-  containers: Array<IContainer>;
   progress: IProgress;
   mediaItems: Array<IMediaItem>;
   roles: Array<IRole>;
-  steamPlayer: ISteamPlayer;
-  steamPlayers: Array<ISteamPlayer>;
-  steamGames: Array<ISteamGame>;
-  user: IUser;
-  users: Array<IUser>;
   secret: ISecret;
   secrets: Array<ISecret>;
+  steamGames: Array<ISteamGame>;
+  steamPlayer: ISteamPlayer;
+  steamPlayers: Array<ISteamPlayer>;
+  user: IUser;
+  users: Array<IUser>;
   wikiPage: IWikiPage;
   /** only shows public games */
   rummikubGames: Array<IRummikubGame>;
+};
+
+
+export type IQueryContainerArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -368,11 +424,6 @@ export type IQueryHostArgs = {
 
 
 export type IQueryNoteArgs = {
-  id: Scalars['String'];
-};
-
-
-export type IQueryContainerArgs = {
   id: Scalars['String'];
 };
 
@@ -387,27 +438,6 @@ export type IQueryMediaItemsArgs = {
 };
 
 
-export type IQuerySteamPlayerArgs = {
-  steamId64: Scalars['String'];
-};
-
-
-export type IQuerySteamPlayersArgs = {
-  steamIds64: Array<Scalars['String']>;
-};
-
-
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'];
-  search: Scalars['String'];
-};
-
-
-export type IQueryUserArgs = {
-  id?: Maybe<Scalars['String']>;
-};
-
-
 export type IQuerySecretArgs = {
   key: Scalars['String'];
 };
@@ -418,9 +448,35 @@ export type IQuerySecretsArgs = {
 };
 
 
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'];
+  search: Scalars['String'];
+};
+
+
+export type IQuerySteamPlayerArgs = {
+  steamId64: Scalars['String'];
+};
+
+
+export type IQuerySteamPlayersArgs = {
+  steamIds64: Array<Scalars['String']>;
+};
+
+
+export type IQueryUserArgs = {
+  id?: Maybe<Scalars['String']>;
+};
+
+
 export type IQueryWikiPageArgs = {
   name: Scalars['String'];
 };
+
+export enum IQueueEventType {
+  GarageDoorStatus = 'garageDoorStatus',
+  ToggleGarageDoor = 'toggleGarageDoor'
+}
 
 export type IRole = {
   __typename?: 'Role';

@@ -16,5 +16,7 @@ export class ConfigService extends BaseConfigService {
 
   readonly mongoUrl = configUtils.required("MONGO_URL");
 
+  readonly redisUrl = configUtils.required("REDIS_URL");
+
   readonly steamApiKey = configUtils.optional("STEAM_API_KEY");
 }

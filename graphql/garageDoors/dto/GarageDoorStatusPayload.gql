@@ -1,0 +1,4 @@
+type GarageDoorStatusPayload {
+  id: String!
+  isOpen: Boolean!
+}
