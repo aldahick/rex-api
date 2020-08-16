@@ -4,12 +4,14 @@ import { singleton } from "tsyringe";
 import { Role } from "../../model/Role";
 import { RoleManager } from "../role";
 import { AuthContext } from "./AuthContext";
+import { AuthGoogleManager } from "./authGoogle.manager";
 import { AuthTokenPayload } from "./AuthTokenPayload";
 
 @authProvider
 @singleton()
 export class AuthManager {
   constructor(
+    readonly google: AuthGoogleManager,
     private readonly authService: AuthService,
     private readonly roleManager: RoleManager
   ) { }

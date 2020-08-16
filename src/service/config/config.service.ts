@@ -9,7 +9,10 @@ export class ConfigService extends BaseConfigService {
   };
 
   readonly googleAuth = {
-    clientId: configUtils.optional("GOOGLE_CLIENT_ID")
+    clientIds: {
+      mobile: configUtils.optional("GOOGLE_CLIENT_ID_MOBILE"),
+      web: configUtils.optional("GOOGLE_CLIENT_ID_WEB")
+    }
   };
 
   readonly mediaDir = configUtils.optional("MEDIA_DIR");

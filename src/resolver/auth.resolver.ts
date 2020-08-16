@@ -17,8 +17,9 @@ export class AuthResolver {
   ) { }
 
   @mutation()
-  async createAuthTokenGoogle(root: unknown, { googleIdToken }: IMutationCreateAuthTokenGoogleArgs, context: AuthContext): Promise<IMutation["createAuthTokenGoogle"]> {
-    const googlePayload = await this.googleAuthService.getIdTokenPayload(googleIdToken);
+  async createAuthTokenGoogle(root: unknown, { googleIdToken, clientType }: IMutationCreateAuthTokenGoogleArgs, context: AuthContext): Promise<IMutation["createAuthTokenGoogle"]> {
+    const clientId = this.authManager.google.getClientIdFromType(clientType);
+    const googlePayload = await this.googleAuthService.getIdTokenPayload(googleIdToken, clientId);
     if (!googlePayload) {
       throw HttpError.forbidden("Invalid Google token");
     }

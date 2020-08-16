@@ -12,6 +12,11 @@ export type Scalars = {
   Upload: File;
 };
 
+export enum IAuthClientType {
+  Mobile = 'MOBILE',
+  Web = 'WEB'
+}
+
 export type IAuthToken = {
   __typename?: 'AuthToken';
   token: Scalars['String'];
@@ -148,6 +153,8 @@ export enum IMediaItemType {
 export type IMutation = {
   __typename?: 'Mutation';
   hello: Scalars['String'];
+  addCalendar: Scalars['Boolean'];
+  removeCalendar: Scalars['Boolean'];
   createAuthTokenGoogle: IAuthToken;
   /** username can also be email */
   createAuthTokenLocal: IAuthToken;
@@ -161,8 +168,6 @@ export type IMutation = {
   startContainer: Scalars['Boolean'];
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
-  addCalendar: Scalars['Boolean'];
-  removeCalendar: Scalars['Boolean'];
   createHost: IHost;
   addMediaDownload: IProgress;
   createNote: INote;
@@ -170,9 +175,9 @@ export type IMutation = {
   updateNoteBody: Scalars['Boolean'];
   addPermissionsToRole: Scalars['Boolean'];
   createRole: IRole;
-  fetchSteamGames: IProgress;
   setSecret: Scalars['Boolean'];
   removeSecret: Scalars['Boolean'];
+  fetchSteamGames: IProgress;
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
@@ -185,8 +190,20 @@ export type IMutation = {
 };
 
 
+export type IMutationAddCalendarArgs = {
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+
+export type IMutationRemoveCalendarArgs = {
+  id: Scalars['String'];
+};
+
+
 export type IMutationCreateAuthTokenGoogleArgs = {
   googleIdToken: Scalars['String'];
+  clientType: IAuthClientType;
 };
 
 
@@ -241,17 +258,6 @@ export type IMutationStopContainerArgs = {
 
 export type IMutationRedeployContainerArgs = {
   containerId: Scalars['String'];
-};
-
-
-export type IMutationAddCalendarArgs = {
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
-
-export type IMutationRemoveCalendarArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -382,9 +388,9 @@ export enum IProgressStatus {
 export type IQuery = {
   __typename?: 'Query';
   hello: Scalars['String'];
+  calendars: Array<ICalendar>;
   container: IContainer;
   containers: Array<IContainer>;
-  calendars: Array<ICalendar>;
   host: IHost;
   hosts: Array<IHost>;
   mediaItems: Array<IMediaItem>;
@@ -392,9 +398,9 @@ export type IQuery = {
   notes: Array<INote>;
   progress: IProgress;
   roles: Array<IRole>;
-  steamGames: Array<ISteamGame>;
   secret: ISecret;
   secrets: Array<ISecret>;
+  steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
   user: IUser;
@@ -430,12 +436,6 @@ export type IQueryProgressArgs = {
 };
 
 
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'];
-  search: Scalars['String'];
-};
-
-
 export type IQuerySecretArgs = {
   key: Scalars['String'];
 };
@@ -443,6 +443,12 @@ export type IQuerySecretArgs = {
 
 export type IQuerySecretsArgs = {
   prefix: Scalars['String'];
+};
+
+
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'];
+  search: Scalars['String'];
 };
 
 

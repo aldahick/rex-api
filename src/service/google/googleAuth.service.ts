@@ -14,15 +14,14 @@ export class GoogleAuthService {
     private readonly config: ConfigService
   ) { }
 
-  async getIdTokenPayload(idToken: string): Promise<GoogleTokenPayload | undefined> {
-    const { clientId } = this.config.googleAuth;
+  async getIdTokenPayload(idToken: string, clientId: string | undefined): Promise<GoogleTokenPayload | undefined> {
     if (clientId === undefined) {
-      throw new Error("Missing environment variable GOOGLE_CLIENT_ID");
+      throw new Error("Missing Google client ID");
     }
     const api = new google.GoogleApis();
     const ticket = await new api.auth.OAuth2().verifyIdToken({
       idToken,
-      audience: this.config.googleAuth.clientId,
+      audience: clientId,
     });
     const payload = ticket.getPayload();
     const userId = ticket.getUserId();
