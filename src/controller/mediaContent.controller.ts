@@ -1,4 +1,5 @@
 import { controller, ControllerPayload, guard, HttpError } from "@athenajs/core";
+import * as _ from "lodash";
 import * as mime from "mime";
 import { singleton } from "tsyringe";
 import { AuthContext } from "../manager/auth";
@@ -51,15 +52,15 @@ export class MediaContentController {
 
     const size = await this.mediaManager.getSize(user, key);
     if (req.headers.range !== undefined) {
-      [start, end] = req.headers.range.replace("bytes=", "").split("-").map(Number);
+      [start, end] = _.compact(req.headers.range.replace("bytes=", "").split("-")).map(Number);
     }
     if (end === undefined) {
-      end = size;
+      end = size - 1;
     }
     res.writeHead(HTTP_PARTIAL_CODE, {
       /* eslint-disable @typescript-eslint/naming-convention */
       "Accept-Range": "bytes",
-      "Content-Length": end - start,
+      "Content-Length": end - start + 1,
       "Content-Range": `bytes ${start}-${end}/${size}`,
       "Content-Type": mimeType
       /* eslint-enable @typescript-eslint/naming-convention */
