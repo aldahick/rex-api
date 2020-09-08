@@ -1,0 +1,14 @@
+extend type Mutation {
+  emitPushNotification(
+    userId: String!,
+    platform: NotificationPlatform!,
+    message: String!
+  ): Boolean!
+  registerNotificationDevice(
+    platform: NotificationPlatform!,
+    token: String!
+  ): Boolean!
+  deregisterNotificationDevice(
+    platform: NotificationPlatform!
+  ): Boolean!
+}

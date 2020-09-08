@@ -6,6 +6,7 @@ export * from "./hello.resolver";
 export * from "./host.resolver";
 export * from "./media.resolver";
 export * from "./note.resolver";
+export * from "./notificationDevice.resolver";
 export * from "./progress.resolver";
 export * from "./role.resolver";
 export * from "./rummikub.resolver";

@@ -3,6 +3,7 @@ import { prop } from "@typegoose/typegoose";
 import { UserAuth } from "./UserAuth";
 import { UserCalendar } from "./UserCalendar";
 import { UserNote } from "./UserNote";
+import { UserNotificationDevice } from "./UserNotificationDevice";
 
 export class User {
   @MongoService.idProp()
@@ -25,6 +26,9 @@ export class User {
 
   @prop({ required: true, type: UserNote })
   notes!: UserNote[];
+
+  @prop({ required: true, type: UserNotificationDevice, _id: false })
+  notificationDevices!: UserNotificationDevice[];
 
   constructor(init?: Omit<User, "_id">) {
     Object.assign(this, init);

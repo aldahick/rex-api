@@ -5,6 +5,7 @@ import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
 import { UserCalendarManager } from "./userCalendar.manager";
 import { UserNoteManager } from "./userNote.manager";
+import { UserNotificationDeviceManager } from "./userNotificationDevice.manager";
 import { UserPasswordManager } from "./userPassword.manager";
 
 @singleton()
@@ -12,6 +13,7 @@ export class UserManager {
   constructor(
     readonly calendar: UserCalendarManager,
     readonly note: UserNoteManager,
+    readonly notificationDevice: UserNotificationDeviceManager,
     readonly password: UserPasswordManager,
     private readonly db: DatabaseService
   ) { }
@@ -75,7 +77,8 @@ export class UserManager {
       },
       roleIds: [],
       calendars: [],
-      notes: []
+      notes: [],
+      notificationDevices: []
     }));
   }
 }
