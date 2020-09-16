@@ -1,4 +1,4 @@
-# This image is optimized for deployment to my (Alex's) personal server,
+# This image is optimized for deployment to my (@aldahick's) personal server,
 # and makes assumptions you may not want to make. For most usage, the
 # docker/dev.Dockerfile is recommended.
 
@@ -10,7 +10,7 @@ WORKDIR /app
 
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn --production
+RUN yarn --production --frozen-lockfile
 
 COPY dist ./dist
 

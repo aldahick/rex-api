@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://localhost:8080/graphql"
+schema: "${API_URL:http://localhost:8080}/graphql"
 generates:
   src/graphql/types.ts:
     plugins:

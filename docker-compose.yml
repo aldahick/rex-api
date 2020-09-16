@@ -30,4 +30,3 @@ services:
       # CHANGE THIS IF YOU USE IT OUTSIDE OF LOCAL DEV
       JWT_KEY: egiuj489t35tbeb5ger
       MONGO_URL: mongodb://mongo:27017/rex
-
