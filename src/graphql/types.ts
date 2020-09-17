@@ -153,13 +153,17 @@ export enum IMediaItemType {
 export type IMutation = {
   __typename?: 'Mutation';
   hello: Scalars['String'];
-  addCalendar: Scalars['Boolean'];
-  removeCalendar: Scalars['Boolean'];
   createAuthTokenGoogle: IAuthToken;
   /** username can also be email */
   createAuthTokenLocal: IAuthToken;
   /** requires auth */
   createAuthToken: IAuthToken;
+  createHost: IHost;
+  addCalendar: Scalars['Boolean'];
+  removeCalendar: Scalars['Boolean'];
+  createNote: INote;
+  removeNote: Scalars['Boolean'];
+  updateNoteBody: Scalars['Boolean'];
   createContainer: IContainer;
   deleteContainers: Scalars['Boolean'];
   updateContainerPorts: Scalars['Boolean'];
@@ -168,36 +172,24 @@ export type IMutation = {
   startContainer: Scalars['Boolean'];
   stopContainer: Scalars['Boolean'];
   redeployContainer: Scalars['Boolean'];
-  createHost: IHost;
+  emitPushNotification: Scalars['Boolean'];
+  registerNotificationDevice: Scalars['Boolean'];
+  deregisterNotificationDevice: Scalars['Boolean'];
   addMediaDownload: IProgress;
-  createNote: INote;
-  removeNote: Scalars['Boolean'];
-  updateNoteBody: Scalars['Boolean'];
   addPermissionsToRole: Scalars['Boolean'];
   createRole: IRole;
   setSecret: Scalars['Boolean'];
   removeSecret: Scalars['Boolean'];
-  fetchSteamGames: IProgress;
   addRoleToUser: Scalars['Boolean'];
   createUser: IUser;
   setUserPassword: Scalars['Boolean'];
+  fetchSteamGames: IProgress;
   fetchWikiPagesUntil: IProgress;
   /** called from web */
   createGarageDoor: IGarageDoor;
   deleteGarageDoor: Scalars['Boolean'];
   toggleGarageDoor: Scalars['Boolean'];
   createRummikubGame: IRummikubGame;
-};
-
-
-export type IMutationAddCalendarArgs = {
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
-
-export type IMutationRemoveCalendarArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -215,6 +207,38 @@ export type IMutationCreateAuthTokenLocalArgs = {
 
 export type IMutationCreateAuthTokenArgs = {
   userId: Scalars['String'];
+};
+
+
+export type IMutationCreateHostArgs = {
+  host: ICreateHostInput;
+};
+
+
+export type IMutationAddCalendarArgs = {
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+
+export type IMutationRemoveCalendarArgs = {
+  id: Scalars['String'];
+};
+
+
+export type IMutationCreateNoteArgs = {
+  title: Scalars['String'];
+};
+
+
+export type IMutationRemoveNoteArgs = {
+  id: Scalars['String'];
+};
+
+
+export type IMutationUpdateNoteBodyArgs = {
+  id: Scalars['String'];
+  body: Scalars['String'];
 };
 
 
@@ -261,30 +285,27 @@ export type IMutationRedeployContainerArgs = {
 };
 
 
-export type IMutationCreateHostArgs = {
-  host: ICreateHostInput;
+export type IMutationEmitPushNotificationArgs = {
+  userId: Scalars['String'];
+  platform: INotificationPlatform;
+  message: Scalars['String'];
+};
+
+
+export type IMutationRegisterNotificationDeviceArgs = {
+  platform: INotificationPlatform;
+  token: Scalars['String'];
+};
+
+
+export type IMutationDeregisterNotificationDeviceArgs = {
+  platform: INotificationPlatform;
 };
 
 
 export type IMutationAddMediaDownloadArgs = {
   url: Scalars['String'];
   destinationKey: Scalars['String'];
-};
-
-
-export type IMutationCreateNoteArgs = {
-  title: Scalars['String'];
-};
-
-
-export type IMutationRemoveNoteArgs = {
-  id: Scalars['String'];
-};
-
-
-export type IMutationUpdateNoteBodyArgs = {
-  id: Scalars['String'];
-  body: Scalars['String'];
 };
 
 
@@ -363,6 +384,16 @@ export type INote = {
   body: Scalars['String'];
 };
 
+export type INotificationDevice = {
+  __typename?: 'NotificationDevice';
+  platform: INotificationPlatform;
+  arn: Scalars['String'];
+};
+
+export enum INotificationPlatform {
+  Ios = 'ios'
+}
+
 export type IProgress = {
   __typename?: 'Progress';
   _id: Scalars['String'];
@@ -388,31 +419,27 @@ export enum IProgressStatus {
 export type IQuery = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  calendars: Array<ICalendar>;
-  container: IContainer;
-  containers: Array<IContainer>;
   host: IHost;
   hosts: Array<IHost>;
-  mediaItems: Array<IMediaItem>;
+  calendars: Array<ICalendar>;
   note: INote;
   notes: Array<INote>;
-  progress: IProgress;
+  container: IContainer;
+  containers: Array<IContainer>;
+  notificationDevices: Array<INotificationDevice>;
+  mediaItems: Array<IMediaItem>;
   roles: Array<IRole>;
+  progress: IProgress;
   secret: ISecret;
   secrets: Array<ISecret>;
-  steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
   steamPlayers: Array<ISteamPlayer>;
   user: IUser;
   users: Array<IUser>;
+  steamGames: Array<ISteamGame>;
   wikiPage: IWikiPage;
   /** only shows public games */
   rummikubGames: Array<IRummikubGame>;
-};
-
-
-export type IQueryContainerArgs = {
-  id: Scalars['String'];
 };
 
 
@@ -421,13 +448,23 @@ export type IQueryHostArgs = {
 };
 
 
-export type IQueryMediaItemsArgs = {
-  dir: Scalars['String'];
+export type IQueryNoteArgs = {
+  id: Scalars['String'];
 };
 
 
-export type IQueryNoteArgs = {
+export type IQueryContainerArgs = {
   id: Scalars['String'];
+};
+
+
+export type IQueryNotificationDevicesArgs = {
+  userId?: Maybe<Scalars['String']>;
+};
+
+
+export type IQueryMediaItemsArgs = {
+  dir: Scalars['String'];
 };
 
 
@@ -446,12 +483,6 @@ export type IQuerySecretsArgs = {
 };
 
 
-export type IQuerySteamGamesArgs = {
-  page: Scalars['Int'];
-  search: Scalars['String'];
-};
-
-
 export type IQuerySteamPlayerArgs = {
   steamId64: Scalars['String'];
 };
@@ -464,6 +495,12 @@ export type IQuerySteamPlayersArgs = {
 
 export type IQueryUserArgs = {
   id?: Maybe<Scalars['String']>;
+};
+
+
+export type IQuerySteamGamesArgs = {
+  page: Scalars['Int'];
+  search: Scalars['String'];
 };
 
 
