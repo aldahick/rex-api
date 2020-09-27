@@ -15,7 +15,7 @@ export class ConfigService extends BaseConfigService {
 
   readonly discord = {
     commandPrefix: configUtils.optional("DISCORD_COMMAND_PREFIX") ?? "~",
-    token: configUtils.optional("DISCORD_TOKEN")
+    token: configUtils.optional("DISCORD_TOKEN", u => u || undefined)
   };
 
   readonly googleAuth = {
@@ -29,7 +29,7 @@ export class ConfigService extends BaseConfigService {
 
   readonly mongoUrl = configUtils.required("MONGO_URL");
 
-  readonly redisUrl = configUtils.required("REDIS_URL");
+  readonly redisUrl = configUtils.optional("REDIS_URL", u => u || undefined);
 
   readonly steamApiKey = configUtils.optional("STEAM_API_KEY");
 }

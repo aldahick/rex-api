@@ -38,7 +38,7 @@ export class RoleResolver {
     attributes: "permissions"
   })
   @mutation()
-  async addPermissionsToRole(root: unknown, { roleId, permissions }: IMutationAddPermissionsToRoleArgs): Promise<IMutation["addPermissionsToRole"]> {
+  async updateRolePermissions(root: unknown, { roleId, permissions }: IMutationAddPermissionsToRoleArgs): Promise<IMutation["addPermissionsToRole"]> {
     const role = await this.db.roles.findById(roleId);
     if (!role) {
       throw HttpError.notFound(`role id=${roleId} does not exist`);

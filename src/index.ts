@@ -28,9 +28,11 @@ const main = async (): Promise<void> => {
   await app.start();
 
   const config = container.resolve(ConfigService);
-  const redis = container.resolve(RedisService);
-  await redis.init(config.redisUrl);
-  await app.registry.queue.register(Object.values(queueHandlers));
+  if (config.redisUrl !== undefined) {
+    const redis = container.resolve(RedisService);
+    await redis.init(config.redisUrl);
+    await app.registry.queue.register(Object.values(queueHandlers));
+  }
 
   app.registry.websocket.register(Object.values(websocketHandlers));
 };
