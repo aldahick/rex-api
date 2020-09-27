@@ -1,14 +1,12 @@
-import { guard, HttpError, mutation, query } from "@athenajs/core";
-import * as _ from "lodash";
+import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
-import { IMutation, IMutationAddPermissionsToRoleArgs, IMutationCreateRoleArgs, IQuery } from "../graphql/types";
-import { Role } from "../model/Role";
-import { DatabaseService } from "../service/database";
+import { IMutation, IMutationCreateRoleArgs, IMutationDeleteRoleArgs, IMutationUpdateRoleArgs, IMutationUpdateRolePermissionsArgs, IQuery } from "../graphql/types";
+import { RoleManager } from "../manager/role";
 
 @singleton()
 export class RoleResolver {
   constructor(
-    private readonly db: DatabaseService
+    private readonly roleManager: RoleManager
   ) { }
 
   @guard({
@@ -17,7 +15,7 @@ export class RoleResolver {
   })
   @query()
   async roles(): Promise<IQuery["roles"]> {
-    return this.db.roles.find();
+    return this.roleManager.getAll();
   }
 
   @guard({
@@ -26,10 +24,30 @@ export class RoleResolver {
   })
   @mutation()
   async createRole(root: unknown, { name }: IMutationCreateRoleArgs): Promise<IMutation["createRole"]> {
-    return this.db.roles.create(new Role({
-      name,
-      permissions: []
-    }));
+    return this.roleManager.create(name);
+  }
+
+  @guard({
+    resource: "role",
+    action: "deleteAny"
+  })
+  @mutation()
+  async deleteRole(root: unknown, { id }: IMutationDeleteRoleArgs): Promise<IMutation["deleteRole"]> {
+    const role = await this.roleManager.get(id);
+    await this.roleManager.delete(role);
+    return true;
+  }
+
+  @guard({
+    resource: "role",
+    action: "updateAny",
+    attributes: "name"
+  })
+  @mutation()
+  async updateRole(root: unknown, { id, name }: IMutationUpdateRoleArgs): Promise<IMutation["updateRole"]> {
+    const role = await this.roleManager.get(id);
+    await this.roleManager.update(role, { name });
+    return true;
   }
 
   @guard({
@@ -38,19 +56,9 @@ export class RoleResolver {
     attributes: "permissions"
   })
   @mutation()
-  async updateRolePermissions(root: unknown, { roleId, permissions }: IMutationAddPermissionsToRoleArgs): Promise<IMutation["addPermissionsToRole"]> {
-    const role = await this.db.roles.findById(roleId);
-    if (!role) {
-      throw HttpError.notFound(`role id=${roleId} does not exist`);
-    }
-    await this.db.roles.updateOne({ _id: role._id }, {
-      $set: {
-        permissions: _.uniqBy(
-          role.permissions.concat(permissions),
-          p => `${p.action}-${p.resource}`
-        )
-      }
-    });
+  async updateRolePermissions(root: unknown, { id, permissions }: IMutationUpdateRolePermissionsArgs): Promise<IMutation["updateRolePermissions"]> {
+    const role = await this.roleManager.get(id);
+    await this.roleManager.setPermissions(role, permissions);
     return true;
   }
 }
