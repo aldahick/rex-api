@@ -10,13 +10,14 @@ workflows:
       - lint:
           requires:
             - install_dependencies
-      - deploy:
+      - publish:
+          context: ah-global
           requires:
             - build
             - lint
           filters:
             branches:
-              only: master
+              only: main
 
 jobs:
   install_dependencies:
@@ -35,14 +36,17 @@ jobs:
           paths:
             - node_modules
           key: v2-dependencies-{{ checksum "yarn.lock" }}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
   lint:
     docker:
       - image: cimg/node:12.18
     steps:
       - checkout
-      - restore_cache:
-          keys:
-          - v2-dependencies-{{ checksum "yarn.lock" }}
+      - attach_workspace:
+          at: .
       - run:
           name: Lint
           command: yarn lint
@@ -51,29 +55,32 @@ jobs:
       - image: cimg/node:12.18
     steps:
       - checkout
-      - restore_cache:
-          keys:
-          - v2-dependencies-{{ checksum "yarn.lock" }}
+      - attach_workspace:
+          at: .
       - run:
           name: Build
           command: yarn build
-      - save_cache:
+      - persist_to_workspace:
+          root: .
           paths:
             - dist
-          key: v1-dist-{{ .Revision }}
-  deploy:
+  publish:
     docker:
       - image: cimg/base:stable
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - setup_remote_docker
-      - restore_cache:
-          keys:
-          - v1-dist-{{ .Revision }}
-          - v1-dist-
       - run:
-          name: Build and deploy Docker
+          name: Authenticate Docker
           command: |
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin https://registry.alexhicks.net
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin "$DOCKER_REGISTRY"
+      - run:
+          name: Build Docker image
+          command: |
             docker build -t "$DOCKER_REPO:latest" -f docker/dist.Dockerfile .
+      - run:
+          name: Push Docker image
+          command: |
             docker push "$DOCKER_REPO:latest"
