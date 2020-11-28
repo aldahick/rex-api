@@ -1,6 +1,7 @@
 import { guard, query } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
+
 import { IQuery, IQuerySteamPlayerArgs, IQuerySteamPlayersArgs, ISteamPlayer } from "../graphql/types";
 import { SteamPlayerManager } from "../manager/steamPlayer";
 import { SteamGame } from "../model/SteamGame";

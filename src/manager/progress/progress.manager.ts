@@ -1,5 +1,6 @@
 import { HttpError } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { Progress, ProgressLog, ProgressStatus } from "../../model/Progress";
 import { DatabaseService } from "../../service/database";
 

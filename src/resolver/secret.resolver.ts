@@ -1,5 +1,6 @@
 import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { IMutation, IMutationRemoveSecretArgs, IMutationSetSecretArgs, IQuery, IQuerySecretArgs, IQuerySecretsArgs } from "../graphql/types";
 import { SecretManager } from "../manager/secret";
 

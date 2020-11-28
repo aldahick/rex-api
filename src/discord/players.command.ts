@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import * as pluralize from "pluralize";
 import { singleton } from "tsyringe";
 import * as url from "url";
+
 import { discordCommand, DiscordPayload } from "../registry/discord";
 
 @singleton()

@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { singleton } from "tsyringe";
+
 import { Progress, ProgressStatus } from "../../model/Progress";
 import { WikiPage } from "../../model/WikiPage";
 import { DatabaseService } from "../../service/database";

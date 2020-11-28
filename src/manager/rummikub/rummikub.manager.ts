@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+
 import { RummikubGameManager } from "./rummikubGame.manager";
 import { RummikubSocketManager } from "./rummikubSocket.manager";
 

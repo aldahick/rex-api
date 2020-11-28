@@ -1,5 +1,6 @@
 import { guard } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { IMutation, IMutationFetchWikiPagesUntilArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
 import { WikiPageManager } from "../manager/wikiPage";

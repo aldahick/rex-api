@@ -1,6 +1,7 @@
 import { MongoService } from "@athenajs/core";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { singleton } from "tsyringe";
+
 import { Container } from "../../model/Container";
 import { GarageDoor } from "../../model/GarageDoor";
 import { Host } from "../../model/Host";

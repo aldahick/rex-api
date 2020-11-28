@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+
 import { discordCommand } from "../registry/discord";
 
 @singleton()

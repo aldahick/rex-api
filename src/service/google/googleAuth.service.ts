@@ -1,5 +1,6 @@
 import * as google from "googleapis";
 import { singleton } from "tsyringe";
+
 import { ConfigService } from "../config";
 
 export interface GoogleTokenPayload {

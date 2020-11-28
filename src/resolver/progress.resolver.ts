@@ -1,5 +1,6 @@
 import { guard, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { IQuery, IQueryProgressArgs } from "../graphql/types";
 import { ProgressManager } from "../manager/progress";
 

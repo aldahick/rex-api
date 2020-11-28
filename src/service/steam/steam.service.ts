@@ -1,6 +1,7 @@
 import axios from "axios";
 import { singleton } from "tsyringe";
 import { resolve as resolveUrl } from "url";
+
 import { ConfigService } from "../config";
 import * as IPlayerService from "./dto/IPlayerService";
 import * as ISteamUser from "./dto/ISteamUser";
@@ -65,10 +66,9 @@ export class SteamService {
   }
 
   private get apiKey(): string {
-    const { steamApiKey } = this.config;
-    if (steamApiKey === undefined) {
+    if (this.config.steamApiKey === undefined) {
       throw new Error("Missing environment variable STEAM_API_KEY");
     }
-    return steamApiKey;
+    return this.config.steamApiKey;
   }
 }

@@ -1,5 +1,6 @@
 import { MongoService } from "@athenajs/core";
 import { prop } from "@typegoose/typegoose";
+
 import { UserAuth } from "./UserAuth";
 import { UserCalendar } from "./UserCalendar";
 import { UserNote } from "./UserNote";

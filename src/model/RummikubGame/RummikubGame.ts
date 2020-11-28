@@ -1,6 +1,7 @@
 import { MongoService } from "@athenajs/core";
 import { prop } from "@typegoose/typegoose";
 import * as _ from "lodash";
+
 import { IRummikubCardColor, IRummikubGame, IRummikubGamePrivacy } from "../../graphql/types";
 import { RummikubCard } from "./RummikubCard";
 import { RummikubChatMessage } from "./RummikubChatMessage";

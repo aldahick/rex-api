@@ -1,5 +1,6 @@
 import * as aws from "aws-sdk";
 import { singleton } from "tsyringe";
+
 import { ConfigService } from "../config";
 
 @singleton()

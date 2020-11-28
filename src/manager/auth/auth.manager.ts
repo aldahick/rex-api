@@ -1,6 +1,7 @@
 import { AuthCheck, authProvider, AuthService } from "@athenajs/core";
 import * as express from "express";
 import { singleton } from "tsyringe";
+
 import { Role } from "../../model/Role";
 import { RoleManager } from "../role";
 import { AuthContext } from "./AuthContext";

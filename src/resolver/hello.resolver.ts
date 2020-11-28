@@ -1,5 +1,6 @@
 import { mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { IMutation, IQuery } from "../graphql/types";
 
 @singleton()

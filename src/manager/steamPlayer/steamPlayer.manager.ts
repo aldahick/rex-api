@@ -1,6 +1,7 @@
 import { HttpError } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
+
 import { SteamGame } from "../../model/SteamGame";
 import { SteamPlayer, SteamService } from "../../service/steam";
 import { SteamGameManager } from "../steamGame";

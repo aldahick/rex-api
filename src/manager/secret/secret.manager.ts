@@ -1,6 +1,7 @@
 import { HttpError } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
+
 import { Secret } from "../../model/Secret";
 import { DatabaseService } from "../../service/database";
 

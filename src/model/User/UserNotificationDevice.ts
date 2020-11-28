@@ -1,4 +1,5 @@
 import { prop } from "@typegoose/typegoose";
+
 import { INotificationPlatform } from "../../graphql/types";
 
 export class UserNotificationDevice {

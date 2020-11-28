@@ -1,5 +1,6 @@
 import { HttpError } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { Host } from "../../model/Host";
 import { DatabaseService } from "../../service/database";
 

@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { singleton } from "tsyringe";
+
 import { User } from "../../model/User";
 import { DatabaseService } from "../../service/database";
 

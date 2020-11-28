@@ -11,9 +11,9 @@ export class DockerService {
   constructor(
     private readonly endpoint: string
   ) {
-    const { hostname, protocol, port, path, auth } = url.parse(this.endpoint);
+    const { hostname, protocol, port, path, auth } = url.parse(endpoint);
     if (hostname === null || protocol === null || path === null || auth === null) {
-      throw HttpError.internalError(`Bad Docker endpoint ${this.endpoint}`);
+      throw HttpError.internalError(`Bad Docker endpoint ${endpoint}`);
     }
     this.docker = new Dockerode({
       host: hostname,

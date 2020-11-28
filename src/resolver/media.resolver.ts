@@ -1,5 +1,6 @@
 import { guard, HttpError, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { IMutation, IMutationAddMediaDownloadArgs, IQuery, IQueryMediaItemsArgs } from "../graphql/types";
 import { AuthContext } from "../manager/auth";
 import { MediaManager } from "../manager/media";

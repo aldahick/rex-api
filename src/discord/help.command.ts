@@ -1,4 +1,5 @@
 import { singleton } from "tsyringe";
+
 import { discordCommand, DiscordRegistry } from "../registry/discord";
 import { ConfigService } from "../service/config";
 

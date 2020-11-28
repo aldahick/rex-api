@@ -2,6 +2,7 @@ import { controller, ControllerPayload, guard, HttpError } from "@athenajs/core"
 import * as _ from "lodash";
 import * as mime from "mime";
 import { singleton } from "tsyringe";
+
 import { AuthContext } from "../manager/auth";
 import { MediaManager } from "../manager/media";
 import { User } from "../model/User";

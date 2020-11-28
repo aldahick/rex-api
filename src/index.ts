@@ -1,5 +1,7 @@
-import { Application, container, RedisService } from "@athenajs/core";
 import "reflect-metadata";
+
+import { Application, container, RedisService } from "@athenajs/core";
+
 import * as controllers from "./controller";
 import * as discordCommands from "./discord";
 import * as queueHandlers from "./queue";

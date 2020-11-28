@@ -2,6 +2,7 @@
 
 import { HttpError } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { INotificationPlatform } from "../../graphql/types";
 import { User, UserNotificationDevice } from "../../model/User";
 import { AwsService } from "../../service/aws";

@@ -1,6 +1,7 @@
 import { AuthCheck, BaseAuthContext } from "@athenajs/core";
 import { Request } from "express";
 import { container } from "tsyringe";
+
 import { Role } from "../../model/Role";
 import { User } from "../../model/User";
 import { UserManager } from "../user";
@@ -18,7 +19,7 @@ export class AuthContext implements BaseAuthContext {
 
   constructor(
     readonly req: Request,
-    private payload?: AuthTokenPayload
+    private readonly payload?: AuthTokenPayload
   ) { }
 
   setPayload(payload: AuthTokenPayload): void {

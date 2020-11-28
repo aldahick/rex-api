@@ -1,5 +1,6 @@
 import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { IMutation, IMutationCreateRoleArgs, IMutationDeleteRoleArgs, IMutationUpdateRoleArgs, IMutationUpdateRolePermissionsArgs, IQuery } from "../graphql/types";
 import { RoleManager } from "../manager/role";
 

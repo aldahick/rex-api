@@ -1,6 +1,7 @@
 import { LoggerService } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
+
 import { SteamPlayerManager, SteamPlayerWithGames } from "../manager/steamPlayer";
 import { discordCommand, DiscordPayload } from "../registry/discord";
 import { HastebinService } from "../service/hastebin";

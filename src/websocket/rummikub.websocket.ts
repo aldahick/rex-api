@@ -1,6 +1,7 @@
 import { HttpError, websocketEvent, WebsocketPayload } from "@athenajs/core";
 import * as joi from "@hapi/joi";
 import { singleton } from "tsyringe";
+
 import {
   IRummikubClientChatPayload,
   IRummikubClientJoinPayload,

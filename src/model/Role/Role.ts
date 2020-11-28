@@ -1,5 +1,6 @@
 import { MongoService } from "@athenajs/core";
 import { prop } from "@typegoose/typegoose";
+
 import { RolePermission } from "./RolePermission";
 
 export class Role {

@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
+
 import { Progress, ProgressStatus } from "../../model/Progress";
 import { SteamGame } from "../../model/SteamGame";
 import { DatabaseService } from "../../service/database";

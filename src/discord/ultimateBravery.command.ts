@@ -1,5 +1,6 @@
 import { LoggerService } from "@athenajs/core";
 import { singleton } from "tsyringe";
+
 import { discordCommand, DiscordPayload } from "../registry/discord";
 import { UltimateBraveryService } from "../service/ultimateBravery";
 
