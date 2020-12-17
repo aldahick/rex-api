@@ -1,7 +1,7 @@
 import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IMutation, IMutationCreateRummikubGameArgs, IQuery } from "../graphql/types";
+import { IMutation, IMutationCreateRummikubGameArgs, IQuery } from "../graphql";
 import { RummikubManager } from "../manager/rummikub";
 
 @singleton()

@@ -6,7 +6,7 @@ import {
   IMutationCreateGarageDoorArgs,
   IMutationDeleteGarageDoorArgs,
   IMutationToggleGarageDoorArgs
-} from "../graphql/types";
+} from "../graphql";
 import { GarageDoorManager } from "../manager/garageDoor";
 
 @singleton()

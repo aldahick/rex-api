@@ -1,7 +1,7 @@
 import { guard, HttpError, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IMutation, IMutationAddCalendarArgs, IMutationRemoveCalendarArgs, IQuery } from "../graphql/types";
+import { IMutation, IMutationAddCalendarArgs, IMutationRemoveCalendarArgs, IQuery } from "../graphql";
 import { AuthContext } from "../manager/auth";
 import { UserManager } from "../manager/user";
 

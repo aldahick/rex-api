@@ -1,6 +1,6 @@
 import { singleton } from "tsyringe";
 
-import { IAuthClientType } from "../../graphql/types";
+import { IAuthClientType } from "../../graphql";
 import { ConfigService } from "../../service/config";
 
 @singleton()

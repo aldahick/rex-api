@@ -1,7 +1,7 @@
 import { HttpError, WebsocketRegistry } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IRummikubServerBoardPayload, IRummikubServerChatPayload, IRummikubServerHandPayload, IRummikubServerPlayersPayload, IRummikubServerTurnPayload } from "../../graphql/types";
+import { IRummikubServerBoardPayload, IRummikubServerChatPayload, IRummikubServerHandPayload, IRummikubServerPlayersPayload, IRummikubServerTurnPayload } from "../../graphql";
 import { RummikubChatMessage, RummikubGame, RummikubPlayer } from "../../model/RummikubGame";
 import { RummikubGameManager } from "./rummikubGame.manager";
 

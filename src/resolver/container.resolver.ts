@@ -14,7 +14,7 @@ import {
   IMutationUpdateContainerVariablesArgs,
   IMutationUpdateContainerVolumesArgs,
   IQuery,
-  IQueryContainerArgs} from "../graphql/types";
+  IQueryContainerArgs} from "../graphql";
 import { ContainerManager } from "../manager/container";
 import { HostManager } from "../manager/host";
 import { Container } from "../model/Container";

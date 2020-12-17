@@ -1,7 +1,7 @@
 import { HttpError, RedisService, WebsocketRegistry } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IGarageDoorTogglePayload, IQueueEventType } from "../../graphql/types";
+import { IGarageDoorTogglePayload, IQueueEventType } from "../../graphql";
 import { GarageDoor } from "../../model/GarageDoor";
 import { DatabaseService } from "../../service/database";
 

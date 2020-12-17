@@ -6,7 +6,7 @@ import {
   IRummikubClientChatPayload,
   IRummikubClientJoinPayload,
   IRummikubClientPlaceCardPayload,
-} from "../graphql/types";
+} from "../graphql";
 import { RummikubManager } from "../manager/rummikub";
 import { RummikubGame, RummikubGameStatus } from "../model/RummikubGame";
 

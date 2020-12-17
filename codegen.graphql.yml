@@ -1,7 +1,7 @@
 overwrite: true
-schema: "${API_URL:http://localhost:8080}/graphql"
+schema: ./graphql/**/*.gql
 generates:
-  src/graphql/types.ts:
+  src/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"

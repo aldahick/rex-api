@@ -5,7 +5,7 @@ import * as path from "path";
 import { Readable } from "stream";
 import { singleton } from "tsyringe";
 
-import { IMediaItem, IMediaItemType } from "../../graphql/types";
+import { IMediaItem, IMediaItemType } from "../../graphql";
 import { Progress, ProgressStatus } from "../../model/Progress";
 import { User } from "../../model/User";
 import { ConfigService } from "../../service/config";

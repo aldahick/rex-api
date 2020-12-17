@@ -2,7 +2,7 @@ import { HttpError } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
 
-import { IRummikubGamePrivacy } from "../../graphql/types";
+import { IRummikubGamePrivacy } from "../../graphql";
 import { RummikubCard, RummikubChatMessage, RummikubGame, RummikubGameStatus, RummikubPlayer } from "../../model/RummikubGame";
 import { DatabaseService } from "../../service/database";
 

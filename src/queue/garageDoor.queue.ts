@@ -1,7 +1,7 @@
 import { queueEvent, QueuePayload } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IGarageDoorsPayload, IGarageDoorStatusPayload, IQueueEventType } from "../graphql/types";
+import { IGarageDoorsPayload, IGarageDoorStatusPayload, IQueueEventType } from "../graphql";
 import { GarageDoorManager } from "../manager/garageDoor";
 
 @singleton()

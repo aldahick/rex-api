@@ -1,7 +1,7 @@
 import { guard, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IMutation, IQuery, IQuerySteamGamesArgs } from "../graphql/types";
+import { IMutation, IQuery, IQuerySteamGamesArgs } from "../graphql";
 import { ProgressManager } from "../manager/progress";
 import { SteamGameManager } from "../manager/steamGame";
 

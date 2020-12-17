@@ -2,7 +2,7 @@ import { MongoService } from "@athenajs/core";
 import { prop } from "@typegoose/typegoose";
 import * as _ from "lodash";
 
-import { IRummikubCardColor, IRummikubGame, IRummikubGamePrivacy } from "../../graphql/types";
+import { IRummikubCardColor, IRummikubGame, IRummikubGamePrivacy } from "../../graphql";
 import { RummikubCard } from "./RummikubCard";
 import { RummikubChatMessage } from "./RummikubChatMessage";
 import { RummikubGameStatus } from "./RummikubGameStatus";

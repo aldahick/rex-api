@@ -1,7 +1,7 @@
 import { guard, HttpError, mutation, query, resolver } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs, IQuery, IQueryUserArgs, IUser } from "../graphql/types";
+import { IMutation, IMutationAddRoleToUserArgs, IMutationCreateUserArgs, IMutationSetUserPasswordArgs, IQuery, IQueryUserArgs, IUser } from "../graphql";
 import { AuthContext } from "../manager/auth";
 import { RoleManager } from "../manager/role";
 import { UserManager } from "../manager/user";

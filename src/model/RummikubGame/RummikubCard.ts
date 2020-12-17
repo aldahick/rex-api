@@ -1,6 +1,6 @@
 import { prop } from "@typegoose/typegoose";
 
-import { IRummikubCardColor } from "../../graphql/types";
+import { IRummikubCardColor } from "../../graphql";
 import { RummikubCardSource } from "./RummikubCardSource";
 
 export class RummikubCard {
