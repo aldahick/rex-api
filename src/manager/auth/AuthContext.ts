@@ -19,7 +19,7 @@ export class AuthContext implements BaseAuthContext {
 
   constructor(
     readonly req: Request,
-    private readonly payload?: AuthTokenPayload
+    private payload?: AuthTokenPayload
   ) { }
 
   setPayload(payload: AuthTokenPayload): void {

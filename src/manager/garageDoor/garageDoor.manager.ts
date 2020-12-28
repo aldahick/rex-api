@@ -1,4 +1,5 @@
 import { HttpError, RedisService, WebsocketRegistry } from "@athenajs/core";
+import { Server } from "socket.io";
 import { singleton } from "tsyringe";
 
 import { IGarageDoorTogglePayload, IQueueEventType } from "../../graphql";
@@ -7,7 +8,7 @@ import { DatabaseService } from "../../service/database";
 
 @singleton()
 export class GarageDoorManager {
-  private get io(): SocketIO.Server {
+  private get io(): Server {
     return this.websocketRegistry.io;
   }
 

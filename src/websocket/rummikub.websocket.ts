@@ -1,5 +1,5 @@
 import { HttpError, websocketEvent, WebsocketPayload } from "@athenajs/core";
-import * as joi from "@hapi/joi";
+import * as joi from "joi";
 import { singleton } from "tsyringe";
 
 import {
@@ -43,7 +43,7 @@ export class RummikubWebsocketHandler {
     // the client won't know they've joined until this returns - give them
     // a moment to prepare to receive events
     socket.emit("rummikub.client.join", true);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         try {
           this.rummikubManager.socket.sendPlayers(game);

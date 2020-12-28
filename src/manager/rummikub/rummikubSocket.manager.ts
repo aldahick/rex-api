@@ -1,4 +1,5 @@
 import { HttpError, WebsocketRegistry } from "@athenajs/core";
+import { Server } from "socket.io";
 import { singleton } from "tsyringe";
 
 import { IRummikubServerBoardPayload, IRummikubServerChatPayload, IRummikubServerHandPayload, IRummikubServerPlayersPayload, IRummikubServerTurnPayload } from "../../graphql";
@@ -12,7 +13,7 @@ type WebsocketWithGame = SocketIO.Socket & {
 
 @singleton()
 export class RummikubSocketManager {
-  private get io(): SocketIO.Server {
+  private get io(): Server {
     return this.websocketRegistry.io;
   }
 
@@ -24,7 +25,7 @@ export class RummikubSocketManager {
   async setGameId(socket: WebsocketWithGame, gameId: string): Promise<void> {
     socket.rummikubGameId = gameId;
     const room = this.getRoom({ _id: gameId } as RummikubGame);
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
       socket.join(room, err => err !== undefined ? reject(err) : resolve());
     });
   }
@@ -143,6 +144,6 @@ export class RummikubSocketManager {
   }
 
   isConnected(player: RummikubPlayer): boolean {
-    return this.io.sockets.connected[player.socketId].connected;
+    return this.io.sockets.sockets.get(player.socketId)?.connected ?? false;
   }
 }

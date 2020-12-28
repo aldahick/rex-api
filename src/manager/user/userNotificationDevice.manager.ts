@@ -16,9 +16,12 @@ export class UserNotificationDeviceManager {
   ) { }
 
   async register(user: User, platform: INotificationPlatform, token: string): Promise<void> {
-    const arn = await this.aws.createSnsEndpointArn(platform, token);
-    if (arn === undefined) {
-      throw HttpError.internalError("Couldn't create SNS endpoint");
+    let arn: string | undefined;
+    if (platform === INotificationPlatform.Ios) {
+      arn = await this.aws.createSnsEndpointArn(platform, token);
+      if (arn === undefined) {
+        throw HttpError.internalError("Couldn't create SNS endpoint");
+      }
     }
     await this.db.users.updateOne({
       _id: user._id
@@ -29,11 +32,13 @@ export class UserNotificationDeviceManager {
           .concat([
             new UserNotificationDevice({
               platform,
-              arn
+              arn,
+              token
             })
           ])
       }
     });
+    // safe because deleteAllArns does not refetch the user
     await this.deleteAllArns(user, platform);
   }
 
@@ -53,7 +58,9 @@ export class UserNotificationDeviceManager {
   private async deleteAllArns(user: User, platform: INotificationPlatform): Promise<void> {
     const devicesToRemove = user.notificationDevices.filter(d => d.platform === platform);
     for (const device of devicesToRemove) {
-      await this.aws.deleteSnsEndpointArn(platform, device.arn);
+      if (device.arn !== undefined) {
+        await this.aws.deleteSnsEndpointArn(platform, device.arn);
+      }
     }
   }
 }

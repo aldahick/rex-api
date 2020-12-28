@@ -45,13 +45,13 @@ export class WikiPageManager {
     const $ = cheerio.load(res.data);
     const firstLink = $("#mw-content-text .mw-parser-output")
       .children()
-      .filter((i, e) => e.tagName.toLowerCase() === "p")
+      .filter((i, e) => e.type === "tag" && e.tagName.toLowerCase() === "p")
       .find("a")
       .toArray()[0];
     return this.db.wikiPages.create(new WikiPage({
       name,
       // slice 2 to avoid starting /, wiki links are formatted as "/wiki/..."
-      firstLinkName: firstLink.attribs.href.split("/").slice(2).join("/")
+      firstLinkName: firstLink.type === "tag" ? firstLink.attribs.href.split("/").slice(2).join("/") : ""
     }));
   }
 }

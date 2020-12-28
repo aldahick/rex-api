@@ -1,5 +1,7 @@
 export type Maybe<T> = T | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -9,139 +11,6 @@ export type Scalars = {
   Float: number;
   DateTime: Date;
 };
-
-export enum IAuthClientType {
-  Mobile = 'MOBILE',
-  Web = 'WEB'
-}
-
-export type IAuthToken = {
-  __typename?: 'AuthToken';
-  token: Scalars['String'];
-  user: IUser;
-};
-
-export type ICalendar = {
-  __typename?: 'Calendar';
-  _id: Scalars['String'];
-  name: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type IContainer = {
-  __typename?: 'Container';
-  _id: Scalars['String'];
-  name: Scalars['String'];
-  image: Scalars['String'];
-  tag: Scalars['String'];
-  status: IContainerStatus;
-  host: IHost;
-  networkName: Scalars['String'];
-  ports: Array<IContainerPort>;
-  variables: Array<IContainerVariable>;
-  volumes: Array<IContainerVolume>;
-};
-
-export type IContainerPort = {
-  __typename?: 'ContainerPort';
-  containerPort: Scalars['Int'];
-  hostPort?: Maybe<Scalars['Int']>;
-  hostBindIp?: Maybe<Scalars['String']>;
-};
-
-export type IContainerPortInput = {
-  containerPort: Scalars['Int'];
-  hostPort?: Maybe<Scalars['Int']>;
-  hostBindIp?: Maybe<Scalars['String']>;
-};
-
-export enum IContainerStatus {
-  Running = 'RUNNING',
-  Starting = 'STARTING',
-  Stopped = 'STOPPED',
-  Dead = 'DEAD',
-  Unknown = 'UNKNOWN'
-}
-
-export type IContainerVariable = {
-  __typename?: 'ContainerVariable';
-  name: Scalars['String'];
-  value: Scalars['String'];
-};
-
-export type IContainerVariableInput = {
-  name: Scalars['String'];
-  value: Scalars['String'];
-};
-
-export type IContainerVolume = {
-  __typename?: 'ContainerVolume';
-  hostPath: Scalars['String'];
-  containerPath: Scalars['String'];
-};
-
-export type IContainerVolumeInput = {
-  hostPath: Scalars['String'];
-  containerPath: Scalars['String'];
-};
-
-export type ICreateContainerInput = {
-  name: Scalars['String'];
-  image: Scalars['String'];
-  tag: Scalars['String'];
-  hostId: Scalars['String'];
-  networkName: Scalars['String'];
-};
-
-export type ICreateHostInput = {
-  name: Scalars['String'];
-  hostname: Scalars['String'];
-  dockerEndpoint: Scalars['String'];
-};
-
-
-export type IGarageDoor = {
-  __typename?: 'GarageDoor';
-  _id: Scalars['String'];
-  name: Scalars['String'];
-  isOpen: Scalars['Boolean'];
-};
-
-export type IGarageDoorsPayload = {
-  __typename?: 'GarageDoorsPayload';
-  garageDoors: Array<IGarageDoor>;
-};
-
-export type IGarageDoorStatusPayload = {
-  __typename?: 'GarageDoorStatusPayload';
-  id: Scalars['String'];
-  isOpen: Scalars['Boolean'];
-};
-
-export type IGarageDoorTogglePayload = {
-  __typename?: 'GarageDoorTogglePayload';
-  id: Scalars['String'];
-};
-
-export type IHost = {
-  __typename?: 'Host';
-  _id: Scalars['String'];
-  name: Scalars['String'];
-  hostname: Scalars['String'];
-  containers?: Maybe<Array<IContainer>>;
-};
-
-export type IMediaItem = {
-  __typename?: 'MediaItem';
-  key: Scalars['String'];
-  type: IMediaItemType;
-};
-
-export enum IMediaItemType {
-  File = 'file',
-  Directory = 'directory',
-  Series = 'series'
-}
 
 export type IMutation = {
   __typename?: 'Mutation';
@@ -165,6 +34,7 @@ export type IMutation = {
   emitPushNotification: Scalars['Boolean'];
   fetchSteamGames: IProgress;
   fetchWikiPagesUntil: IProgress;
+  hello: Scalars['String'];
   redeployContainer: Scalars['Boolean'];
   registerNotificationDevice: Scalars['Boolean'];
   removeCalendar: Scalars['Boolean'];
@@ -378,53 +248,12 @@ export type IMutationUpdateRolePermissionsArgs = {
   permissions: Array<IRolePermissionInput>;
 };
 
-export type INote = {
-  __typename?: 'Note';
-  _id: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  title: Scalars['String'];
-  body: Scalars['String'];
-};
-
-export type INotificationDevice = {
-  __typename?: 'NotificationDevice';
-  platform: INotificationPlatform;
-  arn?: Maybe<Scalars['String']>;
-  token: Scalars['String'];
-};
-
-export enum INotificationPlatform {
-  Ios = 'ios',
-  Spontit = 'spontit'
-}
-
-export type IProgress = {
-  __typename?: 'Progress';
-  _id: Scalars['String'];
-  action: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  status: IProgressStatus;
-  logs: Array<IProgressLog>;
-};
-
-export type IProgressLog = {
-  __typename?: 'ProgressLog';
-  createdAt: Scalars['DateTime'];
-  text: Scalars['String'];
-};
-
-export enum IProgressStatus {
-  Created = 'CREATED',
-  InProgress = 'IN_PROGRESS',
-  Complete = 'COMPLETE',
-  Errored = 'ERRORED'
-}
-
 export type IQuery = {
   __typename?: 'Query';
   calendars: Array<ICalendar>;
   container: IContainer;
   containers: Array<IContainer>;
+  hello: Scalars['String'];
   host: IHost;
   hosts: Array<IHost>;
   mediaItems: Array<IMediaItem>;
@@ -510,6 +339,178 @@ export type IQueryWikiPageArgs = {
   name: Scalars['String'];
 };
 
+export enum IAuthClientType {
+  Mobile = 'MOBILE',
+  Web = 'WEB'
+}
+
+export type IAuthToken = {
+  __typename?: 'AuthToken';
+  token: Scalars['String'];
+  user: IUser;
+};
+
+export type ICalendar = {
+  __typename?: 'Calendar';
+  _id: Scalars['String'];
+  name: Scalars['String'];
+  url: Scalars['String'];
+};
+
+export type IContainer = {
+  __typename?: 'Container';
+  _id: Scalars['String'];
+  name: Scalars['String'];
+  image: Scalars['String'];
+  tag: Scalars['String'];
+  status: IContainerStatus;
+  host: IHost;
+  networkName: Scalars['String'];
+  ports: Array<IContainerPort>;
+  variables: Array<IContainerVariable>;
+  volumes: Array<IContainerVolume>;
+};
+
+export type IContainerPort = {
+  __typename?: 'ContainerPort';
+  containerPort: Scalars['Int'];
+  hostPort?: Maybe<Scalars['Int']>;
+  hostBindIp?: Maybe<Scalars['String']>;
+};
+
+export enum IContainerStatus {
+  Running = 'RUNNING',
+  Starting = 'STARTING',
+  Stopped = 'STOPPED',
+  Dead = 'DEAD',
+  Unknown = 'UNKNOWN'
+}
+
+export type IContainerVariable = {
+  __typename?: 'ContainerVariable';
+  name: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type IContainerVolume = {
+  __typename?: 'ContainerVolume';
+  hostPath: Scalars['String'];
+  containerPath: Scalars['String'];
+};
+
+export type ICreateContainerInput = {
+  name: Scalars['String'];
+  image: Scalars['String'];
+  tag: Scalars['String'];
+  hostId: Scalars['String'];
+  networkName: Scalars['String'];
+};
+
+export type IContainerPortInput = {
+  containerPort: Scalars['Int'];
+  hostPort?: Maybe<Scalars['Int']>;
+  hostBindIp?: Maybe<Scalars['String']>;
+};
+
+export type IContainerVariableInput = {
+  name: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type IContainerVolumeInput = {
+  hostPath: Scalars['String'];
+  containerPath: Scalars['String'];
+};
+
+export type IGarageDoor = {
+  __typename?: 'GarageDoor';
+  _id: Scalars['String'];
+  name: Scalars['String'];
+  isOpen: Scalars['Boolean'];
+};
+
+export type IGarageDoorStatusPayload = {
+  __typename?: 'GarageDoorStatusPayload';
+  id: Scalars['String'];
+  isOpen: Scalars['Boolean'];
+};
+
+export type IGarageDoorTogglePayload = {
+  __typename?: 'GarageDoorTogglePayload';
+  id: Scalars['String'];
+};
+
+export type IGarageDoorsPayload = {
+  __typename?: 'GarageDoorsPayload';
+  garageDoors: Array<IGarageDoor>;
+};
+
+export type IHost = {
+  __typename?: 'Host';
+  _id: Scalars['String'];
+  name: Scalars['String'];
+  hostname: Scalars['String'];
+  containers?: Maybe<Array<IContainer>>;
+};
+
+export type ICreateHostInput = {
+  name: Scalars['String'];
+  hostname: Scalars['String'];
+  dockerEndpoint: Scalars['String'];
+};
+
+export type IMediaItem = {
+  __typename?: 'MediaItem';
+  key: Scalars['String'];
+  type: IMediaItemType;
+};
+
+export enum IMediaItemType {
+  File = 'file',
+  Directory = 'directory',
+  Series = 'series'
+}
+
+export type INote = {
+  __typename?: 'Note';
+  _id: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  title: Scalars['String'];
+  body: Scalars['String'];
+};
+
+export type INotificationDevice = {
+  __typename?: 'NotificationDevice';
+  platform: INotificationPlatform;
+  arn?: Maybe<Scalars['String']>;
+};
+
+export enum INotificationPlatform {
+  Ios = 'ios'
+}
+
+export type IProgress = {
+  __typename?: 'Progress';
+  _id: Scalars['String'];
+  action: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  status: IProgressStatus;
+  logs: Array<IProgressLog>;
+};
+
+export type IProgressLog = {
+  __typename?: 'ProgressLog';
+  createdAt: Scalars['DateTime'];
+  text: Scalars['String'];
+};
+
+export enum IProgressStatus {
+  Created = 'CREATED',
+  InProgress = 'IN_PROGRESS',
+  Complete = 'COMPLETE',
+  Errored = 'ERRORED'
+}
+
 export enum IQueueEventType {
   GarageDoorStatus = 'garageDoorStatus',
   ToggleGarageDoor = 'toggleGarageDoor'
@@ -546,6 +547,24 @@ export enum IRummikubCardColor {
   Yellow = 'yellow'
 }
 
+export type IRummikubGame = {
+  __typename?: 'RummikubGame';
+  _id: Scalars['String'];
+  name: Scalars['String'];
+  playerNames: Array<Scalars['String']>;
+};
+
+export enum IRummikubGamePrivacy {
+  Public = 'public',
+  Unlisted = 'unlisted'
+}
+
+export type IRummikubPlayer = {
+  __typename?: 'RummikubPlayer';
+  _id: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type IRummikubClientChatPayload = {
   __typename?: 'RummikubClientChatPayload';
   message: Scalars['String'];
@@ -563,24 +582,6 @@ export type IRummikubClientPlaceCardPayload = {
   fromCardIndex: Scalars['Int'];
   toRowIndex?: Maybe<Scalars['Int']>;
   toCardIndex: Scalars['Int'];
-};
-
-export type IRummikubGame = {
-  __typename?: 'RummikubGame';
-  _id: Scalars['String'];
-  name: Scalars['String'];
-  playerNames: Array<Scalars['String']>;
-};
-
-export enum IRummikubGamePrivacy {
-  Public = 'public',
-  Unlisted = 'unlisted'
-}
-
-export type IRummikubPlayer = {
-  __typename?: 'RummikubPlayer';
-  _id: Scalars['String'];
-  name: Scalars['String'];
 };
 
 export type IRummikubServerBoardPayload = {
@@ -611,6 +612,7 @@ export type IRummikubServerTurnPayload = {
   __typename?: 'RummikubServerTurnPayload';
   player: IRummikubPlayer;
 };
+
 
 export type ISecret = {
   __typename?: 'Secret';
@@ -649,4 +651,3 @@ export type IWikiPage = {
   name: Scalars['String'];
   firstLinkedPage?: Maybe<IWikiPage>;
 };
-
