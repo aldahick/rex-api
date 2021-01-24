@@ -1,6 +1,0 @@
-extend type Mutation {
-  # called from web
-  createGarageDoor(name: String!): GarageDoor!
-  deleteGarageDoor(id: String!): Boolean!
-  toggleGarageDoor(id: String!): Boolean!
-}

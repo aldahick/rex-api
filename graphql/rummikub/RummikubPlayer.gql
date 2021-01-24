@@ -1,4 +1,0 @@
-type RummikubPlayer {
-  _id: String!
-  name: String!
-}

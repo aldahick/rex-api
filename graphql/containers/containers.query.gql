@@ -1,4 +1,0 @@
-extend type Query {
-  container(id: String!): Container!
-  containers: [Container!]!
-}

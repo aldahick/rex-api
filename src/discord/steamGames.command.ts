@@ -2,7 +2,7 @@ import { LoggerService } from "@athenajs/core";
 import * as _ from "lodash";
 import { singleton } from "tsyringe";
 
-import { SteamPlayerManager, SteamPlayerWithGames } from "../manager/steamPlayer";
+import { SteamManager, SteamPlayerWithGames } from "../manager/steam";
 import { discordCommand, DiscordPayload } from "../registry/discord";
 import { HastebinService } from "../service/hastebin";
 
@@ -11,7 +11,7 @@ export class SteamGamesCommand {
   constructor(
     private readonly hastebinService: HastebinService,
     private readonly logger: LoggerService,
-    private readonly steamPlayerManager: SteamPlayerManager
+    private readonly steamManager: SteamManager
   ) { }
 
   @discordCommand(["steamGames", "commonSteamGames"], {
@@ -21,11 +21,11 @@ export class SteamGamesCommand {
     if (!identifiers.length) {
       return `Usage: ${command} <steam usernames or ids...>`;
     }
-    const steamIds = await this.steamPlayerManager.resolveUsernames(identifiers);
+    const steamIds = await this.steamManager.player.resolveUsernames(identifiers);
     let players: SteamPlayerWithGames[];
     const res = await message.reply("Gimme a second to think about it...");
     try {
-      players = await this.steamPlayerManager.getMany(steamIds);
+      players = await this.steamManager.player.getMany(steamIds);
     } catch (err) {
       this.logger.error(err, "discord.steamGames");
       if (err instanceof Error) {

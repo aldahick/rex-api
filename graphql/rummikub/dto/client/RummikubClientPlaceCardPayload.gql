@@ -1,8 +1,0 @@
-type RummikubClientPlaceCardPayload {
-  # if null, from hand
-  fromRowIndex: Int
-  fromCardIndex: Int!
-  # if null, to hand
-  toRowIndex: Int
-  toCardIndex: Int!
-}

@@ -1,5 +1,0 @@
-type RummikubGame {
-  _id: String!
-  name: String!
-  playerNames: [String!]!
-}

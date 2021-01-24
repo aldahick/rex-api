@@ -1,9 +1,0 @@
-extend type Mutation {
-  createHost(host: CreateHostInput!): Host!
-}
-
-input CreateHostInput {
-  name: String!
-  hostname: String!
-  dockerEndpoint: String!
-}

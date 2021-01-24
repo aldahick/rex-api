@@ -1,4 +1,0 @@
-type NotificationDevice {
-  platform: NotificationPlatform!
-  arn: String
-}

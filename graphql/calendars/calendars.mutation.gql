@@ -1,4 +1,0 @@
-extend type Mutation {
-  addCalendar(name: String!, url: String!): Boolean!
-  removeCalendar(id: String!): Boolean!
-}

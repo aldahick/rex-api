@@ -1,4 +1,0 @@
-# rummikub.client.chat
-type RummikubClientChatPayload {
-  message: String!
-}

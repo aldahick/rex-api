@@ -1,3 +1,0 @@
-type GarageDoorTogglePayload {
-  id: String!
-}

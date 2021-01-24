@@ -1,4 +1,0 @@
-type ContainerVolume {
-  hostPath: String!
-  containerPath: String!
-}

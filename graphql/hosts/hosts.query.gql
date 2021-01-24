@@ -1,4 +1,0 @@
-extend type Query {
-  host(id: String!): Host!
-  hosts: [Host!]!
-}

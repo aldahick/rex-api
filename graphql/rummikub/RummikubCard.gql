@@ -1,5 +1,0 @@
-type RummikubCard {
-  color: RummikubCardColor!
-  # if null, wildcard
-  value: Int
-}

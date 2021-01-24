@@ -1,5 +1,0 @@
-type ContainerPort {
-  containerPort: Int!
-  hostPort: Int
-  hostBindIp: String
-}

@@ -1,4 +1,0 @@
-type ContainerVariable {
-  name: String!
-  value: String!
-}

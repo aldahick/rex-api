@@ -1,3 +1,0 @@
-extend type Mutation {
-  fetchWikiPagesUntil(firstPageName: String!, untilPageName: String!): Progress!
-}

@@ -1,9 +1,0 @@
-# rummikub.server.chat
-type RummikubServerChatPayload {
-  id: String!
-  # if null, author is system
-  author: RummikubPlayer
-  # ISO8601
-  createdAt: String!
-  message: String!
-}

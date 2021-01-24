@@ -1,6 +1,0 @@
-type Host {
-  _id: String!
-  name: String!
-  hostname: String!
-  containers: [Container!]
-}

@@ -1,3 +1,0 @@
-extend type Mutation {
-  createRummikubGame(name: String!, privacy: RummikubGamePrivacy!): RummikubGame!
-}
