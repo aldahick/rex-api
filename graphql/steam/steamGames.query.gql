@@ -1,3 +1,0 @@
-extend type Query {
-  steamGames(page: Int!, search: String!): [SteamGame!]!
-}

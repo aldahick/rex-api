@@ -2,10 +2,10 @@ import { MongoService } from "@athenajs/core";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { singleton } from "tsyringe";
 
-import { Progress } from "../../model/Progress";
-import { Role } from "../../model/Role";
-import { SteamGame } from "../../model/SteamGame";
-import { User } from "../../model/User";
+import { Progress } from "../../module/progress/model";
+import { Role } from "../../module/role/model";
+import { SteamGame } from "../../module/steam/model";
+import { User } from "../../module/user/model";
 import { ConfigService } from "../config";
 
 @singleton()

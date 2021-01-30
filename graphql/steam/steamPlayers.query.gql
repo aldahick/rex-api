@@ -1,4 +1,0 @@
-extend type Query {
-  steamPlayer(steamId64: String!): SteamPlayer!
-  steamPlayers(steamIds64: [String!]!): [SteamPlayer!]!
-}
