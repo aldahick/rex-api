@@ -25,7 +25,6 @@
   "homepage": "https://github.com/aldahick/rex-api#readme",
   "dependencies": {
     "@athenajs/core": "^0.7.0",
-    "@microsoft/signalr": "^5.0.1",
     "@typegoose/typegoose": "^7.4.5",
     "accesscontrol": "^2.2.1",
     "aws-sdk": "^2.817.0",
