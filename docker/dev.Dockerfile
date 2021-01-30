@@ -12,6 +12,4 @@ COPY tsconfig.json ./
 COPY src ./src
 RUN yarn build
 
-COPY graphql ./graphql
-
 CMD yarn start:dev

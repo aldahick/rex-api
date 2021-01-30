@@ -2,10 +2,5 @@ extend type Mutation {
   createRole(name: String!): Role!
   deleteRole(id: String!): Boolean!
   updateRole(id: String!, name: String!): Boolean!
-  updateRolePermissions(id: String!, permissions: [RolePermissionInput!]!): Boolean!
-}
-
-input RolePermissionInput {
-  action: String!
-  resource: String!
+  updateRolePermissions(id: String!, permissions: [AuthPermissionInput!]!): Boolean!
 }

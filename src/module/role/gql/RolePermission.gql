@@ -1,4 +1,0 @@
-type RolePermission {
-  resource: String!
-  action: String!
-}

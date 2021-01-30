@@ -1,0 +1,10 @@
+enum AuthAction {
+  createAny
+  createOwn
+  deleteAny
+  deleteOwn
+  readAny
+  readOwn
+  updateAny
+  updateOwn
+}

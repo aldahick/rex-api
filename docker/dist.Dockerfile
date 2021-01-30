@@ -14,6 +14,7 @@ RUN yarn --production --frozen-lockfile
 
 COPY dist ./dist
 
-COPY graphql ./graphql
+# needed for the graphql definitions
+COPY src ./src
 
 CMD yarn start

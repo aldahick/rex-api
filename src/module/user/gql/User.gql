@@ -3,5 +3,5 @@ type User {
   email: String!
   username: String
   roles: [Role!]
-  permissions: [RolePermission!]
+  permissions: [AuthPermission!]
 }

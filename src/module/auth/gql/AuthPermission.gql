@@ -1,0 +1,9 @@
+type AuthPermission {
+  resource: String!
+  action: AuthAction!
+}
+
+input AuthPermissionInput {
+  resource: String!
+  action: AuthAction!
+}

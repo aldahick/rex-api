@@ -1,5 +1,5 @@
 type Role {
   _id: String!
   name: String!
-  permissions: [RolePermission!]!
+  permissions: [AuthPermission!]!
 }
