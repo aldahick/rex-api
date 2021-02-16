@@ -12,17 +12,6 @@ export type Scalars = {
   DateTime: Date;
 };
 
-export enum IAuthAction {
-  CreateAny = 'createAny',
-  CreateOwn = 'createOwn',
-  DeleteAny = 'deleteAny',
-  DeleteOwn = 'deleteOwn',
-  ReadAny = 'readAny',
-  ReadOwn = 'readOwn',
-  UpdateAny = 'updateAny',
-  UpdateOwn = 'updateOwn'
-}
-
 export enum IAuthClientType {
   Mobile = 'MOBILE',
   Web = 'WEB'
@@ -31,12 +20,12 @@ export enum IAuthClientType {
 export type IAuthPermission = {
   __typename?: 'AuthPermission';
   resource: Scalars['String'];
-  action: IAuthAction;
+  action: Scalars['String'];
 };
 
 export type IAuthPermissionInput = {
   resource: Scalars['String'];
-  action: IAuthAction;
+  action: Scalars['String'];
 };
 
 export type IAuthToken = {
@@ -68,6 +57,7 @@ export type IMutation = {
 export type IMutationAddMediaDownloadArgs = {
   url: Scalars['String'];
   destinationKey: Scalars['String'];
+  scrape?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -156,6 +146,12 @@ export enum IMediaItemType {
   Directory = 'directory',
   Series = 'series'
 }
+
+export type IMediaScrapePayload = {
+  __typename?: 'MediaScrapePayload';
+  token: Scalars['String'];
+  url: Scalars['String'];
+};
 
 export type IQuery = {
   __typename?: 'Query';
