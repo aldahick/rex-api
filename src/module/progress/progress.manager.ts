@@ -7,6 +7,8 @@ import { Progress, ProgressLog } from "./model";
 
 @singleton()
 export class ProgressManager {
+  readonly find = this.db.progress.find.bind(this.db.progress);
+
   constructor(
     private readonly db: DatabaseService
   ) { }

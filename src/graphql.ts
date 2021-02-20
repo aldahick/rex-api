@@ -57,7 +57,6 @@ export type IMutation = {
 export type IMutationAddMediaDownloadArgs = {
   url: Scalars['String'];
   destinationKey: Scalars['String'];
-  scrape?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -147,18 +146,13 @@ export enum IMediaItemType {
   Series = 'series'
 }
 
-export type IMediaScrapePayload = {
-  __typename?: 'MediaScrapePayload';
-  token: Scalars['String'];
-  url: Scalars['String'];
-};
-
 export type IQuery = {
   __typename?: 'Query';
   mediaItems: Array<IMediaItem>;
   note: INote;
   notes: Array<INote>;
   progress: IProgress;
+  progresses: Array<IProgress>;
   roles: Array<IRole>;
   steamGames: Array<ISteamGame>;
   steamPlayer: ISteamPlayer;
@@ -180,6 +174,11 @@ export type IQueryNoteArgs = {
 
 export type IQueryProgressArgs = {
   id: Scalars['String'];
+};
+
+
+export type IQueryProgressesArgs = {
+  ids: Array<Scalars['String']>;
 };
 
 
