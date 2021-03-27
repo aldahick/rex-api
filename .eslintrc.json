@@ -1,5 +1,13 @@
 {
   "extends": "./node_modules/@aldahick/eslint-rules",
+  "overrides": [
+    {
+      "files": ["src/service/blizzard/dto/*.ts"],
+      "rules": {
+        "@typescript-eslint/naming-convention": "off"
+      }
+    }
+  ],
   "rules": {
     "no-console": "warn"
   }

@@ -52,6 +52,16 @@ export class MediaManager {
     stream.resume();
   }
 
+  async create({ user, key, data }: {
+    user: User;
+    key: string;
+    data: string;
+  }): Promise<void> {
+    const filename = this.toFilename(user, key);
+    await fs.mkdirp(path.dirname(filename));
+    await fs.writeFile(filename, data);
+  }
+
   async list(user: User, dir: string): Promise<IMediaItem[]> {
     const baseDir = this.toFilename(user, dir);
     let files: string[];

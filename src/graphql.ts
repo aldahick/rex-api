@@ -41,6 +41,7 @@ export type IMutation = {
   createAuthToken: IAuthToken;
   createAuthTokenGoogle: IAuthToken;
   createAuthTokenLocal: IAuthToken;
+  createMedia: Scalars['Boolean'];
   createNote: INote;
   createRole: IRole;
   createUser: IUser;
@@ -80,6 +81,12 @@ export type IMutationCreateAuthTokenGoogleArgs = {
 export type IMutationCreateAuthTokenLocalArgs = {
   username: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type IMutationCreateMediaArgs = {
+  key: Scalars['String'];
+  data: Scalars['String'];
 };
 
 

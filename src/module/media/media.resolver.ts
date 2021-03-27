@@ -1,7 +1,7 @@
 import { guard, HttpError, mutation, query } from "@athenajs/core";
 import { singleton } from "tsyringe";
 
-import { IMutation, IMutationAddMediaDownloadArgs, IQuery, IQueryMediaItemsArgs } from "../../graphql";
+import { IMutation, IMutationAddMediaDownloadArgs, IMutationCreateMediaArgs, IQuery, IQueryMediaItemsArgs } from "../../graphql";
 import { AuthContext } from "../auth";
 import { ProgressManager } from "../progress";
 import { MediaManager } from "./media.manager";
@@ -39,5 +39,19 @@ export class MediaResolver {
     const progress = await this.progressManager.create("addMediaDownload");
     this.progressManager.resolveSafe(progress, this.mediaManager.download({ user, url, destinationKey, progress }));
     return progress.toGqlObject();
+  }
+
+  @guard({
+    resource: "mediaItem",
+    action: "createOwn"
+  })
+  @mutation()
+  async createMedia(root: unknown, { key, data }: IMutationCreateMediaArgs, context: AuthContext): Promise<IMutation["createMedia"]> {
+    const user = await context.user();
+    if (!user) {
+      throw HttpError.forbidden("Requires user token");
+    }
+    await this.mediaManager.create({ user, key, data });
+    return true;
   }
 }

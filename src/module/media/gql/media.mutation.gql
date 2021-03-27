@@ -1,3 +1,4 @@
 extend type Mutation {
   addMediaDownload(url: String!, destinationKey: String!): Progress!
+  createMedia(key: String!, data: String!): Boolean!
 }
