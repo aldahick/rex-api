@@ -29,7 +29,7 @@ export class LeagueCommand {
     const response = await message.reply("Creating lobby...");
     try {
       const url = await this.leagueManager.createUltimateBravery();
-      await response.edit(`Here's your lobby, @<${message.author.id}>: <${url}>`);
+      await response.edit(`Here's your lobby, <@${message.author.id}>: <${url}>`);
     } catch (err) {
       this.logger.error(err, "discord.league.ultimateBravery");
       if (err instanceof Error) {
