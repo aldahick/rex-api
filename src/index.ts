@@ -7,6 +7,7 @@ import { InjectionToken } from "tsyringe";
 import { IModule } from "./IModule";
 import { authModule } from "./module/auth";
 import { genericModule } from "./module/generic";
+import { leagueModule } from "./module/league";
 import { mediaModule } from "./module/media";
 import { noteModule } from "./module/note";
 import { progressModule } from "./module/progress";
@@ -16,7 +17,7 @@ import { userModule } from "./module/user";
 import { DiscordRegistry } from "./registry/discord";
 import { DatabaseService } from "./service/database";
 
-const modules = [authModule, genericModule, mediaModule, noteModule, progressModule, roleModule, steamModule, userModule];
+const modules = [authModule, genericModule, leagueModule, mediaModule, noteModule, progressModule, roleModule, steamModule, userModule];
 
 const moduleItems = <Key extends keyof IModule>(key: Key): unknown[] => (
   _.flatten(modules.map(m => m[key] ?? [])) as InjectionToken<unknown>[]
