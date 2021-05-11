@@ -13,6 +13,13 @@ export class ConfigService extends BaseConfigService {
     }
   };
 
+  readonly blizzard = {
+    oauthClient: {
+      id: configUtils.optional("BLIZZARD_OAUTH_CLIENT_ID"),
+      secret: configUtils.optional("BLIZZARD_OAUTH_CLIENT_SECRET")
+    }
+  };
+
   readonly discord = {
     commandPrefix: configUtils.optional("DISCORD_COMMAND_PREFIX") ?? "~",
     token: configUtils.optional("DISCORD_TOKEN", u => u || undefined)
